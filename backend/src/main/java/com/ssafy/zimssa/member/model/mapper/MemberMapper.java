@@ -13,6 +13,7 @@ public interface MemberMapper {
 
 	Member login(Member Member) throws SQLException;
 	Member userInfo(String id) throws SQLException;
+	void join(Member member) throws SQLException;
 	void saveRefreshToken(Map<String, String> map) throws SQLException;
 	Object getRefreshToken(String id) throws SQLException;
 	void deleteRefreshToken(Map<String, String> map) throws SQLException;

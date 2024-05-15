@@ -16,7 +16,7 @@ public class Member implements Serializable{
 	private String id;
 	private String password;
 	private String name;
-	private String emialId;
+	private String emailId;
 	private String emailDomain;
 	private String joinDate;
 	private String refreshToken;

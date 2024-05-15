@@ -40,6 +40,15 @@ public class MemberController {
 		this.jwtUtil = jwtUtil;
 	}
 
+	@PostMapping("/join")
+	public ResponseEntity<Member> join(@RequestBody Member member) throws Exception {
+		log.info("join controller>>>>>>>>>>>>>>>>>>>>>>> join controller");
+		memberService.join(member);
+		return new ResponseEntity<Member>(HttpStatus.OK);
+	}
+
+
+
 	@Operation(summary = "로그인", description = "아이디와 비밀번호를 이용하여 로그인 처리.")
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(
