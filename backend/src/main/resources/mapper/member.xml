@@ -14,6 +14,10 @@
 		<result column="token" property="refreshToken"/>
 	</resultMap>
 
+
+
+
+
 	<select id="login" parameterType="map" resultMap="member">
 		select user_id, user_name, token
 		from members
@@ -25,7 +29,16 @@
 			VALUES (#{id}, #{password}, #{name}, #{emailId}, #{emailDomain})
 		</insert>
 
-
+	<update id="update" parameterType="member">
+		Update members 
+		
+		set user_password = #{password},
+		user_name = #{name},
+		email_id = #{emailId},
+		email_domain = #{emailDomain}
+		where user_id = #{id}
+	</update>
+	
 	<select id="userInfo" parameterType="string" resultMap="member">
 		select user_name, user_id, email_id, email_domain, join_date
 		from members

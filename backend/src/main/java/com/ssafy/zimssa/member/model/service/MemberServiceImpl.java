@@ -16,11 +16,19 @@ public class MemberServiceImpl implements MemberService{
 
 	private MemberMapper memberMapper;
 
+	
+	
+	
 	public MemberServiceImpl(MemberMapper memberMapper) {
 		super();
+		
 		this.memberMapper = memberMapper;
 	}
 
+	
+	
+	
+	
 	@Override
 	public Member login(Member member) throws Exception {
 		return memberMapper.login(member);
@@ -32,6 +40,15 @@ public class MemberServiceImpl implements MemberService{
 		 memberMapper.join(member);
 	}
 
+	@Override
+	public void update(Member member) throws Exception {
+		
+		
+		
+		memberMapper.update(member);
+		
+	}
+	
 	@Override
 	public Member userInfo(String userId) throws Exception {
 		return memberMapper.userInfo(userId);
@@ -57,6 +74,8 @@ public class MemberServiceImpl implements MemberService{
 		map.put("token", null);
 		memberMapper.deleteRefreshToken(map);
 	}
+
+
 
 	
 }
