@@ -14,6 +14,7 @@
 	<name>vue-api</name>
 	<description>Vue project for Spring Boot</description>
 	<properties>
+  <jackson-core-version>2.5.1</jackson-core-version>
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
@@ -42,6 +43,7 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -95,6 +97,30 @@
 		    <artifactId>jaxb-runtime</artifactId>
 		    <scope>runtime</scope>
 		</dependency>
+		
+		
+		
+				<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-core-asl</artifactId>
+    <version>1.9.13</version>
+</dependency>
+
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>1.9.13</version>
+</dependency>
+
+
+		
+		<dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-xml</artifactId>
+    <version>2.13.0</version> <!-- 버전은 프로젝트의 나머지 Jackson 라이브러리와 일치시키세요 -->
+</dependency>
+
+		
 	</dependencies>
 
 	<build>
