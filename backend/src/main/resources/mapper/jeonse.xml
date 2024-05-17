@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.zimssa.jeonse.model.mapper.JeonseMapper">
+
+    <resultMap id="GuDongResultMap" type="GuDong">
+        <result property="sigunguCd" column="sigungu_cd"/>
+        <result property="bjdongCd" column="bjdong_cd"/>
+        <result property="sigunguNm" column="sigungu_nm"/>
+        <result property="bjdongNm" column="bjdong_nm"/>
+    </resultMap>
+
+    <resultMap id="JeonseResultMap" type="Jeonse">
+        <result property="houseGbn_nm" column="house_gbn_nm"/>
+        <result property="rentArea" column="rent_area"/>
+        <result property="sggCd" column="sgg_cd"/>
+        <result property="buildYear" column="build_year"/>
+        <result property="rentGtn" column="rent_gtn"/>
+        <result property="bjdongCd" column="bjdong_cd"/>
+        <result property="rentGbn" column="rent_gbn"/>
+        <result property="cntrctUpdtRqestAt" column="cntrct_updt_rqest_at"/>
+        <result property="flrNo" column="flr_no"/>
+        <result property="sggNm" column="sgg_nm"/>
+        <result property="landGbn" column="land_gbn"/>
+        <result property="cntrctDe" column="cntrct_de"/>
+        <result property="newRonSecd" column="new_ron_secd"/>
+        <result property="bjdongNm" column="bjdong_nm"/>
+        <result property="cntrctPrd" column="cntrct_prd"/>
+        <result property="bubn" column="bubn"/>
+        <result property="bldgNm" column="bldg_nm"/>
+        <result property="accYear" column="acc_year"/>
+        <result property="bobn" column="bobn"/>
+        <result property="beforeGrntyAmount" column="before_grnty_amount"/>
+        <result property="landGbnNm" column="land_gbn_nm"/>
+        <result property="rentFee" column="rent_fee"/>
+        <result property="beforeMtRentChrge" column="before_mt_rent_chrge"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
+        <result property="apiBuildingName" column="api_building_name"/>
+    </resultMap>
+
+
+    <select id="findAllGuDong" resultMap="GuDongResultMap">
+        SELECT sigungu_cd, bjdong_cd, sigungu_nm, bjdong_nm
+        FROM address_info
+    </select>
+
+
+    <select id="findAllByGu" parameterType="String" resultMap="JeonseResultMap">
+        SELECT
+            house_gbn_nm,
+            rent_area,
+            sgg_cd,
+            build_year,
+            rent_gtn,
+            bjdong_cd,
+            rent_gbn,
+            cntrct_updt_rqest_at,
+            flr_no,
+            sgg_nm,
+            land_gbn,
+            cntrct_de,
+            new_ron_secd,
+            bjdong_nm,
+            cntrct_prd,
+            bubn,
+            bldg_nm,
+            acc_year,
+            bobn,
+            before_grnty_amount,
+            land_gbn_nm,
+            rent_fee,
+            before_mt_rent_chrge,
+            lat,
+            lng,
+            api_building_name
+        FROM
+            jeonse_info
+        WHERE
+            sgg_cd = #{sggCd}
+    </select>
+
+    <select id="findAllByDong" parameterType="String" resultMap="JeonseResultMap">
+        SELECT
+            house_gbn_nm,
+            rent_area,
+            sgg_cd,
+            build_year,
+            rent_gtn,
+            bjdong_cd,
+            rent_gbn,
+            cntrct_updt_rqest_at,
+            flr_no,
+            sgg_nm,
+            land_gbn,
+            cntrct_de,
+            new_ron_secd,
+            bjdong_nm,
+            cntrct_prd,
+            bubn,
+            bldg_nm,
+            acc_year,
+            bobn,
+            before_grnty_amount,
+            land_gbn_nm,
+            rent_fee,
+            before_mt_rent_chrge,
+            lat,
+            lng,
+            api_building_name
+        FROM
+            jeonse_info
+        WHERE
+            sgg_cd = #{sggCd} AND bjdong_Cd = #{bjdongCd}
+    </select>
+
+</mapper>
