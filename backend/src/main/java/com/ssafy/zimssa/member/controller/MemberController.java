@@ -44,6 +44,7 @@ public class MemberController {
 	@PostMapping("/join")
 	public ResponseEntity<Member> join(@RequestBody Member member) throws Exception {
 		log.info("join controller>>>>>>>>>>>>>>>>>>>>>>> join controller");
+		System.out.println(member);
 		memberService.join(member);
 		return new ResponseEntity<Member>(HttpStatus.OK);
 	}
@@ -163,4 +164,32 @@ public class MemberController {
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+
+	@Operation(summary = "회원 정보 조회", description = "토큰을 이용하여 회원 정보를 조회한다.")
+	@GetMapping("/member")
+	public ResponseEntity<Map<String, Object>> getMember(HttpServletRequest request) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("Authorization");
+
+		System.out.println("!!!!!!!! member 조히 @@!##!#");
+		if (jwtUtil.checkToken(token)) {
+			String userId = jwtUtil.getUserId(token);
+			log.info("사용 가능한 토큰!!! userId: {}", userId);
+			try {
+				Member member = memberService.userInfo(userId);
+				resultMap.put("userInfo", member);
+				status = HttpStatus.OK;
+			} catch (Exception e) {
+				log.error("정보조회 실패 : {}", e);
+				resultMap.put("message", e.getMessage());
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+		} else {
+			log.error("사용 불가능 토큰!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+
 }

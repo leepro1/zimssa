@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.zimssa.junseproduct.model.mapper.JunseMapper">
+
+
+    <insert id="save" parameterType="com.ssafy.zimssa.junseproduct.model.dto.JunseInfoResponseDto">
+    INSERT INTO junse (
+        rent_grant_max_loan_limit_rate,
+        qsc_tlno,
+        int_sprt_cont,
+        max_loan_limit_amount,
+        rcmd_prod_nm,
+        rcmd_grnt_prod_dvcd,
+        grnt_prme_cont,
+        req_trgt_cont,
+        qsc_nm,
+        grnt_dvcd,
+        expt_grfe_rate_cont
+
+    )
+    VALUES (
+               #{rentGrntMaxLoanLmtRate},
+               #{qscTlno},
+               #{intSprtCont},
+               #{maxLoanLmtAmt},
+               #{rcmdProdNm},
+               #{rcmdGrntProdDvcd},
+               #{grntPrmeCont},
+               #{reqTrgtCont},
+               #{qscNm},
+               #{grntDvcd},
+               #{exptGrfeRateCont}
+           )
+    </insert>
+</mapper>
