@@ -41,6 +41,13 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
+	public void delete(String id) throws Exception {
+
+		System.out.println("impl");
+		memberMapper.delete(id);
+	}
+
+	@Override
 	public void update(Member member) throws Exception {
 		
 		

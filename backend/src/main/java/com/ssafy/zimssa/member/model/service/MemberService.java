@@ -6,6 +6,7 @@ public interface MemberService {
 
 	Member login(Member memberDto) throws Exception;
 	void join(Member member) throws Exception;
+	void delete(String id) throws Exception;
 	void update(Member member) throws Exception;
 	Member userInfo(String id) throws Exception;
 	

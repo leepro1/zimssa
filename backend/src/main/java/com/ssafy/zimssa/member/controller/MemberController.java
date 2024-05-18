@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,14 +54,22 @@ public class MemberController {
 	public ResponseEntity<Member> update(@PathVariable("id") String id,@RequestBody Member member) throws Exception {
 		log.info("udpate controller>>>>>>>>>>>>>>>>>>>>>>> update controller");
 
-	
+		System.out.println(id);
 		member.setId(id);
 	
 		memberService.update(member);
 		return new ResponseEntity<Member>(HttpStatus.OK);
 	}
 
-	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<String> delete(@PathVariable("id") String id) throws Exception {
+		System.out.println("delete id "+ id
+		);
+		memberService.delete(id);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	
 	@Operation(summary = "로그인", description = "아이디와 비밀번호를 이용하여 로그인 처리.")
 	@PostMapping("/login")

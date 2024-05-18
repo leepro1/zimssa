@@ -16,6 +16,11 @@
 
 
 
+	<delete id="delete" parameterType="String">
+
+	delete from members where user_id = #{id}
+
+	</delete>
 
 
 	<select id="login" parameterType="map" resultMap="member">
