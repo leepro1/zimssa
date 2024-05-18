@@ -7,7 +7,7 @@
       <p><strong>이메일:</strong> {{ user.emailId }}@{{ user.emailDomain }}</p>
       <p><strong>가입일:</strong> {{ user.joinDate }}</p>
       <button @click="goToEditPage">회원정보 수정</button>
-
+      <button @click="deleteUser">회원탈퇴</button> <!-- Added button for deletion -->
     </div>
     <div v-else>
       <p>로딩 중...</p>
@@ -15,8 +15,10 @@
   </div>
 </template>
 
+
+
 <script>
-import { findById2 } from "@/api/user";
+import { findById2, updateUser, deleteUser } from "@/api/user"; // Import the new deleteUser method
 
 export default {
   name: "MyPage",
@@ -32,12 +34,6 @@ export default {
   methods: {
     async fetchUserInfo() {
       try {
-        // const token = sessionStorage.getItem('accessToken');
-        // if (!token) {
-        //   throw new Error('토큰이 없습니다.');
-        // }
-       // console.log("Token:", token);
-
         const response = await findById2(
           (response) => {
             console.log("User Info Retrieved");
@@ -56,6 +52,18 @@ export default {
     },
     goToEditPage() {
       this.$router.push({ name: 'EditUser' });
+    },
+    async deleteUser() {
+      try {
+        await deleteUser(this.user.id); // Call the deleteUser method with the user ID
+        sessionStorage.removeItem("accessToken");
+        this.$router.push({ name: 'main' }); // 메인 페이지로 이동
+        alert('회원 탈퇴가 완료되었습니다.');
+        // Redirect or perform any other action after deletion
+      } catch (error) {
+     //   console.error(error);
+        alert('회원 탈퇴를 실패했습니다.');
+      }
     },
   },
 };
