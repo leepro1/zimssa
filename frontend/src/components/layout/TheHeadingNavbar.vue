@@ -43,10 +43,10 @@ const logout = () => {
           style="--bs-scroll-height: 100px"
         >
           <li class="nav-item">
-            <a class="nav-link" href="#">마이캠퍼스</a>
+            <router-link :to="{ name: 'maemae' }" class="nav-link">매매 실거래가</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">강의실</a>
+            <router-link :to="{ name: 'jeonse' }" class="nav-link">전월세 실거래가</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">커뮤니티</a>
@@ -70,9 +70,6 @@ const logout = () => {
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link :to="{ name: 'estations' }" class="nav-link">전기차충전소</router-link>
           </li>
         </ul>
         <!-- <form class="d-flex" role="search">
