@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.zimssa.board.model.mapper.BoardMapper">
+
+  <resultMap type="boardDto" id="article">
+    <result column="article_no" property="articleNo"/>
+    <result column="user_id" property="userId"/>
+    <result column="user_name" property="userName"/>
+    <result column="subject" property="subject"/>
+    <result column="content" property="content"/>
+    <result column="hit" property="hit"/>
+    <result column="register_time" property="registerTime"/>
+  </resultMap>
+
+  
+  <select id="getArticle" parameterType="int" resultMap="article">
+    select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name 
+    from board b, members m
+    where b.user_id = m.user_id
+    and b.article_no = #{articleNo}
+  </select>
+  
+  
+  <update id="updateHit" parameterType="int">
+    update board
+    set hit = hit + 1
+    where article_no = #{articleNo}
+  </update>
+
+</mapper>
