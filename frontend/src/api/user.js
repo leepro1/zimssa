@@ -50,5 +50,9 @@ async function deleteUser(userId,success,fail) {
 //     fail(new Error("No token found in sessionStorage"));
 //   }
 // }
+async function check(userId, success, fail) {
+  console.log(userId)
+  await local.get(`/user/check/${userId}`).then(success).catch(fail);
+}
 
-export { userConfirm, findById, tokenRegeneration, logout,findById2 ,updateUser,deleteUser};
+export { check,userConfirm, findById, tokenRegeneration, logout,findById2 ,updateUser,deleteUser};

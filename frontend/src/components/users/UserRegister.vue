@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { check, deleteUser } from "@/api/user"; // deleteUser 메서드 import
 
 const name = ref('');
 const id = ref('');
@@ -9,10 +10,10 @@ const pwdcheck = ref('');
 const email_id = ref('');
 const email_domain = ref('선택');
 const custom_email_domain = ref('');
-
+const idCheckMessage = ref('');
+const idCheckStatus = ref(''); // success, error, or empty
 
 const router = useRouter();
-
 
 const join = async () => {
   if (password.value !== pwdcheck.value) {
@@ -62,9 +63,43 @@ const resetForm = () => {
   email_id.value = '';
   email_domain.value = '선택'; // 여기서 email_domain을 초기화합니다.
   custom_email_domain.value = '';
+  idCheckMessage.value = '';
+  idCheckStatus.value = '';
 };
 
+
+
+
 const isCustomDomain = computed(() => email_domain.value === 'custom');
+const checkId = async () => {
+  try {
+    console.log(id.value)
+    
+    const result = await check(id.value);
+    
+    // console.log(result)
+  //  console.log(result.value)
+   //console.log(result.data)
+    if (result === '사용 가능한 아이디입니다.') {
+      alert('사용 가능한 아이디입니다.');
+
+      idCheckMessage.value = "사용가능합니다";
+      idCheckStatus.value = 'success';
+     
+    } else {
+      idCheckMessage.value = result;
+      idCheckStatus.value = 'error';
+    }
+  } catch (error) {
+    console.error('아이디 중복 검사 중 오류 발생:', error);
+    idCheckMessage.value = '중복된 아이디입니다.';
+    idCheckStatus.value = 'error';
+  }
+}
+// ID must be 3-20 characters long, alphanumeric
+const isIdValid = computed(() => /^[a-zA-Z0-9]{3,20}$/.test(id.value));
+// Password must be 8-20 characters long, include letters and numbers, and may include special characters
+const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/.test(password.value));
 </script>
 
 <template>
@@ -83,16 +118,28 @@ const isCustomDomain = computed(() => email_domain.value === 'custom');
           </div>
           <div class="mb-3">
             <label for="id" class="form-label">아이디 : </label>
-            <input type="text" class="form-control" v-model="id" placeholder="아이디..." />
+            <div class="input-group">
+              
+              <input type="text" class="form-control" v-model="id" @blur="checkId" placeholder="공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요" />
+              <button type="button" class="btn btn-outline-secondary" @click="checkId">중복확인</button>
+            </div>
+
+            <small v-show="idCheckStatus === 'success'" class="text-success">{{ idCheckMessage }}</small>
+  <small v-show="idCheckStatus === 'error'" class="text-danger">{{ idCheckMessage }}</small>
+  <small v-show="!isIdValid && idCheckStatus === ''" class="text-danger">아이디는 공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요</small>
           </div>
           <div class="mb-3">
-            <label for="password" class="form-label">비밀번호 : </label>
-            <input type="password" class="form-control" v-model="password" placeholder="비밀번호..." />
-          </div>
-          <div class="mb-3">
-            <label for="pwdcheck" class="form-label">비밀번호확인 : </label>
-            <input type="password" class="form-control" v-model="pwdcheck" placeholder="비밀번호확인..." />
-          </div>
+        <label for="password" class="form-label">비밀번호 : </label>
+        <input type="password" class="form-control" v-model="password" placeholder="8자 이상 20자 이내로 입력하세요. 영문자, 숫자, 특수문자 사용할 수 있으며 공백은 사용할 수 없습니다" />
+        <small v-if="isPasswordValid" class="text-success">사용 가능한 비밀번호입니다.</small>
+        <small v-else class="text-danger">비밀번호는 8자 이상 20자 이내로 입력하세요. 영문자와 숫자를 포함해야 하며, 특수문자는 선택적으로 사용할 수 있습니다. 공백은 사용할 수 없습니다.</small>
+      </div>
+      <div class="mb-3">
+  <label for="pwdcheck" class="form-label">비밀번호 확인 : </label>
+  <input type="password" class="form-control" v-model="pwdcheck" placeholder="비밀번호 확인..." />
+  <small v-show="password === pwdcheck && pwdcheck !== ''" class="text-success">비밀번호가 일치합니다.</small>
+  <small v-show="password !== pwdcheck && pwdcheck !== ''" class="text-danger">비밀번호가 일치하지 않습니다.</small>
+</div>
           <div class="mb-3">
             <label for="emailid" class="form-label">이메일 : </label>
             <div class="input-group">
@@ -114,6 +161,9 @@ const isCustomDomain = computed(() => email_domain.value === 'custom');
             <button type="button" class="btn btn-outline-success ms-1 mb-3" @click="resetForm">초기화</button>
           </div>
         </form>
+        <div v-if="!isIdValid || !isPasswordValid" class="text-center text-danger">
+          회원가입 조건을 만족하지 않습니다. 입력 내용을 확인해 주세요.
+        </div>
       </div>
     </div>
   </div>
