@@ -6,35 +6,100 @@
 
 
     <insert id="save" parameterType="com.ssafy.zimssa.junseproduct.model.dto.JunseInfoResponseDto">
-    INSERT INTO junse (
-        rent_grant_max_loan_limit_rate,
-        qsc_tlno,
-        int_sprt_cont,
-        max_loan_limit_amount,
-        rcmd_prod_nm,
-        rcmd_grnt_prod_dvcd,
-        grnt_prme_cont,
-        req_trgt_cont,
-        qsc_nm,
-        grnt_dvcd,
-        expt_grfe_rate_cont,
-        user_id
 
+        INSERT INTO junse (
+            rent_grant_max_loan_limit_rate,
+            qsc_tlno,
+            int_sprt_cont,
+            max_loan_limit_amount,
+            rcmd_prod_nm,
+            rcmd_grnt_prod_dvcd,
+            grnt_prme_cont,
+            req_trgt_cont,
+            qsc_nm,
+            grnt_dvcd,
+            expt_grfe_rate_cont,
+            user_id
+        ) VALUES (
+                     #{rentGrntMaxLoanLmtRate},
+                     #{qscTlno},
+                     #{intSprtCont},
+                     #{maxLoanLmtAmt},
+                     #{rcmdProdNm},
+                     #{rcmdGrntProdDvcd},
+                     #{grntPrmeCont},
+                     #{reqTrgtCont},
+                     #{qscNm},
+                     #{grntDvcd},
+                     #{exptGrfeRateCont},
+                     #{id}
+                 ) ON DUPLICATE KEY UPDATE
+            rent_grant_max_loan_limit_rate = VALUES(rent_grant_max_loan_limit_rate),
+            qsc_tlno = VALUES(qsc_tlno),
+            int_sprt_cont = VALUES(int_sprt_cont),
+            max_loan_limit_amount = VALUES(max_loan_limit_amount),
+            rcmd_prod_nm = VALUES(rcmd_prod_nm),
+            rcmd_grnt_prod_dvcd = VALUES(rcmd_grnt_prod_dvcd),
+            grnt_prme_cont = VALUES(grnt_prme_cont),
+            req_trgt_cont = VALUES(req_trgt_cont),
+            qsc_nm = VALUES(qsc_nm),
+            grnt_dvcd = VALUES(grnt_dvcd),
+            expt_grfe_rate_cont = VALUES(expt_grfe_rate_cont);
 
-    )
-    VALUES (
-               #{rentGrntMaxLoanLmtRate},
-               #{qscTlno},
-               #{intSprtCont},
-               #{maxLoanLmtAmt},
-               #{rcmdProdNm},
-               #{rcmdGrntProdDvcd},
-               #{grntPrmeCont},
-               #{reqTrgtCont},
-               #{qscNm},
-               #{grntDvcd},
-               #{exptGrfeRateCont},
-               #{id}
-           )
     </insert>
-</mapper>
+
+    <select id="getproduct" parameterType="string" resultType="com.ssafy.zimssa.junseproduct.model.dto.JunseInfoResponseDto">
+        SELECT
+            rent_grant_max_loan_limit_rate AS rentGrntMaxLoanLmtRate,
+            qsc_tlno AS qscTlno,
+            int_sprt_cont AS intSprtCont,
+            max_loan_limit_amount AS maxLoanLmtAmt,
+            rcmd_prod_nm AS rcmdProdNm,
+            rcmd_grnt_prod_dvcd AS rcmdGrntProdDvcd,
+            grnt_prme_cont AS grntPrmeCont,
+            req_trgt_cont AS reqTrgtCont,
+            qsc_nm AS qscNm,
+            grnt_dvcd AS grntDvcd,
+            expt_grfe_rate_cont AS exptGrfeRateCont,
+            user_id
+
+        FROM junse
+        WHERE user_id = #{userId}
+        ORDER BY rentgrant_id desc
+            LIMIT 1;
+
+    </select>
+<!--=======-->
+<!--    INSERT INTO junse (-->
+<!--        rent_grant_max_loan_limit_rate,-->
+<!--        qsc_tlno,-->
+<!--        int_sprt_cont,-->
+<!--        max_loan_limit_amount,-->
+<!--        rcmd_prod_nm,-->
+<!--        rcmd_grnt_prod_dvcd,-->
+<!--        grnt_prme_cont,-->
+<!--        req_trgt_cont,-->
+<!--        qsc_nm,-->
+<!--        grnt_dvcd,-->
+<!--        expt_grfe_rate_cont,-->
+<!--        user_id-->
+
+
+<!--    )-->
+<!--    VALUES (-->
+<!--               #{rentGrntMaxLoanLmtRate},-->
+<!--               #{qscTlno},-->
+<!--               #{intSprtCont},-->
+<!--               #{maxLoanLmtAmt},-->
+<!--               #{rcmdProdNm},-->
+<!--               #{rcmdGrntProdDvcd},-->
+<!--               #{grntPrmeCont},-->
+<!--               #{reqTrgtCont},-->
+<!--               #{qscNm},-->
+<!--               #{grntDvcd},-->
+<!--               #{exptGrfeRateCont},-->
+<!--               #{id}-->
+<!--           )-->
+<!--    </insert>-->
+<!--&gt;>>>>>> origin-->
+<!--</mapper>-->

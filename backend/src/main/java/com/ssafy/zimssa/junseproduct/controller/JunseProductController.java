@@ -8,6 +8,8 @@ import com.ssafy.zimssa.junseproduct.model.dto.JunseUserInfoDto;
 import com.ssafy.zimssa.junseproduct.model.service.JunseService;
 import java.io.UnsupportedEncodingException;
 
+import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +42,25 @@ public class JunseProductController {
 	    private final String apiUri = "/jnse-rcmd-list";
 	    private final String serviceKey = "?serviceKey=sEzAWExEPqyBjnP5C/tf28HWGYMkG1SfSGQb6mXqcZZVkYY0krdnzRZtaUqoqF6vrJwHPPaNRWmsYtigkd4v8A==";
         private final String DETAILINFO_URL= "/jnse-prod-dtl-info";
+
+
+    @GetMapping("/junse/list/{userId}")
+    public ResponseEntity<JunseInfoResponseDto> list(@PathVariable("userId") String userId) throws Exception {
+        System.out.println("list get>>>>>>>>>>>>>>>>>");
+        System.out.println(userId);
+
+        JunseInfoResponseDto junseInfoResponseDto = junseService.getproduct(userId);
+        //return new ResponseEntity<>(junseInfoResponseDto, HttpStatus.OK);
+        if (junseInfoResponseDto != null) {
+            // 클라이언트에게 HTTP 상태 코드 200(OK)와 함께 응답 본문을 전송합니다.
+            System.out.println("성공");
+            System.out.println(junseInfoResponseDto);
+            return new ResponseEntity<JunseInfoResponseDto>(junseInfoResponseDto, HttpStatus.OK);
+        } else {
+            // 클라이언트에게 HTTP 상태 코드 404(NOT FOUND)와 함께 응답을 전송합니다.
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     @PostMapping("/junse/{userId}")

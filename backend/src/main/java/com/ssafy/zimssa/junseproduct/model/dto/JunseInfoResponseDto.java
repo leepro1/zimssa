@@ -1,37 +1,19 @@
 package com.ssafy.zimssa.junseproduct.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 @Getter
 @Setter
-
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
-@Data
 public class JunseInfoResponseDto {
-	public JunseInfoResponseDto(String rentGrntMaxLoanLmtRate, String qscTlno, String intSprtCont,
-								String maxLoanLmtAmt, String rcmdProdNm, String rcmdGrntProdDvcd,
-								String grntPrmeCont, String reqTrgtCont, String qscNm, String grntDvcd,
-								String exptGrfeRateCont, String guidUrl, String grntReqTrgtDvcd,
-								String trtBankCont,String id) {
-		this.rentGrntMaxLoanLmtRate = rentGrntMaxLoanLmtRate;
-		this.qscTlno = qscTlno;
-		this.intSprtCont = intSprtCont;
-		this.maxLoanLmtAmt = maxLoanLmtAmt;
-		this.rcmdProdNm = rcmdProdNm;
-		this.rcmdGrntProdDvcd = rcmdGrntProdDvcd;
-		this.grntPrmeCont = grntPrmeCont;
-		this.reqTrgtCont = reqTrgtCont;
-		this.qscNm = qscNm;
-		this.grntDvcd = grntDvcd;
-		this.exptGrfeRateCont = exptGrfeRateCont;
-		this.guidUrl = guidUrl;
-		this.grntReqTrgtDvcd = grntReqTrgtDvcd;
-		this.trtBankCont = trtBankCont;
-		this.id = id;
-	}
+
+
 
 	private String rentGrntMaxLoanLmtRate;
 	private String qscTlno;
