@@ -52,7 +52,6 @@ public class BoardController {
 		}
 	}
 
-
 	@Operation(summary = "게시판 글보기", description = "글번호에 해당하는 게시글의 정보를 반환한다.")
 	@GetMapping("/{articleno}")
 	public ResponseEntity<BoardDto> getArticle(@PathVariable("articleno") int articleno)
@@ -77,6 +76,15 @@ public class BoardController {
 		}
 	}
 
+	@Operation(summary = "수정 할 글 얻기", description = "글번호에 해당하는 게시글의 정보를 반환한다.")
+	@GetMapping("/modify/{articleno}")
+	public ResponseEntity<BoardDto> getModifyArticle(
+			@PathVariable("articleno") int articleno)
+			throws Exception {
+		log.info("getModifyArticle - 호출 : " + articleno);
+		return new ResponseEntity<BoardDto>(boardService.getArticle(articleno), HttpStatus.OK);
+	}
+	
 	@Operation(summary = "게시판 글수정", description = "수정할 게시글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.")
 	@PutMapping
 	public ResponseEntity<String> modifyArticle(
@@ -86,7 +94,6 @@ public class BoardController {
 		boardService.modifyArticle(boardDto);
 		return ResponseEntity.ok().build();
 	}
-	
 	
 	@Operation(summary = "게시판 글삭제", description = "글번호에 해당하는 게시글의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.")
 	@DeleteMapping("/{articleno}")
