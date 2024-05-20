@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +13,7 @@ import com.ssafy.zimssa.board.model.BoardDto;
 import com.ssafy.zimssa.board.model.service.BoardService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +30,20 @@ public class BoardController {
 		super();
 		this.boardService = boardService;
 	}
-	
+
+	@Operation(summary = "게시판 글작성", description = "새로운 게시글 정보를 입력한다.")
+	@PostMapping
+	public ResponseEntity<?> writeArticle(@RequestBody BoardDto boardDto) {
+		log.info("writeArticle boardDto - {}", boardDto);
+		try {
+			boardService.writeArticle(boardDto);
+			return new ResponseEntity<Void>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+
 	@Operation(summary = "게시판 글보기", description = "글번호에 해당하는 게시글의 정보를 반환한다.")
 	@GetMapping("/{articleno}")
 	public ResponseEntity<BoardDto> getArticle(@PathVariable("articleno") int articleno)

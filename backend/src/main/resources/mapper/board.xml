@@ -14,7 +14,16 @@
     <result column="register_time" property="registerTime"/>
   </resultMap>
 
-  
+
+  <insert id="writeArticle" parameterType="boardDto">
+    insert into board (user_id, subject, content, hit, register_time)
+    values (#{userId}, #{subject}, #{content}, 0, now())
+    <selectKey resultType="int" keyProperty="articleNo" order="AFTER">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+
   <select id="getArticle" parameterType="int" resultMap="article">
     select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name 
     from board b, members m

@@ -10,6 +10,7 @@ import com.ssafy.zimssa.board.model.BoardDto;
 @Mapper
 public interface BoardMapper {
 
+	void writeArticle(BoardDto boardDto) throws SQLException;
 	BoardDto getArticle(int articleNo) throws SQLException;
 	void updateHit(int articleNo) throws SQLException;
 }
