@@ -14,7 +14,7 @@ const article = ref({
   articleNo: 0,
   subject: "",
   content: "",
-  id: "",
+  userId: "",
   userName: "",
   hit: 0,
   registerTime: "",
@@ -112,7 +112,7 @@ function moveList() {
       <input
         type="text"
         class="form-control"
-        v-model="article.id"
+        v-model="article.userId"
         :disabled="isUseId"
         placeholder="작성자ID..."
       />
