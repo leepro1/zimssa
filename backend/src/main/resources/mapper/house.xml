@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.zimssa.house.model.mapper.HouseMapper">
+
+    <resultMap id="GuDongResultMap" type="GuDong">
+        <result property="sigunguCd" column="sigungu_cd"/>
+        <result property="bjdongCd" column="bjdong_cd"/>
+        <result property="sigunguNm" column="sigungu_nm"/>
+        <result property="bjdongNm" column="bjdong_nm"/>
+    </resultMap>
+
+    <select id="findAllGuDong" resultMap="GuDongResultMap">
+        SELECT sigungu_cd,
+               bjdong_cd,
+               sigungu_nm,
+               bjdong_nm
+        FROM address_info
+    </select>
+
+    <resultMap id="KeywordResultMap" type="KeywordResponseDto">
+        <result property="dongName" column="bjdong_nm"/>
+        <result property="aptName" column="api_building_name"/>
+    </resultMap>
+
+    <select id="findAllAptByKeyword" parameterType="KeywordRequestDto" resultMap="KeywordResultMap">
+        SELECT DISTINCT
+            bjdong_nm,
+            api_building_name
+        FROM
+            ${tradeType}
+        WHERE
+            bldg_nm LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <resultMap id="MaemaeResultMap" type="MaemaeDetailResponseDto">
+        <result property="houseType" column="house_type"/>
+        <result property="area" column="bldg_area"/>
+        <result property="dealDate" column="deal_ymd"/>
+        <result property="dealPrice" column="obj_amt"/>
+        <result property="floor" column="floor"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
+    </resultMap>
+
+    <select id="findAllAptDetailByMaeMae" parameterType="AptDetailRequestDto" resultMap="MaemaeResultMap">
+        SELECT
+            house_type,
+            bldg_area,
+            deal_ymd,
+            obj_amt,
+            floor,
+            lat,
+            lng
+        FROM
+            maemae_info
+        WHERE
+            bjdong_nm = #{dongName}
+            AND api_building_name = #{aptName}
+        ORDER BY
+            deal_ymd DESC;
+    </select>
+
+    <resultMap id="JeonseResultMap" type="JeonseDetailResponseDto">
+        <result property="houseType" column="house_gbn_nm"/>
+        <result property="area" column="rent_area"/>
+        <result property="dealDate" column="cntrct_de"/>
+        <result property="rentPrice" column="rent_gtn"/>
+        <result property="dealType" column="rent_fee"/>
+        <result property="floor" column="flr_no"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
+    </resultMap>
+
+    <select id="findAllAptDetailByJeonse" parameterType="AptDetailRequestDto" resultMap="JeonseResultMap">
+        SELECT
+            house_gbn_nm,
+            rent_area,
+            cntrct_de,
+            rent_gtn,
+            rent_fee,
+            flr_no,
+            lat,
+            lng
+        FROM
+            jeonse_info
+        WHERE
+            bjdong_nm = #{dongName}
+            AND api_building_name = #{aptName}
+        ORDER BY
+            cntrct_de DESC;
+    </select>
+
+</mapper>

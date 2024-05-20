@@ -1,4 +1,4 @@
-package com.ssafy.zimssa.jeonse.model.dto;
+package com.ssafy.zimssa.house.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -11,7 +11,6 @@ const memberStore = useMemberStore();
 const { menuList } = storeToRefs(menuStore);
 const { changeMenuState } = menuStore;
 
-
 const { userLogout } = memberStore;
 
 const logout = () => {
@@ -72,7 +71,9 @@ const logout = () => {
             <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
           </li>
           <li class="nav-item">
-            <router-link :to="{ name: 'junseproduct' }" class="nav-link">전세보증상품 추천</router-link>
+            <router-link :to="{ name: 'junseproduct' }" class="nav-link"
+              >전세보증상품 추천</router-link
+            >
           </li>
         </ul>
         <!-- <form class="d-flex" role="search">

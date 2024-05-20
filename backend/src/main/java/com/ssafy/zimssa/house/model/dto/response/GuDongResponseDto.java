@@ -1,6 +1,6 @@
-package com.ssafy.zimssa.jeonse.model.dto.response;
+package com.ssafy.zimssa.house.model.dto.response;
 
-import com.ssafy.zimssa.jeonse.model.dto.GuDong;
+import com.ssafy.zimssa.house.model.dto.GuDong;
 import lombok.*;
 
 @Getter

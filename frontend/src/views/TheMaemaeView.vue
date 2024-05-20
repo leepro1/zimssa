@@ -1,32 +1,16 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { debounce } from "lodash";
-import { searchKeyword, getDongData } from "@/api/maemae"; // 서버 API 함수들
+import { searchByKeyword, getDetail } from "@/api/house"; // 서버 API 함수들
 
 const map = ref(null);
 const markers = ref([]);
 const searchQuery = ref("");
 const searchResults = ref([]);
-const selectedDong = ref(null);
+const selectedApartment = ref(null);
+const selectedApartmentDetails = ref([]);
 
 const center = ref({ lat: 37.5665, lng: 126.978 }); // 초기 지도 중심 (서울시청 기준)
-
-// 환경 변수에서 카카오 맵 API 키를 가져옵니다
-const KAKAO_MAP_SERVICE_KEY = import.meta.env.VITE_KAKAO_MAP_SERVICE_KEY;
-
-const loadKakaoMapScript = () => {
-  return new Promise((resolve, reject) => {
-    if (window.kakao && window.kakao.maps) {
-      resolve();
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_SERVICE_KEY}&libraries=services`;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Kakao Map script loading error"));
-    document.head.appendChild(script);
-  });
-};
+const roadViewContainer = ref(null);
 
 const initMap = () => {
   const mapContainer = document.getElementById("map");
@@ -39,6 +23,18 @@ const initMap = () => {
   kakao.maps.event.addListener(map.value, "tilesloaded", () => {
     addEventListeners();
   });
+};
+
+const initRoadView = (lat, lng) => {
+  if (roadViewContainer.value) {
+    const roadview = new kakao.maps.Roadview(roadViewContainer.value);
+    const roadviewClient = new kakao.maps.RoadviewClient();
+    const position = new kakao.maps.LatLng(lat, lng);
+
+    roadviewClient.getNearestPanoId(position, 50, function (panoId) {
+      roadview.setPanoId(panoId, position);
+    });
+  }
 };
 
 const addEventListeners = () => {
@@ -56,9 +52,14 @@ const addEventListeners = () => {
 
 const updateMarkers = async () => {
   clearMarkers();
-  // 가짜 데이터로 대체
-  const markersData = [{ lat: 37.5665, lng: 126.978, name: "Sample Dong" }];
-  displayMarkers(markersData);
+  if (selectedApartment.value) {
+    const data = await getDetail(
+      "maemae_info",
+      selectedApartment.value.dongName,
+      selectedApartment.value.aptName
+    );
+    displayMarkers(data);
+  }
 };
 
 const clearMarkers = () => {
@@ -75,52 +76,52 @@ const displayMarkers = (markersData) => {
     });
 
     kakao.maps.event.addListener(marker, "click", () => {
-      handleSelectDong(data);
+      // handle marker click if needed
     });
 
     markers.value.push(marker);
   });
 };
 
-const handleSearch = debounce(async () => {
+const handleSearch = async () => {
   if (searchQuery.value.trim() !== "") {
     try {
-      searchResults.value = await searchKeyword(searchQuery.value);
+      searchResults.value = await searchByKeyword("maemae_info", searchQuery.value);
+      console.log(searchResults.value);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
   } else {
     searchResults.value = [];
   }
-}, 300);
+};
 
-const handleSelectDong = async (dong) => {
+const handleSelectApartment = async (apartment) => {
+  selectedApartment.value = apartment;
   try {
-    const data = await getDongData(dong.name);
-    selectedDong.value = data;
-
-    if (map.value && data.latitude && data.longitude) {
-      const position = new kakao.maps.LatLng(data.latitude, data.longitude);
-      map.value.setCenter(position);
-      map.value.setLevel(3);
-
-      clearMarkers();
-      updateMarkers();
+    const detail = await getDetail("maemae_info", apartment.dongName, apartment.aptName);
+    if (detail && detail.length > 0) {
+      selectedApartmentDetails.value = detail;
+      const apartmentDetail = detail[0];
+      if (map.value) {
+        const position = new kakao.maps.LatLng(apartmentDetail.lat, apartmentDetail.lng);
+        map.value.setCenter(position);
+        map.value.setLevel(3);
+        displayMarkers([apartmentDetail]);
+        initRoadView(apartmentDetail.lat, apartmentDetail.lng);
+      }
+    } else {
+      console.error("No details found for the selected apartment.");
     }
   } catch (error) {
-    console.error("Error fetching dong data:", error);
+    console.error("Error fetching apartment details:", error);
   }
 };
 
 watch(searchQuery, handleSearch);
 
-onMounted(async () => {
-  try {
-    await loadKakaoMapScript();
-    initMap();
-  } catch (error) {
-    console.error(error);
-  }
+onMounted(() => {
+  initMap();
 });
 </script>
 
@@ -130,7 +131,7 @@ onMounted(async () => {
       <input
         v-model="searchQuery"
         type="text"
-        placeholder="동 이름 검색"
+        placeholder="아파트 이름 검색"
         style="padding: 8px; font-size: 16px"
       />
       <div
@@ -139,17 +140,65 @@ onMounted(async () => {
       >
         <ul>
           <li
-            v-for="dong in searchResults"
-            :key="dong.id"
-            @click="handleSelectDong(dong)"
+            v-for="apartment in searchResults"
+            :key="apartment.aptName"
+            @click="handleSelectApartment(apartment)"
             style="padding: 8px; cursor: pointer"
           >
-            {{ dong.name }}
+            {{ apartment.dongName }} - {{ apartment.aptName }}
           </li>
         </ul>
       </div>
     </div>
-    <div id="map" style="width: 100%; height: 100%"></div>
+    <div id="map" style="width: 70%; height: 100%; float: left"></div>
+    <div
+      v-if="selectedApartmentDetails.length"
+      style="
+        width: 30%;
+        height: 100%;
+        float: left;
+        padding: 16px;
+        box-sizing: border-box;
+        overflow-y: auto;
+      "
+    >
+      <h2>{{ selectedApartment.aptName }}</h2>
+      <p>
+        <strong>{{ selectedApartment.dongName }}</strong>
+      </p>
+      <div ref="roadViewContainer" style="width: 100%; height: 300px; margin-bottom: 16px"></div>
+      <ul>
+        <li>
+          <span><strong>면적</strong></span>
+          <span><strong>거래 날짜</strong></span>
+          <span><strong>거래 가격</strong></span>
+          <span><strong>층</strong></span>
+        </li>
+        <li
+          v-for="detail in selectedApartmentDetails"
+          :key="detail.dealDate"
+          style="
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #ccc;
+          "
+        >
+          <span
+            ><strong>{{ detail.area }} ㎡</strong></span
+          >
+          <span
+            ><strong>{{ detail.dealDate }}</strong></span
+          >
+          <span
+            ><strong>{{ detail.dealPrice }} 만원</strong></span
+          >
+          <span
+            ><strong>{{ detail.floor }}층</strong></span
+          >
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
