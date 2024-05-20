@@ -17,7 +17,9 @@
         req_trgt_cont,
         qsc_nm,
         grnt_dvcd,
-        expt_grfe_rate_cont
+        expt_grfe_rate_cont,
+        user_id
+
 
     )
     VALUES (
@@ -31,7 +33,8 @@
                #{reqTrgtCont},
                #{qscNm},
                #{grntDvcd},
-               #{exptGrfeRateCont}
+               #{exptGrfeRateCont},
+               #{id}
            )
     </insert>
 </mapper>

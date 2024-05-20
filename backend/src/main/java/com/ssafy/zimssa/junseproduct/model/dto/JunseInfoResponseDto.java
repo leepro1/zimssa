@@ -15,7 +15,7 @@ public class JunseInfoResponseDto {
 								String maxLoanLmtAmt, String rcmdProdNm, String rcmdGrntProdDvcd,
 								String grntPrmeCont, String reqTrgtCont, String qscNm, String grntDvcd,
 								String exptGrfeRateCont, String guidUrl, String grntReqTrgtDvcd,
-								String trtBankCont) {
+								String trtBankCont,String id) {
 		this.rentGrntMaxLoanLmtRate = rentGrntMaxLoanLmtRate;
 		this.qscTlno = qscTlno;
 		this.intSprtCont = intSprtCont;
@@ -30,6 +30,7 @@ public class JunseInfoResponseDto {
 		this.guidUrl = guidUrl;
 		this.grntReqTrgtDvcd = grntReqTrgtDvcd;
 		this.trtBankCont = trtBankCont;
+		this.id = id;
 	}
 
 	private String rentGrntMaxLoanLmtRate;
@@ -46,4 +47,5 @@ public class JunseInfoResponseDto {
 	private String guidUrl;
 	private String grntReqTrgtDvcd;
 	private String trtBankCont;
+	private String id;
 }
