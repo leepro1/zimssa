@@ -1,20 +1,42 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
 
-//import VSelect from "@/components/common/VSelect.vue";
 import BoardListItem from "@/components/boards/item/BoardListItem.vue";
-// import VPageNavigation from "@/components/common/VPageNavigation.vue";
+import { useMemberStore } from "@/stores/member";
+import { findById2 } from "@/api/user";
+
+const isAdmin = ref(false);
+
+// 현재 사용자의 관리자 유무를 변수에 저장
+const fetchUserId = async () => {
+  try {
+    await findById2(
+      (response) => {
+        console.log("junse User Info Retrieved");
+        console.log("response.data.userInfo.id............", response.data.userInfo.id);
+        console.log("response.data.userInfo.role............", response.data.userInfo.role);
+        if (response.data.userInfo.role === "admin") isAdmin.value = true;
+      },
+      (error) => {
+        console.error(error);
+        alert("사용자 정보를 가져오는 데 실패했습니다.");
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    alert("사용자 정보를 가져오는 데 실패했습니다.");
+  }
+};
+
+onBeforeMount(() => {
+  console.log("onMounted............................");
+  fetchUserId();
+});
 
 const router = useRouter();
-
-const selectOption = ref([
-  { text: "검색조건", value: "" },
-  { text: "글번호", value: "article_no" },
-  { text: "제목", value: "subject" },
-  { text: "작성자아이디", value: "user_id" },
-]);
+const memberStore = useMemberStore();
 
 const articles = ref([]);
 const currentPage = ref(1);
@@ -31,11 +53,16 @@ onMounted(() => {
   getArticleList();
 });
 
-const changeKey = (val) => {
-  param.value.key = val;
-};
+// const changeKey = (val) => {
+//   param.value.key = val;
+// };
 
 const getArticleList = () => {
+  console.log("getArticle called................................");
+
+  // 글 제목으로만 검색
+  param.value.key = "subject";
+
   listArticle(
     param.value,
     ({ data }) => {
@@ -71,13 +98,17 @@ const moveWrite = () => {
       <div class="col-lg-10">
         <div class="row align-self-center mb-2">
           <div class="col-md-2 text-start">
-            <button type="button" class="btn btn-outline-primary btn-sm" @click="moveWrite">
+            <button
+              v-if="isAdmin"
+              type="button"
+              class="btn btn-outline-primary btn-sm"
+              @click="moveWrite"
+            >
               글쓰기
             </button>
           </div>
           <div class="col-md-5 offset-5">
-            <form class="d-flex">
-              <VSelect :selectOption="selectOption" @onKeySelect="changeKey" />
+            <form class="d-flex" @submit.prevent="getArticleList">
               <div class="input-group input-group-sm ms-1">
                 <input
                   type="text"
