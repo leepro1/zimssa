@@ -3,14 +3,13 @@ import { ref, onMounted, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
 
-import VSelect from "@/components/boards/VSelect.vue";
 import BoardListItem from "@/components/boards/item/BoardListItem.vue";
 import { useMemberStore } from "@/stores/member";
 import { findById2 } from "@/api/user";
 
 const isAdmin = ref(false);
 
-// 현재 사용자의 관리자 유뮤를 변수에 저장
+// 현재 사용자의 관리자 유무를 변수에 저장
 const fetchUserId = async () => {
   try {
     await findById2(
@@ -32,17 +31,12 @@ const fetchUserId = async () => {
 };
 
 onBeforeMount(() => {
+  console.log("onMounted............................");
   fetchUserId();
 });
 
 const router = useRouter();
 const memberStore = useMemberStore();
-// console.log("memberStore.userInfo.role.....................", memberStore.userInfo.role);
-const selectOption = ref([
-  { text: "검색조건", value: "" },
-  { text: "글번호", value: "article_no" },
-  { text: "제목", value: "subject" },
-]);
 
 const articles = ref([]);
 const currentPage = ref(1);
@@ -59,11 +53,16 @@ onMounted(() => {
   getArticleList();
 });
 
-const changeKey = (val) => {
-  param.value.key = val;
-};
+// const changeKey = (val) => {
+//   param.value.key = val;
+// };
 
 const getArticleList = () => {
+  console.log("getArticle called................................");
+
+  // 글 제목으로만 검색
+  param.value.key = "subject";
+
   listArticle(
     param.value,
     ({ data }) => {
@@ -109,8 +108,7 @@ const moveWrite = () => {
             </button>
           </div>
           <div class="col-md-5 offset-5">
-            <form class="d-flex">
-              <VSelect :selectOption="selectOption" @onKeySelect="changeKey" />
+            <form class="d-flex" @submit.prevent="getArticleList">
               <div class="input-group input-group-sm ms-1">
                 <input
                   type="text"
