@@ -3,9 +3,8 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
 
-//import VSelect from "@/components/common/VSelect.vue";
+import VSelect from "@/components/boards/VSelect.vue";
 import BoardListItem from "@/components/boards/item/BoardListItem.vue";
-// import VPageNavigation from "@/components/common/VPageNavigation.vue";
 
 const router = useRouter();
 
@@ -13,6 +12,7 @@ const selectOption = ref([
   { text: "검색조건", value: "" },
   { text: "글번호", value: "article_no" },
   { text: "제목", value: "subject" },
+  { text: "작성자아이디", value: "user_id" },
 ]);
 
 const articles = ref([]);
