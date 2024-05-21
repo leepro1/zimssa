@@ -12,7 +12,10 @@ public interface MemberService {
 	boolean checkduplicate(String id) throws Exception;
 	
 	
-	
+	void userCheck(String user_id) throws Exception;
+	void sendEamail(Member member) throws Exception;
+
+
 	
 	void saveRefreshToken(String id, String refreshToken) throws Exception;
 	Object getRefreshToken(String id) throws Exception;

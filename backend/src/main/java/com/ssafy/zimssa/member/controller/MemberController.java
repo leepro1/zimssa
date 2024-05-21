@@ -55,6 +55,14 @@ public class MemberController {
 		}
 	}
 
+	@PostMapping("/findpassword/{user_id}")
+	public ResponseEntity<String> findpassword(@PathVariable("user_id") String user_id) throws Exception {
+
+		memberService.userCheck(user_id);
+		return ResponseEntity.ok("임시 비밀번호가 이메일로 전송되었습니다.");
+
+	}
+
 	@PostMapping("/join")
 	public ResponseEntity<Member> join(@Valid @RequestBody Member member) throws Exception {
 		log.info("join controller>>>>>>>>>>>>>>>>>>>>>>> join controller");

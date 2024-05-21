@@ -54,5 +54,7 @@ async function check(userId, success, fail) {
   console.log(userId)
   await local.get(`/user/check/${userId}`).then(success).catch(fail);
 }
-
-export { check,userConfirm, findById, tokenRegeneration, logout,findById2 ,updateUser,deleteUser};
+async function findPassword(userId, success, fail) {
+  await local.post(`/user/findpassword/${userId}`).then(success).catch(fail);
+}
+export { findPassword,check,userConfirm, findById, tokenRegeneration, logout,findById2 ,updateUser,deleteUser};

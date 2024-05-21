@@ -1,5 +1,6 @@
 package com.ssafy.zimssa.member.model.mapper;
 
+import com.ssafy.zimssa.member.model.dto.MemberChangeDto;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 
 import com.ssafy.zimssa.member.model.dto.Member;
+import org.apache.ibatis.jdbc.SQL;
 
 @Mapper
 public interface MemberMapper {
@@ -25,4 +27,6 @@ public interface MemberMapper {
 	Object getRefreshToken(String id) throws SQLException;
 	void deleteRefreshToken(Map<String, String> map) throws SQLException;
 
+	Member getMember(String id) throws SQLException;
+	void updatePassword(MemberChangeDto memberChangeDto) throws SQLException;
 }

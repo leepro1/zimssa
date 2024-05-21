@@ -17,12 +17,34 @@
 
 
 
+
+	<update id="updatePassword" parameterType="MemberChangeDto">
+		UPDATE members
+		SET user_password = #{password}
+		WHERE user_id = #{user_id}
+	</update>
+
 	<delete id="delete" parameterType="String">
 
 	delete from members where user_id = #{id}
 
 	</delete>
 
+	<resultMap id="MemberResultMap" type="com.ssafy.zimssa.member.model.dto.Member">
+		<id property="id" column="user_id"/>
+		<result property="password" column="user_password"/>
+		<result property="name" column="user_name"/>
+		<result property="emailId" column="email_id"/>
+		<result property="emailDomain" column="email_domain"/>
+		<result property="joinDate" column="join_date"/>
+		<result property="refreshToken" column="refresh_token"/>
+		<result property="role" column="role"/>
+	</resultMap>
+
+	<select id="getMember" parameterType="String" resultMap="MemberResultMap">
+		SELECT * FROM members
+		WHERE user_id = #{user_id}
+	</select>
 
 	<select id="login" parameterType="map" resultMap="member">
 		select user_id, user_name, token
@@ -50,6 +72,7 @@
 		from members
 		where user_id = #{id}
 	</select>
+
 
 	<select id="checkdup" parameterType="string" resultType="string">
 		select user_id

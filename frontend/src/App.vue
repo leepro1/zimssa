@@ -8,8 +8,10 @@ import Chatbot from "@/components/chatbot/Chatbot.vue"; // Chatbot 컴포넌트�
   <div>
     <TheHeadingNavbar></TheHeadingNavbar>
     <router-view></router-view>
-    <Chatbot />
+    <Chatbot /> 
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 필요한 스타일을 추가하세요 */
+</style>
