@@ -32,6 +32,8 @@
             ${tradeType}
         WHERE
             bldg_nm LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY
+            bjdong_nm
     </select>
 
     <resultMap id="MaemaeResultMap" type="MaemaeDetailResponseDto">

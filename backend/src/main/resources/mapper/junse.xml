@@ -6,7 +6,6 @@
 
 
     <insert id="save" parameterType="com.ssafy.zimssa.junseproduct.model.dto.JunseInfoResponseDto">
-
         INSERT INTO junse (
             rent_grant_max_loan_limit_rate,
             qsc_tlno,
@@ -69,4 +68,38 @@
             LIMIT 1;
 
     </select>
+<<<<<<< HEAD
+<!--=======-->
+<!--    INSERT INTO junse (-->
+<!--        rent_grant_max_loan_limit_rate,-->
+<!--        qsc_tlno,-->
+<!--        int_sprt_cont,-->
+<!--        max_loan_limit_amount,-->
+<!--        rcmd_prod_nm,-->
+<!--        rcmd_grnt_prod_dvcd,-->
+<!--        grnt_prme_cont,-->
+<!--        req_trgt_cont,-->
+<!--        qsc_nm,-->
+<!--        grnt_dvcd,-->
+<!--        expt_grfe_rate_cont,-->
+<!--        user_id-->
+
+
+<!--    )-->
+<!--    VALUES (-->
+<!--               #{rentGrntMaxLoanLmtRate},-->
+<!--               #{qscTlno},-->
+<!--               #{intSprtCont},-->
+<!--               #{maxLoanLmtAmt},-->
+<!--               #{rcmdProdNm},-->
+<!--               #{rcmdGrntProdDvcd},-->
+<!--               #{grntPrmeCont},-->
+<!--               #{reqTrgtCont},-->
+<!--               #{qscNm},-->
+<!--               #{grntDvcd},-->
+<!--               #{exptGrfeRateCont},-->
+<!--               #{id}-->
+<!--           )-->
+<!--    </insert>-->
+<!--&gt;>>>>>> origin-->
 </mapper>

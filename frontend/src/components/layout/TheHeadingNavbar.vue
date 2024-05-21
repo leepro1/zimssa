@@ -20,7 +20,7 @@ const logout = () => {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top navClass">
     <div class="container-fluid">
       <router-link :to="{ name: 'main' }" class="navbar-brand">
         <img src="@/assets/zimssa6.jpg" class="rounded mx-auto d-block" alt="..." />
@@ -47,16 +47,23 @@ const logout = () => {
           <li class="nav-item">
             <router-link :to="{ name: 'jeonse' }" class="nav-link">전월세 실거래가</router-link>
           </li>
+          <<<<<<< HEAD ======= >>>>>>> main
           <li class="nav-item">
             <router-link :to="{ name: 'junseproduct' }" class="nav-link"
               >전세보증상품 추천</router-link
             >
           </li>
           <li class="nav-item">
+            <<<<<<< HEAD
+            <router-link :to="{ name: 'junseproduct' }" class="nav-link"
+              >전세보증상품 추천</router-link
+            >
+            =======
             <router-link :to="{ name: 'board' }" class="nav-link">공지사항</router-link>
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'news' }" class="nav-link">뉴스</router-link>
+            >>>>>>> main
           </li>
         </ul>
 
@@ -88,4 +95,8 @@ const logout = () => {
   </nav>
 </template>
 
-<style scoped></style>
+<style scoped>
+.navClass {
+  height: 10vh;
+}
+</style>
