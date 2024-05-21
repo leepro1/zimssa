@@ -2,6 +2,7 @@ package com.ssafy.zimssa.member.controller;
 
 import com.ssafy.zimssa.member.model.dto.Member;
 import com.ssafy.zimssa.member.model.service.MemberService;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +43,20 @@ public class MemberController {
 		this.jwtUtil = jwtUtil;
 	}
 
+	@GetMapping ("/check/{id}")
+	public ResponseEntity<String> check(@PathVariable("id") String id) throws Exception {
+		System.out.println("check id "+id+">>>>>>>>>>>>>>>>");
+		boolean isDuplicate = memberService.checkduplicate(id);
+		System.out.println(isDuplicate);
+		if (isDuplicate) {
+			return ResponseEntity.status(409).body("아이디가 이미 존재합니다.");
+		} else {
+			return ResponseEntity.ok("사용 가능한 아이디입니다.");
+		}
+	}
+
 	@PostMapping("/join")
-	public ResponseEntity<Member> join(@RequestBody Member member) throws Exception {
+	public ResponseEntity<Member> join(@Valid @RequestBody Member member) throws Exception {
 		log.info("join controller>>>>>>>>>>>>>>>>>>>>>>> join controller");
 		System.out.println(member);
 		memberService.join(member);

@@ -62,6 +62,21 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
+	public boolean checkduplicate(String id) throws Exception {
+//
+//		Member member = null;
+//		member=memberMapper.userInfo(id);
+//		System.out.println(member);
+
+		String check_id ="empty";
+		check_id=memberMapper.checkdup(id);
+	//	System.out.println(check_id);
+		if(check_id==null)
+			return false;
+		else return true;
+	}
+
+	@Override
 	public void saveRefreshToken(String id, String refreshToken) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("id", id);

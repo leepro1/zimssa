@@ -17,6 +17,7 @@ public interface MemberMapper {
 	
 	Member login(Member Member) throws SQLException;
 	Member userInfo(String id) throws SQLException;
+	String checkdup(String id) throws SQLException;
 	void update(Member member) throws SQLException;
 	void join(Member member) throws SQLException;
 	void delete(String id) throws SQLException;

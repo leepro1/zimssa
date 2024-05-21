@@ -9,7 +9,7 @@ public interface MemberService {
 	void delete(String id) throws Exception;
 	void update(Member member) throws Exception;
 	Member userInfo(String id) throws Exception;
-	
+	boolean checkduplicate(String id) throws Exception;
 	
 	
 	

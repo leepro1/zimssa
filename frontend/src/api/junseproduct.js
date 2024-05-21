@@ -14,5 +14,10 @@ async function submitFormData(userId, formData, success, fail) {
         //await local.delete(`/user/delete/${userId}`).then(success).catch(fail);
 
 }
+async function getJunseInfo(userId, success, fail) {
+    console.log("@@@@@@ getJunseInfo js");
+    console.log(userId)
+    await local.get(`/junseproduct/junse/list/${userId}`).then(success).catch(fail);
+}
 
-export { submitFormData };
+export { submitFormData ,getJunseInfo};
