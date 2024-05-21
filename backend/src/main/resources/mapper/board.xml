@@ -57,12 +57,13 @@
   
     <sql id="search">
     <if test="word != null and word != ''">
+      <if test="key == 'user_id'">
+        and user_id = #{word}
+      </if>
       <if test="key == 'subject'">
         and subject like concat('%', #{word}, '%')
       </if>
-      <if test="key != 'subject'">
-        and ${key} = #{word}
-      </if>
+
     </if>
   </sql>
   
