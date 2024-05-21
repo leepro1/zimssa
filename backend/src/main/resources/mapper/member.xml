@@ -12,6 +12,7 @@
 		<result column="email_domain" property="emailDomain"/>
 		<result column="join_date" property="joinDate"/>
 		<result column="token" property="refreshToken"/>
+		<result column="role" property="role"/>
 	</resultMap>
 
 
@@ -45,7 +46,7 @@
 	</update>
 	
 	<select id="userInfo" parameterType="string" resultMap="member">
-		select user_name, user_id, email_id, email_domain, join_date
+		select user_name, user_id, email_id, email_domain, join_date, role
 		from members
 		where user_id = #{id}
 	</select>
