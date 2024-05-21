@@ -13,8 +13,6 @@ const { isLogin, isLoginError } = storeToRefs(memberStore)
 const { userLogin, getUserInfo } = memberStore
 const { changeMenuState } = useMenuStore()
 
-
-
 const loginUser = ref({
   id: "",
   password: "",
@@ -82,4 +80,53 @@ const login = async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 아래는 CSS 스타일입니다 */
+.container {
+  margin-top: 50px;
+}
+
+.orange {
+  background-color: #7468B6;
+  padding: 0 5px;
+  color: white;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.float-end {
+  float: right;
+}
+
+.text-start {
+  text-align: left;
+}
+
+.alert-danger {
+  background-color: #FFE6E6;
+  border-color: #E1AFD1;
+  color: #AD88C6;
+}
+
+.btn-outline-primary {
+  color: #7468B6;
+  border-color: #7468B6;
+}
+
+.btn-outline-primary:hover {
+  background-color: #7468B6;
+  color: white;
+}
+
+.btn-outline-success {
+  color: #AD88C6;
+  border-color: #AD88C6;
+}
+
+.btn-outline-success:hover {
+  background-color: #AD88C6;
+  color: white;
+}
+</style>
