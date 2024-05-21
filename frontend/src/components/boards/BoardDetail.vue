@@ -77,7 +77,7 @@ function onDeleteArticle() {
               </p>
             </div>
           </div>
-          <div class="col-md-4 align-self-center text-end">댓글 : 17</div>
+          <!-- <div class="col-md-4 align-self-center text-end">댓글 : 17</div> -->
           <div class="divider mb-3"></div>
           <div class="text-secondary">
             {{ article.content }}
@@ -87,7 +87,7 @@ function onDeleteArticle() {
             <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
               글목록
             </button>
-            <template v-if="article.userId == memberStore.userInfo.id">
+            <template v-if="memberStore.userInfo.role == 'admin'">
               <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
                 글수정
               </button>

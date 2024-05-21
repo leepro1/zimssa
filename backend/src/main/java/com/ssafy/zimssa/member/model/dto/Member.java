@@ -37,8 +37,10 @@ public class Member implements Serializable{
 	private String emailDomain;
 
 	private String joinDate;
+	
 	private String refreshToken;
 	
+	private String role;
 	
 
 }
