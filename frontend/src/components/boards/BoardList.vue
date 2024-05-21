@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
 
@@ -8,35 +8,38 @@ import { useMemberStore } from "@/stores/member";
 import { findById2 } from "@/api/user";
 
 const isAdmin = ref(false);
+const isLoggedIn = ref(false);
 
 // 현재 사용자의 관리자 유무를 변수에 저장
 const fetchUserId = async () => {
   try {
     await findById2(
       (response) => {
-        console.log("junse User Info Retrieved");
+        console.log("User Info Retrieved");
         console.log("response.data.userInfo.id............", response.data.userInfo.id);
         console.log("response.data.userInfo.role............", response.data.userInfo.role);
+        isLoggedIn.value = true; // 로그인 상태로 설정
         if (response.data.userInfo.role === "admin") isAdmin.value = true;
       },
       (error) => {
-        console.error(error);
-        alert("사용자 정보를 가져오는 데 실패했습니다.");
+        // 에러가 발생하는 것의 의미 - 아직 로그인 하지 않음
+        // console.error(error);
+        // alert("사용자 정보를 가져오는 데 실패했습니다.");
       }
     );
   } catch (error) {
-    console.error(error);
-    alert("사용자 정보를 가져오는 데 실패했습니다.");
+    // console.error(error);
+    // alert("사용자 정보를 가져오는 데 실패했습니다.");
   }
 };
 
-onBeforeMount(() => {
-  console.log("onMounted............................");
+// 사용자 정보 가져오기
+onMounted(() => {
   fetchUserId();
+  getArticleList();
 });
 
 const router = useRouter();
-const memberStore = useMemberStore();
 
 const articles = ref([]);
 const currentPage = ref(1);
@@ -49,14 +52,7 @@ const param = ref({
   word: "",
 });
 
-onMounted(() => {
-  getArticleList();
-});
-
-// const changeKey = (val) => {
-//   param.value.key = val;
-// };
-
+// 게시글 목록 가져오기
 const getArticleList = () => {
   console.log("getArticle called................................");
 
@@ -99,7 +95,7 @@ const moveWrite = () => {
         <div class="row align-self-center mb-2">
           <div class="col-md-2 text-start">
             <button
-              v-if="isAdmin"
+              v-if="isLoggedIn && isAdmin"
               type="button"
               class="btn btn-outline-primary btn-sm"
               @click="moveWrite"

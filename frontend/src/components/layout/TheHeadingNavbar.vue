@@ -47,23 +47,21 @@ const logout = () => {
           <li class="nav-item">
             <router-link :to="{ name: 'jeonse' }" class="nav-link">전월세 실거래가</router-link>
           </li>
-          <<<<<<< HEAD ======= >>>>>>> main
           <li class="nav-item">
             <router-link :to="{ name: 'junseproduct' }" class="nav-link"
               >전세보증상품 추천</router-link
             >
           </li>
           <li class="nav-item">
-            <<<<<<< HEAD
             <router-link :to="{ name: 'junseproduct' }" class="nav-link"
               >전세보증상품 추천</router-link
             >
-            =======
+          </li>
+          <li>
             <router-link :to="{ name: 'board' }" class="nav-link">공지사항</router-link>
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'news' }" class="nav-link">뉴스</router-link>
-            >>>>>>> main
           </li>
         </ul>
 

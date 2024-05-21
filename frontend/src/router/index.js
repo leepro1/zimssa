@@ -86,19 +86,16 @@ const router = createRouter({
         {
           path: "view/:articleno",
           name: "article-view",
-          beforeEnter: onlyAuthUser,
           component: () => import("@/components/boards/BoardDetail.vue"),
         },
         {
           path: "write",
           name: "article-write",
-          beforeEnter: onlyAuthUser,
           component: () => import("@/components/boards/BoardWrite.vue"),
         },
         {
           path: "modify/:articleno",
           name: "article-modify",
-          beforeEnter: onlyAuthUser,
           component: () => import("@/components/boards/BoardModify.vue"),
         },
       ],

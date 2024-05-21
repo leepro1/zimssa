@@ -3,17 +3,35 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle, deleteArticle } from "@/api/board";
 import { useMemberStore } from "@/stores/member";
+import { findById2 } from "@/api/user";
 
 const route = useRoute();
 const router = useRouter();
 const memberStore = useMemberStore();
 
-// const articleno = ref(route.params.articleno);
 const { articleno } = route.params;
 
 const article = ref({});
+const isAdmin = ref(false);
+const isLoggedIn = ref(false);
+
+const fetchUserId = async () => {
+  try {
+    await findById2(
+      (response) => {
+        console.log("User Info Retrieved");
+        console.log("response.data.userInfo.id............", response.data.userInfo.id);
+        console.log("response.data.userInfo.role............", response.data.userInfo.role);
+        isLoggedIn.value = true; // 로그인 상태로 설정
+        if (response.data.userInfo.role === "admin") isAdmin.value = true;
+      },
+      (error) => {}
+    );
+  } catch (error) {}
+};
 
 onMounted(() => {
+  fetchUserId();
   getArticle();
 });
 
@@ -72,12 +90,11 @@ function onDeleteArticle() {
               <p>
                 <span class="fw-bold">{{ article.userName }}</span> <br />
                 <span class="text-secondary fw-light">
-                  {{ article.registerTime }}1 조회 : {{ article.hit }}
+                  {{ article.registerTime }} 조회 : {{ article.hit }}
                 </span>
               </p>
             </div>
           </div>
-          <!-- <div class="col-md-4 align-self-center text-end">댓글 : 17</div> -->
           <div class="divider mb-3"></div>
           <div class="text-secondary">
             {{ article.content }}
@@ -87,7 +104,7 @@ function onDeleteArticle() {
             <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
               글목록
             </button>
-            <template v-if="memberStore.userInfo.role == 'admin'">
+            <template v-if="isLoggedIn && isAdmin">
               <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
                 글수정
               </button>
