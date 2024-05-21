@@ -2,9 +2,11 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle, deleteArticle } from "@/api/board";
+import { useMemberStore } from "@/stores/member";
 
 const route = useRoute();
 const router = useRouter();
+const memberStore = useMemberStore();
 
 // const articleno = ref(route.params.articleno);
 const { articleno } = route.params;
@@ -58,7 +60,7 @@ function onDeleteArticle() {
       </div>
       <div class="col-lg-10 text-start">
         <div class="row my-2">
-          <h2 class="text-secondary px-5">{{ article.articleNo }}. {{ article.subject }}</h2>
+          <h2 class="text-secondary px-5">{{ article.subject }}</h2>
         </div>
         <div class="row">
           <div class="col-md-8">
@@ -68,7 +70,7 @@ function onDeleteArticle() {
                 src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
               />
               <p>
-                <span class="fw-bold">안효인</span> <br />
+                <span class="fw-bold">{{ article.userName }}</span> <br />
                 <span class="text-secondary fw-light">
                   {{ article.registerTime }}1 조회 : {{ article.hit }}
                 </span>
@@ -85,12 +87,18 @@ function onDeleteArticle() {
             <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
               글목록
             </button>
-            <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
-              글수정
-            </button>
-            <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteArticle">
-              글삭제
-            </button>
+            <template v-if="article.userId == memberStore.userInfo.id">
+              <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
+                글수정
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger mb-3 ms-1"
+                @click="onDeleteArticle"
+              >
+                글삭제
+              </button>
+            </template>
           </div>
         </div>
       </div>

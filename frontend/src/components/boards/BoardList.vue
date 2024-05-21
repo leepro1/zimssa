@@ -3,9 +3,8 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
 
-//import VSelect from "@/components/common/VSelect.vue";
+import VSelect from "@/components/boards/VSelect.vue";
 import BoardListItem from "@/components/boards/item/BoardListItem.vue";
-// import VPageNavigation from "@/components/common/VPageNavigation.vue";
 
 const router = useRouter();
 

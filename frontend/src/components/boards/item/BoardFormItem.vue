@@ -2,9 +2,11 @@
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { registArticle, getModifyArticle, modifyArticle } from "@/api/board";
+import { useMemberStore } from "@/stores/member";
 
 const router = useRouter();
 const route = useRoute();
+const memberStore = useMemberStore();
 
 const props = defineProps({ type: String });
 
@@ -14,7 +16,7 @@ const article = ref({
   articleNo: 0,
   subject: "",
   content: "",
-  id: "",
+  userId: "",
   userName: "",
   hit: 0,
   registerTime: "",
@@ -33,6 +35,9 @@ if (props.type === "modify") {
     }
   );
   isUseId.value = true;
+} else {
+  // 추가하는 경우에는 글 작성자 아이디를 현재 로그인 사용자로 설정
+  article.value.userId = memberStore.userInfo.id;
 }
 
 const subjectErrMsg = ref("");
@@ -110,11 +115,19 @@ function moveList() {
     <div class="mb-3">
       <label for="id" class="form-label">작성자 ID : </label>
       <input
+        v-if="type === 'regist'"
         type="text"
         class="form-control"
-        v-model="article.id"
+        :value="memberStore.userInfo.id"
+        readonly
+      />
+      <input
+        v-else
+        type="text"
+        class="form-control"
+        v-model="article.userId"
         :disabled="isUseId"
-        placeholder="작성자ID..."
+        readonly
       />
     </div>
     <div class="mb-3">
