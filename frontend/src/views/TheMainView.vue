@@ -1,10 +1,11 @@
 <script setup>
-import SwiperSlide from "@/components/main/SwiperSlide.vue";
 import { getNewsList } from "@/api/news.js";
 import { ref, onMounted } from "vue";
 import { formatDistanceToNow, parse } from "date-fns";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
+import SwiperSlide from "@/components/main/SwiperSlide.vue";
+import ResultPage from "@/components/Junseproduct/ResultPage.vue";
 
 const houseList = ref([]); // 주택
 const isNewsLoading = ref(true);
@@ -85,7 +86,9 @@ const goToBoard = () => {
     <div class="content">
       <div class="left">fasafdga</div>
       <div class="right">
-        <div class="product"></div>
+        <div class="product">
+          <result-page></result-page>
+        </div>
         <div class="news-board">
           <div class="news">
             <div class="rounded-shadow-box" @click="goToNews">
@@ -152,9 +155,10 @@ const goToBoard = () => {
 
 .product {
   display: flex;
-  background-color: rgb(255, 116, 46);
+  background-color: rgb(255, 255, 255);
   width: 25vw;
   height: 70vh;
+  padding: 15px;
 }
 
 .news-board {
@@ -167,14 +171,14 @@ const goToBoard = () => {
 
 .news {
   display: flex;
-  background-color: rgb(63, 201, 187);
+  background-color: rgb(255, 255, 255);
   width: 25vw;
   height: 35vh;
 }
 
 .board {
   display: flex;
-  background-color: rgb(56, 73, 71);
+  background-color: rgb(255, 255, 255);
   width: 25vw;
   height: 35vh;
 }
