@@ -95,13 +95,9 @@ const goToJeonse = () => {
       <div class="left">
         <div class="introduce">
           <h1>𝔃𝓲𝓶𝓼𝓼𝓪</h1>
-          <h3>짐 싸, 좋은 집으로 이사 가자</h3>
-          <h5>
-            사법권은 법관으로 구성된 법원에 속한다. 지방의회의 조직·권한·의원선거와 지방자치단체의
-            장의 선임방법 기타 지방자치단체의 조직과 운영에 관한 사항은 법률로 정한다. 군사재판을
-            관할하기 위하여 특별법원으로서 군사법원을 둘 수 있다. 모든 국민은 건강하고 쾌적한
-            환경에서 생활할 권리를 가지며, 국가와 국민은 환경보전을 위하여 노력하여야 한다.
-          </h5>
+          <p>"짐 싸! 좋은 집으로 이사 가자"</p>
+          <h5>나에게 꼭 맞는 전세 보증 상품을 알아보자!</h5>
+          <h5>요즘 부동산 가격은? 뉴스를 통해!</h5>
         </div>
         <div class="linkBtns">
           <button @click="goToMaemae">매매 매물 보러가기 ></button>
@@ -157,7 +153,8 @@ const goToJeonse = () => {
 <style scoped>
 .content {
   display: flex;
-  background-color: rgb(185, 189, 164);
+  background-color: rgb(255, 255, 255);
+  /* background-image: url("/Users/taehyeon/Github/zimssa/frontend/src/assets/zimssa.png"); */
   width: 100%;
   height: 70vh;
 }
@@ -165,45 +162,50 @@ const goToJeonse = () => {
 .left {
   display: flex;
   flex-direction: column;
-  background-color: rgb(255, 255, 255);
   width: 50vw;
   height: 70vh;
+  margin: 20px;
+  background-color: #f0f0f0; /* 원하는 배경색으로 변경 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
 .right {
   display: flex;
-  background-color: rgb(3, 165, 206);
+  background-color: rgb(255, 255, 255, 0.8);
   width: 50vw;
   height: 70vh;
 }
 
 .product {
   display: flex;
-  background-color: rgb(255, 255, 255);
-  width: 25vw;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
   height: 70vh;
   padding: 15px;
 }
 
 .news-board {
   display: flex;
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   flex-direction: column;
-  background-color: rgb(112, 132, 72);
   width: 25vw;
   height: 70vh;
 }
 
 .news {
   display: flex;
-  background-color: rgb(255, 255, 255);
-  width: 25vw;
+  width: 100%;
   height: 35vh;
 }
 
 .board {
   display: flex;
-  background-color: rgb(255, 255, 255);
-  width: 25vw;
+  width: 100%;
   height: 35vh;
 }
 
@@ -250,13 +252,12 @@ const goToJeonse = () => {
 
 /* 소개 글*/
 .introduce {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
+  align-content: center;
   background-color: rgb(255, 255, 255);
-  margin-top: 40px;
-  margin-left: 40px;
-  width: 50vw;
-  height: 50vh;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
 }
 
 .introduce h1 {
@@ -264,9 +265,10 @@ const goToJeonse = () => {
   color: #ad88c6; /* 날짜 색상 */
 }
 
-.introduce h3 {
+.introduce p {
   font-size: 30px;
   color: black;
+  word-wrap: break-word;
 }
 
 .linkBtns {
@@ -275,8 +277,8 @@ const goToJeonse = () => {
   justify-content: center;
   align-items: center;
   background-color: white;
-  width: 50vw;
-  height: 20vh;
+  width: 100%;
+  height: 30%;
 }
 
 .linkBtns button {
@@ -287,7 +289,7 @@ const goToJeonse = () => {
   background-size: 400%;
   transition: background 300ms ease-in-out;
   border-radius: 12px;
-  width: 200px;
+  width: 250px;
   height: 70px;
   color: black;
   margin: 0 20px; /* 좌우 간격을 균등하게 유지 */
