@@ -78,13 +78,36 @@ const goToNews = () => {
 const goToBoard = () => {
   router.push({ name: "board" });
 };
+
+const goToMaemae = () => {
+  router.push({ name: "maemae" });
+};
+
+const goToJeonse = () => {
+  router.push({ name: "jeonse" });
+};
 </script>
 
 <template>
   <div>
     <swiper-slide></swiper-slide>
     <div class="content">
-      <div class="left">fasafdga</div>
+      <div class="left">
+        <div class="introduce">
+          <h1>𝔃𝓲𝓶𝓼𝓼𝓪</h1>
+          <h3>짐 싸, 좋은 집으로 이사 가자</h3>
+          <h5>
+            사법권은 법관으로 구성된 법원에 속한다. 지방의회의 조직·권한·의원선거와 지방자치단체의
+            장의 선임방법 기타 지방자치단체의 조직과 운영에 관한 사항은 법률로 정한다. 군사재판을
+            관할하기 위하여 특별법원으로서 군사법원을 둘 수 있다. 모든 국민은 건강하고 쾌적한
+            환경에서 생활할 권리를 가지며, 국가와 국민은 환경보전을 위하여 노력하여야 한다.
+          </h5>
+        </div>
+        <div class="linkBtns">
+          <button @click="goToMaemae">매매 매물 보러가기 ></button>
+          <button @click="goToJeonse">전월세 매물 보러가기 ></button>
+        </div>
+      </div>
       <div class="right">
         <div class="product">
           <result-page></result-page>
@@ -141,7 +164,8 @@ const goToBoard = () => {
 
 .left {
   display: flex;
-  background-color: rgb(72, 200, 113);
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
   width: 50vw;
   height: 70vh;
 }
@@ -164,7 +188,7 @@ const goToBoard = () => {
 .news-board {
   display: flex;
   flex-direction: column;
-  background-color: rgb(132, 72, 79);
+  background-color: rgb(112, 132, 72);
   width: 25vw;
   height: 70vh;
 }
@@ -222,5 +246,54 @@ const goToBoard = () => {
   color: #888; /* 날짜 색상 */
   margin-top: 3px;
   text-align: right;
+}
+
+/* 소개 글*/
+.introduce {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  margin-top: 40px;
+  margin-left: 40px;
+  width: 50vw;
+  height: 50vh;
+}
+
+.introduce h1 {
+  font-size: 60px;
+  color: #ad88c6; /* 날짜 색상 */
+}
+
+.introduce h3 {
+  font-size: 30px;
+  color: black;
+}
+
+.linkBtns {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  width: 50vw;
+  height: 20vh;
+}
+
+.linkBtns button {
+  border-color: 7468B6;
+  color: #fff;
+  background-image: linear-gradient(45deg, #ad88c6 50%, transparent 50%);
+  background-position: 100%;
+  background-size: 400%;
+  transition: background 300ms ease-in-out;
+  border-radius: 12px;
+  width: 200px;
+  height: 70px;
+  color: black;
+  margin: 0 20px; /* 좌우 간격을 균등하게 유지 */
+}
+
+.linkBtns button:hover {
+  background-position: 0;
 }
 </style>

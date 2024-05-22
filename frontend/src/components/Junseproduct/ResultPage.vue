@@ -27,7 +27,7 @@
     </div>
     <div v-if="!memberStore.isLogin" class="login-overlay">
       <span>로그인 후에 이용 가능합니다</span>
-      <button @click="goToLogin">로그인으로 이동</button>
+      <button class="toLoginBtn" @click="goToLogin">로그인으로 이동</button>
     </div>
   </div>
 </template>
@@ -188,7 +188,7 @@ p {
 
 /* 회색빛 불투명 효과 및 상태창 */
 .overlay {
-  opacity: 0.3;
+  opacity: 1;
 }
 
 .login-overlay {
@@ -204,8 +204,26 @@ p {
   justify-content: center;
   z-index: 10;
   border-radius: 10px; /* 부모 요소의 border-radius와 맞춤 */
-  color: black;
+  color: rgb(0, 0, 0);
   font-size: 20px;
   font-weight: bold;
+}
+
+.toLoginBtn {
+  border-color: 7468B6;
+  color: #fff;
+  background-image: linear-gradient(45deg, #ad88c6 50%, transparent 50%);
+  background-position: 100%;
+  background-size: 400%;
+  transition: background 300ms ease-in-out;
+  border-radius: 12px;
+  width: 200px;
+  height: 35px;
+  color: black;
+  margin: 0 20px; /* 좌우 간격을 균등하게 유지 */
+}
+
+.toLoginBtn:hover {
+  background-position: 0;
 }
 </style>
