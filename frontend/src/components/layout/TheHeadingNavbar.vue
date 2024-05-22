@@ -52,11 +52,6 @@ const logout = () => {
               >전세보증상품 추천</router-link
             >
           </li>
-          <li class="nav-item">
-            <router-link :to="{ name: 'junseproduct' }" class="nav-link"
-              >전세보증상품 추천</router-link
-            >
-          </li>
           <li>
             <router-link :to="{ name: 'board' }" class="nav-link">공지사항</router-link>
           </li>
