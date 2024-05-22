@@ -216,17 +216,11 @@ const submitForm = async () => {
 };
 </script>
 <style scoped>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 .form-box {
-  padding: 20px;
+  height: auto; /* 자동 높이 설정 */
+  max-height: 85vh; /* 최대 높이 설정 */
+  overflow-y: auto; /* 세로 스크롤 적용 */
+  padding: 10px; /* 패딩을 줄임 */
   background-color: #fff; /* 폼 박스 배경색 */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -234,85 +228,82 @@ const submitForm = async () => {
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* 여백을 줄임 */
   color: #7468B6; /* 타이틀 색상 */
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* 여백을 줄임 */
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 3px; /* 여백을 줄임 */
+  color: #7468B6; /* 레이블 색상 */
+  font-size: 0.8rem; /* 레이블 폰트 크기를 줄임 */
 }
 
 input, select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
+  width: calc(100% - 12px); /* 입력 필드 너비를 줄임 */
+  padding: 6px; /* 패딩을 줄임 */
+  margin-top: 3px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 1.0rem; /* 입력 필드 폰트 크기를 줄임 */
 }
 
 .form-actions {
   text-align: center;
+  margin-top: 15px; /* 여백을 줄임 */
 }
 
 button {
-  padding: 10px 20px;
-  border: none;
+  padding: 8px 16px; /* 버튼 패딩을 줄임 */
   border-radius: 5px;
-  background-color: #7468B6;/* 버튼 배경색 */
+  background-color: #7468B6; /* 버튼 배경색 */
   color: white;
   cursor: pointer;
+  font-size: 0.8rem; /* 버튼 폰트 크기를 줄임 */
 }
 
 button:hover {
-  background-color: #7468B6; /* 버튼 호버 배경색 */
+  background-color: #5d52a1; /* 버튼 호버 배경색 */
 }
 
 .results {
-  margin-top: 20px;
+  margin-top: 15px; /* 여백을 줄임 */
 }
 
 .results h3 {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* 여백을 줄임 */
   color: #7468B6; /* 결과 제목 색상 */
-}
-
-.results p {
-  margin-bottom: 5px;
-}
-
-.result-item {
-  margin-top: 20px;
+  font-size: 0.9rem; /* 결과 제목 폰트 크기를 줄임 */
 }
 
 .result-info {
-  padding: 20px;
+  padding: 12px; /* 패딩을 줄임 */
   border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .result-info .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* 여백을 줄임 */
 }
 
 .result-info label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 3px; /* 여백을 줄임 */
+  color: #7468B6; /* 레이블 색상 */
+  font-size: 0.8rem; /* 레이블 폰트 크기를 줄임 */
 }
 
 .result-info div {
-  padding: 8px;
+  padding: 6px; /* 패딩을 줄임 */
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 0.8rem; /* 텍스트 폰트 크기를 줄임 */
 }
-label {
-  color: #7468B6; /* 보라색 */
-  font-weight: bold; /* 볼드체 */
-}
+
 </style>

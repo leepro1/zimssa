@@ -17,7 +17,7 @@
         <button @click="sendQuestion">Send</button>
       </div>
     </div>
-    <button class="open-button" @click="togglePopup" v-if="!isOpen">Chat</button>
+    <button class="open-button" @click="togglePopup" v-if="!isOpen">부동산 AI Chat</button>
   </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
 .chatbot-popup {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px; /* left를 right로 변경 */
   width: 300px;
   height: 500px; /* 세로로 길게 조정 */
   border: 1px solid #ccc;
@@ -136,7 +136,7 @@ button:hover {
 .open-button {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px; /* left를 right로 변경 */
   padding: 10px 20px;
   border: none;
   background-color: #7468B6;

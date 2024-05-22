@@ -95,16 +95,7 @@
   </script>
   
   <style scoped>
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa; /* 배경색 */
-  }
-  
+
   .mypage-box {
     background-color: #fff;
     padding: 20px;
