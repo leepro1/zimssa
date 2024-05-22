@@ -67,25 +67,17 @@ const resetForm = () => {
   idCheckStatus.value = '';
 };
 
-
-
-
 const isCustomDomain = computed(() => email_domain.value === 'custom');
 const checkId = async () => {
   try {
-    console.log(id.value)
-    
+    idCheckMessage.value = "사용가능합니다";
+      idCheckStatus.value = 'success';
     const result = await check(id.value);
-    
-    // console.log(result)
-  //  console.log(result.value)
-   //console.log(result.data)
+    console.log("result",result)
     if (result === '사용 가능한 아이디입니다.') {
       alert('사용 가능한 아이디입니다.');
-
       idCheckMessage.value = "사용가능합니다";
       idCheckStatus.value = 'success';
-     
     } else {
       idCheckMessage.value = result;
       idCheckStatus.value = 'error';
@@ -96,6 +88,7 @@ const checkId = async () => {
     idCheckStatus.value = 'error';
   }
 }
+
 // ID must be 3-20 characters long, alphanumeric
 const isIdValid = computed(() => /^[a-zA-Z0-9]{3,20}$/.test(id.value));
 // Password must be 8-20 characters long, include letters and numbers, and may include special characters
@@ -104,71 +97,171 @@ const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]
 
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="orange">회원가입</mark>
-        </h2>
-      </div>
-      <div class="col-lg-10 text-start">
-        <form @submit.prevent="join">
-          <div class="mb-3">
-            <label for="name" class="form-label">이름 : </label>
-            <input type="text" class="form-control" v-model="name" placeholder="이름..." />
-          </div>
-          <div class="mb-3">
-            <label for="id" class="form-label">아이디 : </label>
-            <div class="input-group">
-              
-              <input type="text" class="form-control" v-model="id" @blur="checkId" placeholder="공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요" />
-              <button type="button" class="btn btn-outline-secondary" @click="checkId">중복확인</button>
-            </div>
-
-            <small v-show="idCheckStatus === 'success'" class="text-success">{{ idCheckMessage }}</small>
-  <small v-show="idCheckStatus === 'error'" class="text-danger">{{ idCheckMessage }}</small>
-  <small v-show="!isIdValid && idCheckStatus === ''" class="text-danger">아이디는 공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요</small>
-          </div>
-          <div class="mb-3">
-        <label for="password" class="form-label">비밀번호 : </label>
-        <input type="password" class="form-control" v-model="password" placeholder="8자 이상 20자 이내로 입력하세요. 영문자, 숫자, 특수문자 사용할 수 있으며 공백은 사용할 수 없습니다" />
-        <small v-if="isPasswordValid" class="text-success">사용 가능한 비밀번호입니다.</small>
-        <small v-else class="text-danger">비밀번호는 8자 이상 20자 이내로 입력하세요. 영문자와 숫자를 포함해야 하며, 특수문자는 선택적으로 사용할 수 있습니다. 공백은 사용할 수 없습니다.</small>
-      </div>
-      <div class="mb-3">
-  <label for="pwdcheck" class="form-label">비밀번호 확인 : </label>
-  <input type="password" class="form-control" v-model="pwdcheck" placeholder="비밀번호 확인..." />
-  <small v-show="password === pwdcheck && pwdcheck !== ''" class="text-success">비밀번호가 일치합니다.</small>
-  <small v-show="password !== pwdcheck && pwdcheck !== ''" class="text-danger">비밀번호가 일치하지 않습니다.</small>
-</div>
-          <div class="mb-3">
-            <label for="emailid" class="form-label">이메일 : </label>
-            <div class="input-group">
-              <input type="text" class="form-control" v-model="email_id" placeholder="이메일아이디" />
-              <span class="input-group-text">@</span>
-              <input v-if="isCustomDomain" type="text" class="form-control" v-model="custom_email_domain" placeholder="직접 입력..." />
-              <select v-else class="form-select" v-model="email_domain" aria-label="이메일 도메인 선택">
-                <option value="선택">선택</option>
-                <option value="ssafy.com">ssafy.com</option>
-                <option value="google.com">google.com</option>
-                <option value="naver.com">naver.com</option>
-                <option value="kakao.com">kakao.com</option>
-                <option value="custom">직접 입력</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-auto text-center">
-            <button type="submit" class="btn btn-outline-primary mb-3">회원가입</button>
-            <button type="button" class="btn btn-outline-success ms-1 mb-3" @click="resetForm">초기화</button>
-          </div>
-        </form>
-        <div v-if="!isIdValid || !isPasswordValid" class="text-center text-danger">
-          회원가입 조건을 만족하지 않습니다. 입력 내용을 확인해 주세요.
+    <div class="signup-box">
+      <h2 class="title">회원가입</h2>
+      <form @submit.prevent="join">
+        <input type="text" id="name" v-model="name" placeholder="이름" />
+        <div class="input-group">
+          <input type="text" id="id" v-model="id" @blur="checkId" placeholder="아이디" />
+          <button type="button" @click="checkId">아이디 중복확인</button>
         </div>
+        <small v-show="idCheckStatus === 'success'" class="text-success">{{ idCheckMessage }}</small>
+        <small v-show="idCheckStatus === 'error'" class="text-danger">{{ idCheckMessage }}</small>
+        <small v-show="!isIdValid && idCheckStatus === ''" class="text-danger"></small>
+        <input type="password" id="password" v-model="password" placeholder="비밀번호 비밀번호는 8자 이상 20자 이내로 입력하세요." />
+        <small v-if="isPasswordValid" class="text-success">사용 가능한 비밀번호입니다.</small>
+        <small v-else class="text-danger"></small>
+        <input type="password" id="pwdcheck" v-model="pwdcheck" placeholder="비밀번호 확인" />
+        <small v-show="password === pwdcheck && pwdcheck !== ''" class="text-success">비밀번호가 일치합니다.</small>
+        <small v-show="password !== pwdcheck && pwdcheck !== ''" class="text-danger">비밀번호가 일치하지 않습니다.</small>
+        <div class="input-group">
+          <input type="text" v-model="email_id" placeholder="이메일" />
+          <span>@</span>
+          <input v-if="isCustomDomain" type="text" v-model="custom_email_domain" placeholder="직접 입력..." />
+          <select v-else v-model="email_domain">
+            <option value="선택">선택</option>
+            <option value="ssafy.com">ssafy.com</option>
+            <option value="google.com">google.com</option>
+            <option value="naver.com">naver.com</option>
+            <option value="kakao.com">kakao.com</option>
+            <option value="custom">직접 입력</option>
+          </select>
+        </div>
+        <div class="buttons">
+          <button type="submit" class="btn btn-primary">회원가입</button>
+        </div>
+      </form>
+      <div v-if="!isIdValid || !isPasswordValid" class="validation-message">
+        회원가입 조건을 만족하지 않습니다.     <br>
+입력 내용을 확인해 주세요.
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* 스타일 정의 */
+body, html {
+  overflow: hidden; /* Hide scrollbar */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84vh;
+  background-color: #f8f9fa;
+}
+
+.signup-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.title {
+  margin-bottom: 50px;
+  text-align: center;
+  color: #7468B6;
+}
+
+input, select, button, span {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group input {
+  flex: 1;
+}
+
+.input-group span {
+  flex: 0 0 30px;
+  background-color: #ddd;
+  border-radius: 0 5px 5px 0;
+  text-align: center;
+  line-height: 30px;
+  margin-left: -1px; /* Removing gap */
+}
+
+.input-group button {
+  flex: 0 0 auto;
+  padding: 10px 20px;
+  background-color: #7468B6;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.input-group input:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.input-group select {
+  border-radius: 0 5px 5px 0;
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #7468B6;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #AD88C6;
+  color: #fff;
+}
+
+.btn-warning {
+  background-color: #E1AFD1;
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-warning:hover {
+  opacity: 0.9;
+}
+
+.text-success {
+  color: green;
+  margin-bottom: 20px; /* 텍스트 성공 클래스에 마진 추가 */
+}
+
+.text-danger {
+  color: red;
+  
+  margin-bottom: 20px; /* 텍스트 성공 클래스에 마진 추가 */
+
+}
+
+.validation-message {
+  text-align: center;
+  color: red;
+  margin-top: 10px;
+}
 </style>

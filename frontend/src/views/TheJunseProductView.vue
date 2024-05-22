@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>전세보증상품 추천</h2>
+    <h2></h2>
     <JunseProductInput @submitForm="handleFormSubmit" />
   </div>
 </template>

@@ -42,16 +42,20 @@ public class MemberController {
 		this.memberService = memberService;
 		this.jwtUtil = jwtUtil;
 	}
-
-	@GetMapping ("/check/{id}")
-	public ResponseEntity<String> check(@PathVariable("id") String id) throws Exception {
-		System.out.println("check id "+id+">>>>>>>>>>>>>>>>");
+	@GetMapping("/check/{id}")
+	public ResponseEntity<Map<String, String>> check(@PathVariable("id") String id) throws Exception {
+		System.out.println("check id " + id + ">>>>>>>>>>>>>>>>");
 		boolean isDuplicate = memberService.checkduplicate(id);
 		System.out.println(isDuplicate);
+		Map<String, String> response = new HashMap<>();
 		if (isDuplicate) {
-			return ResponseEntity.status(409).body("아이디가 이미 존재합니다.");
+			response.put("id", id);
+			response.put("message", "아이디가 이미 존재합니다.");
+			return ResponseEntity.status(409).body(response);
 		} else {
-			return ResponseEntity.ok("사용 가능한 아이디입니다.");
+			response.put("id", id);
+			response.put("message", "사용 가능한 아이디입니다.");
+			return ResponseEntity.ok(response);
 		}
 	}
 

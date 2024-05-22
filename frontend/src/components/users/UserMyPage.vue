@@ -1,25 +1,40 @@
 <template>
-  <div>
-    <h1>마이페이지</h1>
-    <div v-if="user">
-      <p><strong>아이디:</strong> {{ user.id }}</p>
-      <p><strong>이름:</strong> {{ user.name }}</p>
-      <p><strong>이메일:</strong> {{ user.emailId }}@{{ user.emailDomain }}</p>
-      <p><strong>가입일:</strong> {{ user.joinDate }}</p>
-      <button @click="goToEditPage">회원정보 수정</button>
-      <button @click="deleteUser">회원탈퇴</button> <!-- 회원탈퇴 버튼 추가 -->
-    </div>
-    <div v-else>
-      <p>로딩 중...</p>
+  <div class="container">
+    <div class="mypage-box">
+      <h2 class="title">마이페이지</h2>
+      <form v-if="user" class="user-info">
+        <div class="form-group">
+          <label for="id">아이디:</label>
+          <input type="text" id="id" :value="user.id" readonly>
+        </div>
+        <div class="form-group">
+          <label for="name">이름:</label>
+          <input type="text" id="name" :value="user.name" readonly>
+        </div>
+        <div class="form-group">
+          <label for="email">이메일:</label>
+          <input type="text" id="email" :value="user.emailId + '@' + user.emailDomain" readonly>
+        </div>
+        <div class="form-group">
+          <label for="joinDate">가입일:</label>
+          <input type="text" id="joinDate" :value="user.joinDate" readonly>
+        </div>
+        <div class="buttons">
+          <button @click.prevent="goToEditPage" class="btn btn-primary">회원정보 수정</button>
+          <button @click.prevent="deleteUser" class="btn btn-danger">회원탈퇴</button>
+        </div>
+      </form>
+      <div v-else>
+        <p>로딩 중...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { findById2, deleteUser } from "@/api/user"; // deleteUser 메서드 import
+import { findById2, deleteUser } from "@/api/user";
 import { useMenuStore } from "@/stores/menu";
 import { useMemberStore } from "@/stores/member";
-import { storeToRefs } from "pinia";
 
 export default {
   name: "MyPage",
@@ -62,14 +77,13 @@ export default {
       const { changeMenuState } = menuStore;
 
       try {
-        await deleteUser(this.user.id); // deleteUser 메서드를 호출하여 사용자 삭제
+        await deleteUser(this.user.id);
         sessionStorage.removeItem("accessToken");
 
-        // 로그아웃 함수 호출
         userLogout();
         changeMenuState();
 
-        this.$router.push({ name: 'main' }); // 메인 페이지로 이동
+        this.$router.push({ name: 'main' });
         alert('회원 탈퇴가 완료되었습니다.');
       } catch (error) {
         console.error(error);
@@ -81,5 +95,91 @@ export default {
 </script>
 
 <style scoped>
-/* 필요에 따라 스타일을 추가하세요 */
+body, html {
+  overflow: hidden; /* Hide scrollbar */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.mypage-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.title {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #7468B6;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #7468B6;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input[readonly] {
+  background-color: #E9ECEF;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #7468B6;
+  color: #fff;
+}
+
+.btn-danger {
+  background-color: #E74C3C;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #5a4ea1;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+}
 </style>

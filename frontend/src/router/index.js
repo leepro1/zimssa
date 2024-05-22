@@ -27,11 +27,13 @@ const onlyAuthUser = async (to, from, next) => {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    
     {
       path: "/",
       name: "main",
       component: TheMainView,
     },
+    
     {
       path: "/maemae",
       name: "maemae",
@@ -71,7 +73,11 @@ const router = createRouter({
         },
       ],
     },
-
+    {
+      path: '/result',
+      name: 'ResultPage',
+      component:  () => import("@/components/Junseproduct/ResultPage.vue"),
+    },
     {
       path: "/board",
       name: "board",

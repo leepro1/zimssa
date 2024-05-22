@@ -1,33 +1,31 @@
 <template>
-  <div>
-    <form v-if="user" @submit.prevent="updateUserInfo">
-      <div>
-        <label for="id">id:</label>
+  <div class="edit-user-container">
+    <form v-if="user" @submit.prevent="updateUserInfo" class="edit-user-form">
+      <div class="form-group">
+        <label for="id">ID:</label>
         <input type="text" id="id" v-model="user.id" readonly>
       </div>
-      <div>
+      <div class="form-group">
         <label for="name">이름:</label>
         <input type="text" id="name" v-model="user.name">
       </div>
-      <div>
+      <div class="form-group">
         <label for="emailId">이메일 아이디:</label>
         <input type="text" id="emailId" v-model="user.emailId">
       </div>
-
-      
-      <div>
+      <div class="form-group">
         <label for="emailDomain">이메일 도메인:</label>
         <input type="text" id="emailDomain" v-model="user.emailDomain">
       </div>
-      <div>
+      <div class="form-group">
         <label for="password">비밀번호:</label>
         <input type="password" id="password" v-model="user.password">
       </div>
-      <div>
+      <div class="form-group">
         <label for="confirmPassword">비밀번호 확인:</label>
         <input type="password" id="confirmPassword" v-model="confirmPassword">
       </div>
-      <button type="submit">수정</button>
+      <button type="submit" class="submit-button">수정</button>
     </form>
   </div>
 </template>
@@ -99,5 +97,80 @@ export default {
 </script>
 
 <style scoped>
-/* 필요에 따라 스타일을 추가하세요 */
+body, html {
+  overflow: hidden; /* Hide scrollbar */
+}
+
+.edit-user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84vh;
+  background-color: #f8f9fa;
+}
+
+.edit-user-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #7468B6;
+  text-align: left; /* Left align all labels */
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input[readonly] {
+  background-color: #E9ECEF;
+}
+
+.submit-button {
+  padding: 10px;
+  border: none;
+  background-color: #7468B6;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.submit-button:hover {
+  background-color: #5a4ea1;
+}
+
+.text-success {
+  color: green;
+  margin-bottom: 20px;
+}
+
+.text-danger {
+  color: red;
+  margin-bottom: 20px;
+}
+
+.validation-message {
+  text-align: center;
+  color: red;
+  margin-top: 10px;
+}
 </style>
