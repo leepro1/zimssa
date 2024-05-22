@@ -3,14 +3,16 @@ import { ref, onMounted, watch, computed } from "vue";
 import { debounce } from "lodash";
 import { searchByKeyword, getDetail } from "@/api/house";
 import { getMapMarker } from "@/api/mapMarker";
+import { getJjim, postJjim, deleteJjim } from "@/api/jjim";
 import apartmentMarkerImage from "@/assets/apartment.png";
-import subwayMarkerImage from "@/assets/subway.png";
-import schoolMarkerImage from "@/assets/school.png";
-import hospitalMarkerImage from "@/assets/hospital.png";
-import seniorMarkerImage from "@/assets/hospital.png";
-import childMarkerImage from "@/assets/hospital.png";
-import impairmentMarkerImage from "@/assets/hospital.png";
-import homelessMarkerImage from "@/assets/hospital.png";
+import subwayMarkerImage from "@/assets/facilities/subway.png";
+import schoolMarkerImage from "@/assets/facilities/school.png";
+import hospitalMarkerImage from "@/assets/facilities/hospital.png";
+import seniorMarkerImage from "@/assets/facilities/senior.png";
+import childMarkerImage from "@/assets/facilities/child.png";
+import impairmentMarkerImage from "@/assets/facilities/impairment.png";
+import homelessMarkerImage from "@/assets/facilities/homeless.png";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const map = ref(null);
 const markers = ref([]);
@@ -20,6 +22,14 @@ const selectedApartment = ref(null);
 const selectedApartmentDetails = ref([]);
 const showSearchResults = ref(true);
 const selectedArea = ref("전체");
+
+const user = ref({
+  isLoggedIn: true,
+  id: "user123",
+});
+
+// 찜 목록
+const jjimList = ref([]);
 
 // 편의시설 리스트
 const subwayList = ref([]);
@@ -343,7 +353,7 @@ const displayMarkers = (markersData) => {
   });
 
   const content = `
-    <div class="info-window" style="background-color: #e1afd1; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px;">
+    <div style="background-color: #ad88c6; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px;">
       <div style="font-weight: bold; font-size: 14px;">${selectedApartment.value.aptName}</div>
       <div style="font-size: 12px;">${priceStats.value.min} 억 ~ ${priceStats.value.max} 억</div>
     </div>
@@ -381,6 +391,49 @@ const handleSearch = debounce(async () => {
   }
 }, 500);
 
+const fetchJjimList = async () => {
+  if (user.value.isLoggedIn) {
+    try {
+      jjimList.value = await getJjim(user.value.id);
+    } catch (error) {
+      console.error("Error fetching jjim list:", error);
+    }
+  }
+};
+
+const handleJjimToggle = async () => {
+  if (!user.value.isLoggedIn) return;
+
+  const existingJjim = jjimList.value.find(
+    (jjim) =>
+      jjim.location === selectedApartment.value.dongName &&
+      jjim.house_name === selectedApartment.value.aptName
+  );
+
+  try {
+    if (existingJjim) {
+      await deleteJjim(existingJjim.id);
+    } else {
+      await postJjim(
+        user.value.id,
+        selectedApartment.value.dongName,
+        selectedApartment.value.aptName
+      );
+    }
+    await fetchJjimList();
+  } catch (error) {
+    console.error("Error toggling jjim:", error);
+  }
+};
+
+const isJjimmed = computed(() => {
+  return jjimList.value.some(
+    (jjim) =>
+      jjim.location === selectedApartment.value.dongName &&
+      jjim.house_name === selectedApartment.value.aptName
+  );
+});
+
 const handleSelectApartment = async (apartment) => {
   selectedApartment.value = apartment;
   showSearchResults.value = false;
@@ -397,6 +450,7 @@ const handleSelectApartment = async (apartment) => {
         displayMarkers([apartmentDetail]);
         initRoadView(apartmentDetail.lat, apartmentDetail.lng);
       }
+      await fetchJjimList();
     } else {
       console.error("No details found for the selected apartment.");
     }
@@ -443,116 +497,67 @@ onMounted(() => {
 </script>
 
 <template>
-  <div style="position: relative; height: 87vh">
-    <div
-      style="
-        width: 30%;
-        height: 100%;
-        float: left;
-        padding: 16px;
-        box-sizing: border-box;
-        overflow-y: auto;
-        background-color: #f8f8f8;
-      "
-    >
+  <div class="container">
+    <div class="sidebar">
       <input
         v-model="searchQuery"
         type="text"
         placeholder="아파트 이름 검색"
-        style="
-          padding: 8px;
-          font-size: 16px;
-          width: 100%;
-          margin-bottom: 16px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        "
+        class="search-input"
       />
-      <div
-        v-if="showSearchResults && searchResults.length"
-        style="
-          background: white;
-          border: 1px solid #ccc;
-          max-height: 200px;
-          overflow-y: auto;
-          margin-bottom: 16px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        "
-      >
-        <ul style="list-style-type: none; padding: 0; margin: 0">
+      <div v-if="showSearchResults && searchResults.length" class="search-results">
+        <ul class="search-results-list">
           <li
             v-for="apartment in searchResults"
             :key="apartment.aptName"
             @click="handleSelectApartment(apartment)"
-            style="padding: 8px; cursor: pointer"
+            class="search-result-item"
           >
             {{ apartment.dongName }} - {{ apartment.aptName }}
           </li>
         </ul>
       </div>
       <div v-if="selectedApartmentDetails.length">
-        <h2>{{ selectedApartment.aptName }}</h2>
-        <p>
-          <strong>{{ selectedApartment.dongName }}</strong>
-        </p>
-        <div v-if="filteredDetails.length">
+        <div style="display: flex; justify-content: space-around">
           <div>
+            <h2>{{ selectedApartment.aptName }}</h2>
             <p>
-              {{ priceStats.min }}억원 ~ {{ priceStats.max }}억원 (평균 {{ priceStats.avg }}억원)
+              <strong>{{ selectedApartment.dongName }}</strong>
             </p>
           </div>
+          <div>
+            <button
+              v-if="user.isLoggedIn"
+              @click="handleJjimToggle"
+              :class="{ active: isJjimmed }"
+              class="jjim-button"
+            >
+              <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+            </button>
+          </div>
         </div>
-        <div
-          ref="roadViewContainer"
-          style="
-            width: 100%;
-            height: 300px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-          "
-        ></div>
-        <div>
-          <select
-            v-model="selectedArea"
-            style="
-              padding: 8px;
-              margin-bottom: 16px;
-              width: 100%;
-              border: 1px solid #ccc;
-              border-radius: 4px;
-            "
-          >
-            <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
-          </select>
+        <div ref="roadViewContainer" class="road-view-container"></div>
+        <div v-if="filteredDetails.length" class="price-stats">
+          <div class="price-range">
+            <div>{{ priceStats.min }}억원 ~ {{ priceStats.max }}억원</div>
+            <div>(평균 {{ priceStats.avg }}억원)</div>
+          </div>
+          <div>
+            <select v-model="selectedArea" class="area-select">
+              <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
+            </select>
+          </div>
         </div>
-        <ul style="padding: 0; list-style-type: none; max-height: 300px; overflow-y: auto">
-          <li
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 8px;
-              border-bottom: 1px solid #ccc;
-              background: #f0f0f0;
-              font-weight: bold;
-            "
-          >
+        <ul class="apartment-details-list">
+          <li class="apartment-details-header">
             <span>거래 날짜</span>
             <span>면적</span>
             <span>거래 가격</span>
-            <span>층</span>
           </li>
           <li
             v-for="detail in filteredDetails"
-            :key="detail.dealDate + detail.area + detail.floor"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 8px;
-              border-bottom: 1px solid #eee;
-              transition: background-color 0.2s;
-              cursor: pointer;
-            "
+            :key="detail.dealDate + detail.area"
+            class="apartment-detail-item"
           >
             <span>{{ detail.dealDate }}</span>
             <span>{{ detail.area }} ㎡</span>
@@ -562,140 +567,46 @@ onMounted(() => {
               }}
               억원</span
             >
-            <span>{{ detail.floor }}층</span>
           </li>
         </ul>
       </div>
     </div>
-    <div id="map" style="width: 70%; height: 100%; position: relative">
-      <div
-        style="position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column"
-      >
-        <button
-          @click="toggleSubwayMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #4caf50;
-          "
-        >
-          <div><img src="@/assets/subway.png" width="24px" /></div>
-          <div style="font-size: 10px">지하철</div>
-        </button>
 
-        <button
-          @click="toggleSchoolMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #2196f3;
-          "
-        >
-          <div><img src="@/assets/school.png" width="24px" /></div>
-          <div style="font-size: 10px">학교</div>
+    <div id="map" class="map-container">
+      <div class="map-buttons">
+        <button @click="toggleSubwayMarkers" class="map-button">
+          <div><img src="@/assets/facilities/subway.png" width="24px" /></div>
+          <div class="button-label">지하철</div>
         </button>
-
-        <button
-          @click="toggleHospitalMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #f44336;
-          "
-        >
-          <div><img src="@/assets/hospital.png" width="24px" /></div>
-          <div style="font-size: 10px">병원</div>
+        <button @click="toggleSchoolMarkers" class="map-button">
+          <div><img src="@/assets/facilities/school.png" width="24px" /></div>
+          <div class="button-label">학교</div>
         </button>
-
-        <button
-          @click="toggleSeniorMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #f44336;
-          "
-        >
-          <div><img src="@/assets/hospital.png" width="24px" /></div>
-          <div style="font-size: 10px">노인</div>
+        <button @click="toggleHospitalMarkers" class="map-button">
+          <div><img src="@/assets/facilities/hospital.png" width="24px" /></div>
+          <div class="button-label">병원</div>
         </button>
-
-        <button
-          @click="toggleChildMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #f44336;
-          "
-        >
-          <div><img src="@/assets/hospital.png" width="24px" /></div>
-          <div style="font-size: 10px">아동</div>
+        <button @click="toggleSeniorMarkers" class="map-button">
+          <div><img src="@/assets/facilities/senior.png" width="24px" /></div>
+          <div class="button-label">노인</div>
         </button>
-
-        <button
-          @click="toggleImpairmentMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #f44336;
-          "
-        >
-          <div><img src="@/assets/hospital.png" width="24px" /></div>
-          <div style="font-size: 10px">장애인</div>
+        <button @click="toggleChildMarkers" class="map-button">
+          <div><img src="@/assets/facilities/child.png" width="24px" /></div>
+          <div class="button-label">아동</div>
         </button>
-
-        <button
-          @click="toggleHomelessMarkers"
-          style="
-            margin-bottom: 5px;
-            padding: 10px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            z-index: 2;
-            background-color: #f44336;
-          "
-        >
-          <div><img src="@/assets/hospital.png" width="24px" /></div>
-          <div style="font-size: 10px">노숙인</div>
+        <button @click="toggleImpairmentMarkers" class="map-button">
+          <div><img src="@/assets/facilities/impairment.png" width="24px" /></div>
+          <div class="button-label">장애인</div>
+        </button>
+        <button @click="toggleHomelessMarkers" class="map-button">
+          <div><img src="@/assets/facilities/homeless.png" width="24px" /></div>
+          <div class="button-label">노숙인</div>
         </button>
       </div>
     </div>
   </div>
 </template>
-
 <style scoped>
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
-
 ul {
   padding: 0;
   margin: 0;
@@ -703,5 +614,149 @@ ul {
 
 li {
   list-style-type: none;
+}
+
+.container {
+  position: relative;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  height: 90vh;
+}
+
+.sidebar {
+  width: 30%;
+  height: 100%;
+  float: left;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-color: #f8f8f8;
+}
+
+.search-input {
+  padding: 8px;
+  font-size: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-results {
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-results-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-result-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.road-view-container {
+  width: 100%;
+  height: 300px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.price-stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.price-range {
+  display: flex;
+  flex-direction: column;
+}
+
+.area-select {
+  padding: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.apartment-details-list {
+  padding: 0;
+  list-style-type: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.apartment-details-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+.apartment-detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.map-container {
+  width: 70%;
+  height: 100%;
+  position: relative;
+  float: right;
+}
+
+.map-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-button {
+  margin-bottom: 5px;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  z-index: 2;
+  background-color: #ad88c6;
+}
+
+.button-label {
+  font-size: 10px;
+}
+
+button.active {
+  background-color: #d1a7e0;
+}
+
+.jjim-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #ad88c6;
+  transition: color 0.3s;
+}
+
+.jjim-button.active {
+  color: #ff6b6b;
 }
 </style>

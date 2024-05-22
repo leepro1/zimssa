@@ -44,6 +44,7 @@
         <result property="floor" column="floor"/>
         <result property="lat" column="lat"/>
         <result property="lng" column="lng"/>
+        <result property="buildYear" column="build_year"/>
     </resultMap>
 
     <select id="findAllAptDetailByMaeMae" parameterType="AptDetailRequestDto" resultMap="MaemaeResultMap">
@@ -54,7 +55,8 @@
             obj_amt,
             floor,
             lat,
-            lng
+            lng,
+            build_year
         FROM
             maemae_info
         WHERE
@@ -65,18 +67,21 @@
     </select>
 
     <resultMap id="JeonseResultMap" type="JeonseDetailResponseDto">
+        <result property="dealType" column="rent_gbn"/>
         <result property="houseType" column="house_gbn_nm"/>
         <result property="area" column="rent_area"/>
         <result property="dealDate" column="cntrct_de"/>
-        <result property="rentPrice" column="rent_gtn"/>
-        <result property="dealType" column="rent_fee"/>
+        <result property="dealPrice" column="rent_gtn"/>
+        <result property="rentPrice" column="rent_fee"/>
         <result property="floor" column="flr_no"/>
         <result property="lat" column="lat"/>
         <result property="lng" column="lng"/>
+        <result property="buildYear" column="build_year"/>
     </resultMap>
 
     <select id="findAllAptDetailByJeonse" parameterType="AptDetailRequestDto" resultMap="JeonseResultMap">
         SELECT
+            rent_gbn,
             house_gbn_nm,
             rent_area,
             cntrct_de,
@@ -84,7 +89,8 @@
             rent_fee,
             flr_no,
             lat,
-            lng
+            lng,
+            build_year
         FROM
             jeonse_info
         WHERE

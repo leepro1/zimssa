@@ -1,401 +1,844 @@
+<script setup>
+import { ref, onMounted, watch, computed } from "vue";
+import { debounce } from "lodash";
+import { searchByKeyword, getDetail } from "@/api/house";
+import { getMapMarker } from "@/api/mapMarker";
+import { getJjim, postJjim, deleteJjim } from "@/api/jjim";
+import apartmentMarkerImage from "@/assets/apartment.png";
+import subwayMarkerImage from "@/assets/facilities/subway.png";
+import schoolMarkerImage from "@/assets/facilities/school.png";
+import hospitalMarkerImage from "@/assets/facilities/hospital.png";
+import seniorMarkerImage from "@/assets/facilities/senior.png";
+import childMarkerImage from "@/assets/facilities/child.png";
+import impairmentMarkerImage from "@/assets/facilities/impairment.png";
+import homelessMarkerImage from "@/assets/facilities/homeless.png";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+const map = ref(null);
+const markers = ref([]);
+const searchQuery = ref("");
+const searchResults = ref([]);
+const selectedApartment = ref(null);
+const selectedApartmentDetails = ref([]);
+const showSearchResults = ref(true);
+const selectedArea = ref("전체");
+
+// 로그인된 사용자 정보 (예시)
+const user = ref({
+  isLoggedIn: true,
+  id: "user123",
+});
+
+// 찜 목록
+const jjimList = ref([]);
+
+// 편의시설 리스트
+const subwayList = ref([]);
+const schoolList = ref([]);
+const hospitalList = ref([]);
+const seniorList = ref([]);
+const childList = ref([]);
+const impairmentList = ref([]);
+const homelessList = ref([]);
+
+// 편의시설 마커 리스트
+const subwayMarkers = ref([]);
+const schoolMarkers = ref([]);
+const hospitalMarkers = ref([]);
+const seniorMarkers = ref([]);
+const childMarkers = ref([]);
+const impairmentMarkers = ref([]);
+const homelessMarkers = ref([]);
+
+// 전세/월세 토글 상태
+const dealType = ref("전세");
+
+// 지도 중심
+const center = ref({ lat: 37.5665, lng: 126.978 });
+const roadViewContainer = ref(null);
+
+const getMapMarkerFilter = async () => {
+  subwayList.value = await getMapMarker("subway");
+  schoolList.value = await getMapMarker("school");
+  hospitalList.value = await getMapMarker("hospital");
+  seniorList.value = await getMapMarker("senior");
+  childList.value = await getMapMarker("child");
+  impairmentList.value = await getMapMarker("impairment");
+  homelessList.value = await getMapMarker("homeless");
+};
+
+const initMap = () => {
+  const mapContainer = document.getElementById("map");
+  const mapOption = {
+    center: new kakao.maps.LatLng(center.value.lat, center.value.lng),
+    level: 3,
+  };
+  map.value = new kakao.maps.Map(mapContainer, mapOption);
+
+  kakao.maps.event.addListener(map.value, "tilesloaded", () => {
+    addEventListeners();
+    updateMarkers();
+  });
+};
+
+const addEventListeners = () => {
+  kakao.maps.event.addListener(map.value, "dragend", () => {
+    const mapCenter = map.value.getCenter();
+    center.value.lat = mapCenter.getLat();
+    center.value.lng = mapCenter.getLng();
+    updateMarkers();
+  });
+  kakao.maps.event.addListener(map.value, "zoom_changed", () => {
+    updateMarkers();
+  });
+};
+
+const updateMarkers = () => {
+  const level = map.value.getLevel();
+
+  if (level > 5) {
+    markers.value.forEach((marker) => marker.setMap(null));
+    subwayMarkers.value.forEach((marker) => marker.setMap(null));
+    schoolMarkers.value.forEach((marker) => marker.setMap(null));
+    hospitalMarkers.value.forEach((marker) => marker.setMap(null));
+    seniorMarkers.value.forEach((marker) => marker.setMap(null));
+    childMarkers.value.forEach((marker) => marker.setMap(null));
+    impairmentMarkers.value.forEach((marker) => marker.setMap(null));
+    homelessMarkers.value.forEach((marker) => marker.setMap(null));
+    return;
+  }
+
+  markers.value.forEach((marker) => {
+    marker.setMap(null);
+  });
+  markers.value = [];
+
+  displayMarkers(selectedApartmentDetails.value);
+
+  displaySubwayMarkers();
+  displaySchoolMarkers();
+  displayHospitalMarkers();
+  displaySeniorMarkers();
+  displayChildMarkers();
+  displayImpairmentMarkers();
+  displayHomelessMarkers();
+};
+
+const subwayMarkersVisible = ref(false);
+const schoolMarkersVisible = ref(false);
+const hospitalMarkersVisible = ref(false);
+const seniorMarkersVisible = ref(false);
+const childMarkersVisible = ref(false);
+const impairmentMarkersVisible = ref(false);
+const homelessMarkersVisible = ref(false);
+
+const toggleSubwayMarkers = () => {
+  subwayMarkersVisible.value = !subwayMarkersVisible.value;
+  subwayMarkers.value.forEach((marker) =>
+    marker.setMap(subwayMarkersVisible.value ? map.value : null)
+  );
+};
+
+const toggleSchoolMarkers = () => {
+  schoolMarkersVisible.value = !schoolMarkersVisible.value;
+  schoolMarkers.value.forEach((marker) =>
+    marker.setMap(schoolMarkersVisible.value ? map.value : null)
+  );
+};
+
+const toggleHospitalMarkers = () => {
+  hospitalMarkersVisible.value = !hospitalMarkersVisible.value;
+  hospitalMarkers.value.forEach((marker) =>
+    marker.setMap(hospitalMarkersVisible.value ? map.value : null)
+  );
+};
+
+const toggleSeniorMarkers = () => {
+  seniorMarkersVisible.value = !seniorMarkersVisible.value;
+  seniorMarkers.value.forEach((marker) =>
+    marker.setMap(seniorMarkersVisible.value ? map.value : null)
+  );
+};
+
+const toggleChildMarkers = () => {
+  childMarkersVisible.value = !childMarkersVisible.value;
+  childMarkers.value.forEach((marker) =>
+    marker.setMap(childMarkersVisible.value ? map.value : null)
+  );
+};
+
+const toggleImpairmentMarkers = () => {
+  impairmentMarkersVisible.value = !impairmentMarkersVisible.value;
+  impairmentMarkers.value.forEach((marker) =>
+    marker.setMap(impairmentMarkersVisible.value ? map.value : null)
+  );
+};
+
+const toggleHomelessMarkers = () => {
+  homelessMarkersVisible.value = !homelessMarkersVisible.value;
+  homelessMarkers.value.forEach((marker) =>
+    marker.setMap(homelessMarkersVisible.value ? map.value : null)
+  );
+};
+
+const displaySubwayMarkers = () => {
+  if (!subwayMarkersVisible.value) return;
+
+  subwayMarkers.value.forEach((marker) => marker.setMap(null));
+  subwayMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  subwayList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(subwayMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      subwayMarkers.value.push(marker);
+    }
+  });
+};
+
+const displaySchoolMarkers = () => {
+  if (!schoolMarkersVisible.value) return;
+
+  schoolMarkers.value.forEach((marker) => marker.setMap(null));
+  schoolMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  schoolList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(schoolMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      schoolMarkers.value.push(marker);
+    }
+  });
+};
+
+const displayHospitalMarkers = () => {
+  if (!hospitalMarkersVisible.value) return;
+
+  hospitalMarkers.value.forEach((marker) => marker.setMap(null));
+  hospitalMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  hospitalList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(hospitalMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      hospitalMarkers.value.push(marker);
+    }
+  });
+};
+
+const displaySeniorMarkers = () => {
+  if (!seniorMarkersVisible.value) return;
+
+  seniorMarkers.value.forEach((marker) => marker.setMap(null));
+  seniorMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  seniorList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(seniorMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      seniorMarkers.value.push(marker);
+    }
+  });
+};
+
+const displayChildMarkers = () => {
+  if (!childMarkersVisible.value) return;
+
+  childMarkers.value.forEach((marker) => marker.setMap(null));
+  childMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  childList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(childMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      childMarkers.value.push(marker);
+    }
+  });
+};
+
+const displayImpairmentMarkers = () => {
+  if (!impairmentMarkersVisible.value) return;
+
+  impairmentMarkers.value.forEach((marker) => marker.setMap(null));
+  impairmentMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  impairmentList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(impairmentMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      impairmentMarkers.value.push(marker);
+    }
+  });
+};
+
+const displayHomelessMarkers = () => {
+  if (!homelessMarkersVisible.value) return;
+
+  homelessMarkers.value.forEach((marker) => marker.setMap(null));
+  homelessMarkers.value = [];
+
+  const bounds = map.value.getBounds();
+
+  homelessList.value.forEach((data) => {
+    const position = new kakao.maps.LatLng(data.lat, data.lng);
+    if (bounds.contain(position)) {
+      const marker = new kakao.maps.Marker({
+        position,
+        map: map.value,
+        title: data.name,
+        image: new kakao.maps.MarkerImage(homelessMarkerImage, new kakao.maps.Size(24, 24)),
+      });
+      homelessMarkers.value.push(marker);
+    }
+  });
+};
+
+const initRoadView = (lat, lng) => {
+  if (roadViewContainer.value) {
+    const roadview = new kakao.maps.Roadview(roadViewContainer.value);
+    const roadviewClient = new kakao.maps.RoadviewClient();
+    const position = new kakao.maps.LatLng(lat, lng);
+
+    roadviewClient.getNearestPanoId(position, 50, function (panoId) {
+      roadview.setPanoId(panoId, position);
+    });
+  }
+};
+
+const displayMarkers = (markersData) => {
+  if (markersData.length === 0) return;
+
+  const data = markersData[0];
+  const position = new kakao.maps.LatLng(data.lat, data.lng);
+
+  const markerImage = new kakao.maps.MarkerImage(apartmentMarkerImage, new kakao.maps.Size(40, 40));
+
+  const marker = new kakao.maps.Marker({
+    position,
+    map: map.value,
+    image: markerImage,
+  });
+
+  const content = `
+    <div style="background-color: #ad88c6; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px;">
+      <div style="font-weight: bold; font-size: 14px;">${selectedApartment.value.aptName}</div>
+      <div style="font-size: 12px;">${jeonsePriceStats.value.min} 억 ~ ${jeonsePriceStats.value.max} 억</div>
+    </div>
+  `;
+
+  const infoWindow = new kakao.maps.InfoWindow({
+    content,
+    removable: false,
+    disableAutoPan: false,
+  });
+
+  const contentDiv = document.createElement("div");
+  contentDiv.innerHTML = content;
+
+  setTimeout(() => {
+    infoWindow.setContent(contentDiv);
+    infoWindow.open(map.value, marker);
+  }, 0);
+
+  markers.value.push(marker);
+};
+
+const handleSearch = debounce(async () => {
+  if (searchQuery.value.trim() !== "") {
+    try {
+      searchResults.value = await searchByKeyword("jeonse_info", searchQuery.value);
+      showSearchResults.value = true;
+      console.log(searchResults.value);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  } else {
+    searchResults.value = [];
+    showSearchResults.value = false;
+  }
+}, 500);
+
+const fetchJjimList = async () => {
+  if (user.value.isLoggedIn) {
+    try {
+      jjimList.value = await getJjim(user.value.id);
+    } catch (error) {
+      console.error("Error fetching jjim list:", error);
+    }
+  }
+};
+
+const handleJjimToggle = async () => {
+  if (!user.value.isLoggedIn) return;
+
+  const existingJjim = jjimList.value.find(
+    (jjim) =>
+      jjim.location === selectedApartment.value.dongName &&
+      jjim.house_name === selectedApartment.value.aptName
+  );
+
+  try {
+    if (existingJjim) {
+      await deleteJjim(existingJjim.id);
+    } else {
+      await postJjim(
+        user.value.id,
+        selectedApartment.value.dongName,
+        selectedApartment.value.aptName
+      );
+    }
+    await fetchJjimList();
+  } catch (error) {
+    console.error("Error toggling jjim:", error);
+  }
+};
+
+const isJjimmed = computed(() => {
+  return jjimList.value.some(
+    (jjim) =>
+      jjim.location === selectedApartment.value.dongName &&
+      jjim.house_name === selectedApartment.value.aptName
+  );
+});
+
+const handleSelectApartment = async (apartment) => {
+  selectedApartment.value = apartment;
+  showSearchResults.value = false;
+  selectedArea.value = "전체";
+  try {
+    const detail = await getDetail("jeonse_info", apartment.dongName, apartment.aptName);
+    if (detail && detail.length > 0) {
+      selectedApartmentDetails.value = detail;
+      const apartmentDetail = detail[0];
+      if (map.value) {
+        const position = new kakao.maps.LatLng(apartmentDetail.lat, apartmentDetail.lng);
+        map.value.setCenter(position);
+        map.value.setLevel(3);
+        displayMarkers([apartmentDetail]);
+        initRoadView(apartmentDetail.lat, apartmentDetail.lng);
+      }
+      await fetchJjimList();
+    } else {
+      console.error("No details found for the selected apartment.");
+    }
+  } catch (error) {
+    console.error("Error fetching apartment details:", error);
+  }
+};
+
+const uniqueAreas = computed(() => {
+  const areas = new Set(selectedApartmentDetails.value.map((detail) => detail.area));
+  return ["전체", ...Array.from(areas).sort((a, b) => parseFloat(a) - parseFloat(b))];
+});
+
+const filteredJeonseDetails = computed(() => {
+  if (selectedArea.value === "전체") {
+    return selectedApartmentDetails.value.filter((detail) => detail.dealType === "전세");
+  }
+  return selectedApartmentDetails.value.filter(
+    (detail) => detail.dealType === "전세" && detail.area === selectedArea.value
+  );
+});
+
+const filteredWolseDetails = computed(() => {
+  if (selectedArea.value === "전체") {
+    return selectedApartmentDetails.value.filter((detail) => detail.dealType === "월세");
+  }
+  return selectedApartmentDetails.value.filter(
+    (detail) => detail.dealType === "월세" && detail.area === selectedArea.value
+  );
+});
+
+const jeonsePriceStats = computed(() => {
+  if (filteredJeonseDetails.value.length === 0) return { min: 0, max: 0, avg: 0 };
+
+  const prices = filteredJeonseDetails.value.map((detail) =>
+    parseInt(detail.dealPrice.replace(/,/g, ""), 10)
+  );
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const avg = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+
+  return {
+    min: (min / 10000).toFixed(2),
+    max: (max / 10000).toFixed(2),
+    avg: (avg / 10000).toFixed(2),
+  };
+});
+
+const wolsePriceStats = computed(() => {
+  if (filteredWolseDetails.value.length === 0) return { min: 0, max: 0, avg: 0 };
+
+  const prices = filteredWolseDetails.value.map((detail) =>
+    parseInt(detail.dealPrice.replace(/,/g, ""), 10)
+  );
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const avg = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+
+  return {
+    min: (min / 10000).toFixed(2),
+    max: (max / 10000).toFixed(2),
+    avg: (avg / 10000).toFixed(2),
+  };
+});
+
+watch(searchQuery, handleSearch);
+
+onMounted(() => {
+  initMap();
+  getMapMarkerFilter();
+});
+</script>
+
 <template>
-  <div>
-    <p style="margin-top: -12px">
-      <em class="link">
-        <a href="/web/documentation/#CategoryCode" target="_blank"
-          >카테고리 코드목록을 보시려면 여기를 클릭하세요!</a
-        >
-      </em>
-    </p>
-    <div class="map_wrap">
-      <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
-      <ul id="category">
-        <li id="CS2" data-order="0">
-          <span class="category_bg store"></span>
-          편의점
-        </li>
-        <li id="PS3" data-order="1">
-          <span class="category_bg kindergarten"></span>
-          어린이집, 유치원
-        </li>
-        <li id="SC4" data-order="2">
-          <span class="category_bg school"></span>
-          학교
-        </li>
-        <li id="PK6" data-order="3">
-          <span class="category_bg parking"></span>
-          주차장
-        </li>
-        <li id="OL7" data-order="4">
-          <span class="category_bg oil"></span>
-          주유소, 충전소
-        </li>
-        <li id="SW8" data-order="5">
-          <span class="category_bg subway"></span>
-          지하철역
-        </li>
-        <li id="BK9" data-order="6">
-          <span class="category_bg bank"></span>
-          은행
-        </li>
-        <li id="CT1" data-order="7">
-          <span class="category_bg culture"></span>
-          문화시설
-        </li>
-        <li id="AG2" data-order="8">
-          <span class="category_bg real_estate"></span>
-          중개업소
-        </li>
-        <li id="PO3" data-order="9">
-          <span class="category_bg public_office"></span>
-          공공기관
-        </li>
-        <li id="CE7" data-order="10">
-          <span class="category_bg cafe"></span>
-          카페
-        </li>
-        <li id="HP8" data-order="11">
-          <span class="category_bg hospital"></span>
-          병원
-        </li>
-        <li id="PM9" data-order="12">
-          <span class="category_bg pharmacy"></span>
-          약국
-        </li>
-      </ul>
+  <div class="container">
+    <div class="sidebar">
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="아파트 이름 검색"
+        class="search-input"
+      />
+      <div v-if="showSearchResults && searchResults.length" class="search-results">
+        <ul class="search-results-list">
+          <li
+            v-for="apartment in searchResults"
+            :key="apartment.aptName"
+            @click="handleSelectApartment(apartment)"
+            class="search-result-item"
+          >
+            {{ apartment.dongName }} - {{ apartment.aptName }}
+          </li>
+        </ul>
+      </div>
+      <div v-if="selectedApartmentDetails.length">
+        <div style="display: flex; justify-content: space-around">
+          <div>
+            <h2>{{ selectedApartment.aptName }}</h2>
+            <p>
+              <strong>{{ selectedApartment.dongName }}</strong>
+            </p>
+          </div>
+          <div>
+            <button
+              v-if="user.isLoggedIn"
+              @click="handleJjimToggle"
+              :class="{ active: isJjimmed }"
+              class="jjim-button"
+            >
+              <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+            </button>
+          </div>
+        </div>
+        <div ref="roadViewContainer" class="road-view-container"></div>
+        <div>
+          <button @click="dealType = '전세'" :class="{ active: dealType === '전세' }">전세</button>
+          <button @click="dealType = '월세'" :class="{ active: dealType === '월세' }">월세</button>
+        </div>
+        <div v-if="dealType === '전세'">
+          <div>
+            <div class="price-stats">
+              <div class="price-range">
+                <div>{{ jeonsePriceStats.min }}억원 ~ {{ jeonsePriceStats.max }}억원</div>
+                <div>(평균 {{ jeonsePriceStats.avg }}억원)</div>
+              </div>
+              <div>
+                <select v-model="selectedArea" class="area-select">
+                  <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
+                </select>
+              </div>
+            </div>
+            <ul class="apartment-details-list">
+              <li class="apartment-details-header">
+                <span>거래 날짜</span>
+                <span>면적</span>
+                <span>보증금</span>
+              </li>
+              <li
+                v-for="detail in filteredJeonseDetails"
+                :key="detail.dealDate + detail.area"
+                class="apartment-detail-item"
+              >
+                <span>{{ detail.dealDate }}</span>
+                <span>{{ detail.area }} ㎡</span>
+                <span
+                  >{{
+                    (parseInt(detail.dealPrice.replace(/,/g, ""), 10) / 10000).toFixed(2)
+                  }}
+                  억원</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div v-if="dealType === '월세'">
+          <div>
+            <div class="price-stats">
+              <div class="price-range">
+                <div>{{ wolsePriceStats.min }}억원 ~ {{ wolsePriceStats.max }}억원</div>
+                <div>(평균 {{ wolsePriceStats.avg }}억원)</div>
+              </div>
+              <div>
+                <select v-model="selectedArea" class="area-select">
+                  <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
+                </select>
+              </div>
+            </div>
+            <ul class="apartment-details-list">
+              <li class="apartment-details-header">
+                <span>거래 날짜</span>
+                <span>면적</span>
+                <span>보증금</span>
+              </li>
+              <li
+                v-for="detail in filteredWolseDetails"
+                :key="detail.dealDate + detail.area"
+                class="apartment-detail-item"
+              >
+                <span>{{ detail.dealDate }}</span>
+                <span>{{ detail.area }} ㎡</span>
+                <span
+                  >{{
+                    (parseInt(detail.dealPrice.replace(/,/g, ""), 10) / 10000).toFixed(2)
+                  }}
+                  억원</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="map" class="map-container">
+      <div class="map-buttons">
+        <button @click="toggleSubwayMarkers" class="map-button">
+          <div><img src="@/assets/facilities/subway.png" width="24px" /></div>
+          <div class="button-label">지하철</div>
+        </button>
+        <button @click="toggleSchoolMarkers" class="map-button">
+          <div><img src="@/assets/facilities/school.png" width="24px" /></div>
+          <div class="button-label">학교</div>
+        </button>
+        <button @click="toggleHospitalMarkers" class="map-button">
+          <div><img src="@/assets/facilities/hospital.png" width="24px" /></div>
+          <div class="button-label">병원</div>
+        </button>
+        <button @click="toggleSeniorMarkers" class="map-button">
+          <div><img src="@/assets/facilities/senior.png" width="24px" /></div>
+          <div class="button-label">노인</div>
+        </button>
+        <button @click="toggleChildMarkers" class="map-button">
+          <div><img src="@/assets/facilities/child.png" width="24px" /></div>
+          <div class="button-label">아동</div>
+        </button>
+        <button @click="toggleImpairmentMarkers" class="map-button">
+          <div><img src="@/assets/facilities/impairment.png" width="24px" /></div>
+          <div class="button-label">장애인</div>
+        </button>
+        <button @click="toggleHomelessMarkers" class="map-button">
+          <div><img src="@/assets/facilities/homeless.png" width="24px" /></div>
+          <div class="button-label">노숙인</div>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { onMounted } from "vue";
-
-onMounted(() => {
-  var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
-    contentNode = document.createElement("div"),
-    markers = [],
-    currCategory = "";
-
-  var mapContainer = document.getElementById("map"),
-    mapOption = {
-      center: new kakao.maps.LatLng(37.566826, 126.9786567),
-      level: 5,
-    };
-
-  var map = new kakao.maps.Map(mapContainer, mapOption);
-  var ps = new kakao.maps.services.Places(map);
-
-  kakao.maps.event.addListener(map, "idle", searchPlaces);
-
-  contentNode.className = "placeinfo_wrap";
-  addEventHandle(contentNode, "mousedown", kakao.maps.event.preventMap);
-  addEventHandle(contentNode, "touchstart", kakao.maps.event.preventMap);
-  placeOverlay.setContent(contentNode);
-
-  addCategoryClickEvent();
-
-  function addEventHandle(target, type, callback) {
-    if (target.addEventListener) {
-      target.addEventListener(type, callback);
-    } else {
-      target.attachEvent("on" + type, callback);
-    }
-  }
-
-  function searchPlaces() {
-    if (!currCategory) {
-      return;
-    }
-
-    placeOverlay.setMap(null);
-    removeMarker();
-    ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
-  }
-
-  function placesSearchCB(data, status, pagination) {
-    if (status === kakao.maps.services.Status.OK) {
-      displayPlaces(data);
-    }
-  }
-
-  function displayPlaces(places) {
-    var order = document.getElementById(currCategory).getAttribute("data-order");
-
-    for (var i = 0; i < places.length; i++) {
-      var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order);
-
-      (function (marker, place) {
-        kakao.maps.event.addListener(marker, "click", function () {
-          displayPlaceInfo(place);
-        });
-      })(marker, places[i]);
-    }
-  }
-
-  function addMarker(position, order) {
-    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png",
-      imageSize = new kakao.maps.Size(27, 28),
-      imgOptions = {
-        spriteSize: new kakao.maps.Size(72, 208),
-        spriteOrigin: new kakao.maps.Point(46, order * 36),
-        offset: new kakao.maps.Point(11, 28),
-      },
-      markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-      marker = new kakao.maps.Marker({
-        position: position,
-        image: markerImage,
-      });
-
-    marker.setMap(map);
-    markers.push(marker);
-
-    return marker;
-  }
-
-  function removeMarker() {
-    for (var i = 0; i < markers.length; i++) {
-      markers[i].setMap(null);
-    }
-    markers = [];
-  }
-
-  function displayPlaceInfo(place) {
-    var content =
-      '<div class="placeinfo">' +
-      '   <a class="title" href="' +
-      place.place_url +
-      '" target="_blank" title="' +
-      place.place_name +
-      '">' +
-      place.place_name +
-      "</a>";
-
-    if (place.road_address_name) {
-      content +=
-        '    <span title="' +
-        place.road_address_name +
-        '">' +
-        place.road_address_name +
-        "</span>" +
-        '  <span class="jibun" title="' +
-        place.address_name +
-        '">(지번 : ' +
-        place.address_name +
-        ")</span>";
-    } else {
-      content += '    <span title="' + place.address_name + '">' + place.address_name + "</span>";
-    }
-
-    content +=
-      '<span class="tel">' + place.phone + "</span>" + "</div>" + '<div class="after"></div>';
-
-    contentNode.innerHTML = content;
-    placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
-    placeOverlay.setMap(map);
-  }
-
-  function addCategoryClickEvent() {
-    var category = document.getElementById("category"),
-      children = category.children;
-
-    for (var i = 0; i < children.length; i++) {
-      children[i].onclick = onClickCategory;
-    }
-  }
-
-  function onClickCategory() {
-    var id = this.id,
-      className = this.className;
-
-    placeOverlay.setMap(null);
-
-    if (className === "on") {
-      currCategory = "";
-      changeCategoryClass();
-      removeMarker();
-    } else {
-      currCategory = id;
-      changeCategoryClass(this);
-      searchPlaces();
-    }
-  }
-
-  function changeCategoryClass(el) {
-    var category = document.getElementById("category"),
-      children = category.children,
-      i;
-
-    for (i = 0; i < children.length; i++) {
-      children[i].className = "";
-    }
-
-    if (el) {
-      el.className = "on";
-    }
-  }
-});
-</script>
-
 <style scoped>
-.map_wrap,
-.map_wrap * {
-  margin: 0;
+ul {
   padding: 0;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
-  font-size: 12px;
+  margin: 0;
 }
-.map_wrap {
+
+li {
+  list-style-type: none;
+}
+
+.container {
   position: relative;
+  margin: 0 auto;
+  padding: 0;
   width: 100%;
-  height: 350px;
+  height: 90vh;
 }
-#category {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  border-radius: 5px;
-  border: 1px solid #909090;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-  background: #fff;
-  overflow: hidden;
-  z-index: 2;
-}
-#category li {
+
+.sidebar {
+  width: 30%;
+  height: 100%;
   float: left;
-  list-style: none;
-  width: 50px;
-  border-right: 1px solid #acacac;
-  padding: 6px 0;
-  text-align: center;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-color: #f8f8f8;
+}
+
+.search-input {
+  padding: 8px;
+  font-size: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-results {
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-results-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-result-item {
+  padding: 8px;
   cursor: pointer;
 }
-#category li.on {
-  background: #eee;
-}
-#category li:hover {
-  background: #ffe6e6;
-  border-left: 1px solid #acacac;
-  margin-left: -1px;
-}
-#category li:last-child {
-  margin-right: 0;
-  border-right: 0;
-}
-#category li span {
-  display: block;
-  margin: 0 auto 3px;
-  width: 27px;
-  height: 28px;
-}
-#category li .category_bg {
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png)
-    no-repeat;
-}
-#category li .store {
-  background-position: -10px -180px;
-}
-#category li .kindergarten {
-  background-position: -10px -216px;
-}
-#category li .school {
-  background-position: -10px -252px;
-}
-#category li .parking {
-  background-position: -10px -288px;
-}
-#category li .oil {
-  background-position: -10px -324px;
-}
-#category li .subway {
-  background-position: -10px -360px;
-}
-#category li .bank {
-  background-position: -10px -396px;
-}
-#category li .culture {
-  background-position: -10px -432px;
-}
-#category li .real_estate {
-  background-position: -10px -468px;
-}
-#category li .public_office {
-  background-position: -10px -504px;
-}
-#category li .cafe {
-  background-position: -10px -540px;
-}
-#category li .hospital {
-  background-position: -10px -576px;
-}
-#category li .pharmacy {
-  background-position: -10px -612px;
-}
-#category li.on .category_bg {
-  background-position-x: -46px;
-}
-.placeinfo_wrap {
-  position: absolute;
-  bottom: 28px;
-  left: -150px;
-  width: 300px;
-}
-.placeinfo {
-  position: relative;
+
+.road-view-container {
   width: 100%;
-  border-radius: 6px;
+  height: 300px;
+  margin-bottom: 16px;
   border: 1px solid #ccc;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
-  background: #fff;
+  border-radius: 4px;
 }
-.placeinfo:nth-of-type(n) {
-  border: 0;
-  box-shadow: 0px 1px 2px #888;
+
+.price-stats {
+  display: flex;
+  justify-content: space-around;
 }
-.placeinfo_wrap .after {
-  content: "";
-  position: relative;
-  margin-left: -12px;
-  left: 50%;
-  width: 22px;
-  height: 12px;
-  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+
+.price-range {
+  display: flex;
+  flex-direction: column;
 }
-.placeinfo a,
-.placeinfo a:hover,
-.placeinfo a:active {
-  color: #fff;
-  text-decoration: none;
+
+.area-select {
+  padding: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-.placeinfo a,
-.placeinfo span {
-  display: block;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+
+.apartment-details-list {
+  padding: 0;
+  list-style-type: none;
+  max-height: 300px;
+  overflow-y: auto;
 }
-.placeinfo span {
-  margin: 5px 5px 0 5px;
-  cursor: default;
-  font-size: 13px;
-}
-.placeinfo .title {
+
+.apartment-details-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+  background: #f0f0f0;
   font-weight: bold;
-  font-size: 14px;
-  border-radius: 6px 6px 0 0;
-  margin: -1px -1px 0 -1px;
+}
+
+.apartment-detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.map-container {
+  width: 70%;
+  height: 100%;
+  position: relative;
+  float: right;
+}
+
+.map-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-button {
+  margin-bottom: 5px;
   padding: 10px;
-  color: #fff;
-  background: #d95050;
-  background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png)
-    no-repeat right 14px center;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  z-index: 2;
+  background-color: #ad88c6;
 }
-.placeinfo .tel {
-  color: #0f7833;
+
+.button-label {
+  font-size: 10px;
 }
-.placeinfo .jibun {
-  color: #999;
-  font-size: 11px;
-  margin-top: 0;
+
+button.active {
+  background-color: #d1a7e0;
+}
+
+.jjim-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #ad88c6;
+  transition: color 0.3s;
+}
+
+.jjim-button.active {
+  color: #ff6b6b;
 }
 </style>

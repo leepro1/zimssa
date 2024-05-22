@@ -19,5 +19,5 @@ public class MaemaeDetailResponseDto {
     private String floor;
     private String lat;
     private String lng;
-
+    private String buildYear;
 }

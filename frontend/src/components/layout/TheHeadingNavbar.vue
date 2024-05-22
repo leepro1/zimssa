@@ -23,7 +23,12 @@ const logout = () => {
   <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top navClass">
     <div class="container-fluid">
       <router-link :to="{ name: 'main' }" class="navbar-brand">
-        <img src="@/assets/zimssa6.jpg" class="rounded mx-auto d-block" alt="..." />
+        <img
+          src="@/assets/zimssa.png"
+          class="rounded mx-auto d-block"
+          style="height: 8vh"
+          alt="..."
+        />
       </router-link>
       <button
         class="navbar-toggler"
@@ -46,11 +51,6 @@ const logout = () => {
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'jeonse' }" class="nav-link">전월세 실거래가</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link :to="{ name: 'junseproduct' }" class="nav-link"
-              >전세보증상품 추천</router-link
-            >
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'junseproduct' }" class="nav-link"

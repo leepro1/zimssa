@@ -8,7 +8,7 @@ import Chatbot from "@/components/chatbot/Chatbot.vue"; // Chatbot 컴포넌트�
   <div>
     <TheHeadingNavbar></TheHeadingNavbar>
     <router-view></router-view>
-    <Chatbot /> 
+    <Chatbot />
   </div>
 </template>
 

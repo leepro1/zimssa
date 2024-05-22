@@ -20,5 +20,6 @@ public class JeonseDetailResponseDto {
     private String floor; //flr_no
     private String lat;
     private String lng;
+    private String buildYear;
 
 }
