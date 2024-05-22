@@ -5,7 +5,7 @@
       <form @submit.prevent="submitForm">
         <div class="form-group">
           <label for="rentGrntAmt">임차보증금액</label>
-          <input type="text" id="rentGrntAmt" v-model="formData.rentGrntAmt" />
+          <input placeholder="200000000"  type="text" id="rentGrntAmt" v-model="formData.rentGrntAmt" />
         </div>
         <div class="form-group">
           <label for="trgtLwdgCd">지역</label>
@@ -46,15 +46,15 @@
         </div>
         <div class="form-group">
           <label for="myIncmAmt">연 소득금액</label>
-          <input type="text" id="myIncmAmt" v-model="formData.myIncmAmt" />
+          <input placeholder="65000000" type="text" id="myIncmAmt" v-model="formData.myIncmAmt" />
         </div>
         <div class="form-group">
           <label for="myTotDebtAmt">총 부채금액</label>
-          <input type="text" id="myTotDebtAmt" v-model="formData.myTotDebtAmt" />
+          <input placeholder="50000000" type="text" id="myTotDebtAmt" v-model="formData.myTotDebtAmt" />
         </div>
         <div class="form-group">
           <label for="ownHsCnt">주택보유수</label>
-          <input type="text" id="ownHsCnt" v-model="formData.ownHsCnt" />
+          <input placeholder="1" type="text" id="ownHsCnt" v-model="formData.ownHsCnt" />
         </div>
         <div class="form-group">
           <label for="grntPrmeActnDvcdCont">보증 우대 구분</label>
@@ -99,26 +99,10 @@
     <div class="form-group">
       <label>추천 상품 이름:</label>
       <div>{{ responseData.rcmdProdNm }}</div>
-<<<<<<< HEAD
     </div>
     <div class="form-group">
-      <label>임차 보증금액 최대 한도율:</label>
-      <div>{{ responseData.rentGrntMaxLoanLmtRate }}</div>
-    </div>
-    <div class="form-group">
-      <label>요청 대상 내용:</label>
-      <div>{{ responseData.reqTrgtCont }}</div>
-    </div>
-    <div class="form-group">
-      <label>이자 지원 내용:</label>
-      <div>{{ responseData.intSprtCont }}</div>
-    </div>
-    <div class="form-group">
-=======
-    </div>
-    <div class="form-group">
-      <label>임차 보증금액 최대 한도율:</label>
-      <div>{{ responseData.rentGrntMaxLoanLmtRate }}</div>
+      <label >임차 보증금액 최대 한도율:</label>
+      <div >{{ responseData.rentGrntMaxLoanLmtRate }}</div>
     </div>
     <div class="form-group">
       <label>요청 대상 내용:</label>
@@ -129,7 +113,6 @@
       <div>{{ responseData.intSprtCont }}</div>
     </div>
     <div class="form-group">
->>>>>>> origin
       <label>최대 대출 한도 금액:</label>
       <div>{{ responseData.maxLoanLmtAmt }}</div>
   </div>

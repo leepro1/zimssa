@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="input-area">
-        <input v-model="question" @keyup.enter="sendQuestion" placeholder="Type your question here..." />
+        <input v-model="question" @keyup.enter="sendQuestion" placeholder="질문 입력" />
         <button @click="sendQuestion">Send</button>
       </div>
     </div>

@@ -115,7 +115,7 @@ public class MemberServiceImpl implements MemberService{
 
 
 		message.setTo(mailDto.getAddress());
-		message.setFrom("ssafytestpjt@gmail.com");
+		message.setFrom("wjdals05070@gmail.com");
 		message.setSubject(mailDto.getTitle());
 		message.setText(mailDto.getMessage());
 		System.out.println(message);

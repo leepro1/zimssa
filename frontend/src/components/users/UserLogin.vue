@@ -47,6 +47,7 @@ const closeFindPasswordModal = () => {
 }
 
 const findPassword = async () => {
+  
   try {
     await findPasswordAPI(findPasswordUserId.value, 
       response => {
@@ -62,6 +63,9 @@ const findPassword = async () => {
     findPasswordMessage.value = "아이디를 확인해주세요."
     isPasswordMessageError.value = true
   }
+}
+const goToSignUp = () => {
+  router.push({ name: "user-join" })
 }
 </script>
 
@@ -94,7 +98,7 @@ const findPassword = async () => {
         <div class="form-check"></div>
         <div class="buttons">
           <button type="button" class="btn btn-primary" @click="login">로그인</button>
-          <button type="button" class="btn btn-secondary">회원가입</button>
+          <button type="button" class="btn btn-secondary" @click="goToSignUp">회원가입</button>
           <button type="button" class="btn btn-warning" @click="openFindPasswordModal">비밀번호 찾기</button>
         </div>
       </form>
@@ -306,7 +310,7 @@ const { userLogin, getUserInfo } = memberStore
 const { changeMenuState } = useMenuStore()
 
 const loginUser = ref({
-  id: "",
+  id: "",ㅁ
   password: "",
 })
 

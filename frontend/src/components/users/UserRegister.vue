@@ -69,19 +69,21 @@ const resetForm = () => {
 
 const isCustomDomain = computed(() => email_domain.value === 'custom');
 const checkId = async () => {
+  console.log("checkid on")
   try {
-    idCheckMessage.value = "사용가능합니다";
       idCheckStatus.value = 'success';
     const result = await check(id.value);
-    console.log("result",result)
-    if (result === '사용 가능한 아이디입니다.') {
-      alert('사용 가능한 아이디입니다.');
-      idCheckMessage.value = "사용가능합니다";
+    console.log("result", result)
+
+    
+   
+  //    alert('사용 가능한 아이디입니다.');
+      idCheckMessage.value = "사용가능아이디입니다.";
       idCheckStatus.value = 'success';
-    } else {
-      idCheckMessage.value = result;
-      idCheckStatus.value = 'error';
-    }
+    
+     // idCheckMessage.value = result;
+     // idCheckStatus.value = 'error';
+    
   } catch (error) {
     console.error('아이디 중복 검사 중 오류 발생:', error);
     idCheckMessage.value = '중복된 아이디입니다.';
@@ -103,7 +105,7 @@ const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]
         <input type="text" id="name" v-model="name" placeholder="이름" />
         <div class="input-group">
           <input type="text" id="id" v-model="id" @blur="checkId" placeholder="아이디" />
-          <button type="button" @click="checkId">아이디 중복확인</button>
+          <!-- <button type="button" @click="checkId">아이디 중복확인</button> -->
         </div>
         <small v-show="idCheckStatus === 'success'" class="text-success">{{ idCheckMessage }}</small>
         <small v-show="idCheckStatus === 'error'" class="text-danger">{{ idCheckMessage }}</small>
@@ -131,10 +133,10 @@ const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]
           <button type="submit" class="btn btn-primary">회원가입</button>
         </div>
       </form>
-      <div v-if="!isIdValid || !isPasswordValid" class="validation-message">
+      <!-- <div v-if="!isIdValid || !isPasswordValid" class="validation-message">
         회원가입 조건을 만족하지 않습니다.     <br>
 입력 내용을 확인해 주세요.
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

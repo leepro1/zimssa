@@ -4,23 +4,23 @@
         <h2 class="title">맞춤형 추천상품</h2>
         <form class="user-info">
           <div class="form-group">
-            <label><span class="purple-text">추천 상품:</span></label>
+            <label><span class="purple-text">추천 상품</span></label>
             <input type="text" :value="responseData.rcmdProdNm" readonly>
           </div>
           <div class="form-group">
-            <label><span class="purple-text">임차 보증금액 최대 한도율:</span></label>
+            <label><span class="purple-text">임차 보증금액 최대 한도율</span></label>
             <input type="text" :value="responseData.rentGrntMaxLoanLmtRate" readonly>
           </div>
           <div class="form-group">
-            <label><span class="purple-text">상품 설명:</span></label>
+            <label><span class="purple-text">상품 설명</span></label>
             <input type="text" :value="responseData.reqTrgtCont" readonly>
           </div>
           <div class="form-group">
-            <label><span class="purple-text">이자 지원:</span></label>
+            <label><span class="purple-text">이자 지원</span></label>
             <input type="text" :value="responseData.intSprtCont" readonly>
           </div>
           <div class="form-group">
-            <label><span class="purple-text">최대 대출 한도 금액:</span></label>
+            <label><span class="purple-text">최대 대출 한도 금액</span></label>
             <input type="text" :value="responseData.maxLoanLmtAmt" readonly>
           </div>
         </form>
