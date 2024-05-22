@@ -22,6 +22,7 @@ const loginUser = ref({
 const isFindPasswordModalOpen = ref(false)
 const findPasswordUserId = ref("")
 const findPasswordMessage = ref("")
+const isPasswordMessageError = ref(false)
 
 const login = async () => {
   await userLogin(loginUser.value)
@@ -48,46 +49,49 @@ const closeFindPasswordModal = () => {
 const findPassword = async () => {
   try {
     await findPasswordAPI(findPasswordUserId.value, 
-      response => findPasswordMessage.value = response.data, 
-      () => findPasswordMessage.value = "아이디를 확인해주세요."
+      response => {
+        findPasswordMessage.value = response.data
+        isPasswordMessageError.value = false
+      }, 
+      () => {
+        findPasswordMessage.value = "아이디를 확인해주세요."
+        isPasswordMessageError.value = true
+      }
     )
   } catch (error) {
     findPasswordMessage.value = "아이디를 확인해주세요."
+    isPasswordMessageError.value = true
   }
 }
 </script>
 
+
 <template>
   <div class="container">
     <div class="login-box">
-      <h2 class="title">로그인</h2>
+      <h2 class="title">LOGIN</h2>
       <form>
         <div class="form-group">
-          <label for="id" class="form-label">아이디 :</label>
           <input
             type="text"
             class="form-input"
             v-model="loginUser.id"
-            placeholder="아이디..."
+            placeholder="아이디"
           />
         </div>
         <div class="form-group">
-          <label for="password" class="form-label">비밀번호 :</label>
           <input
             type="password"
             class="form-input"
             v-model="loginUser.password"
             @keyup.enter="login"
-            placeholder="비밀번호..."
+            placeholder="비밀번호"
           />
         </div>
         <div class="form-group" v-if="isLoginError === true">
           <div class="alert alert-danger" role="alert">아이디 또는 비밀번호 확인해 주세요</div>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" />
-          <label class="form-check-label" for="saveid">아이디 저장</label>
-        </div>
+        <div class="form-check"></div>
         <div class="buttons">
           <button type="button" class="btn btn-primary" @click="login">로그인</button>
           <button type="button" class="btn btn-secondary">회원가입</button>
@@ -102,10 +106,10 @@ const findPassword = async () => {
         <h2>비밀번호 찾기</h2>
         <div class="form-group">
           <label for="findPasswordId" class="form-label">아이디를 입력하세요. 등록된 이메일로 임시비밀번호가 전송됩니다.</label>
-          <input type="text" class="form-input" v-model="findPasswordUserId" placeholder="아이디..." />
+          <input type="text" class="form-input" v-model="findPasswordUserId" placeholder="아이디" />
         </div>
         <div class="form-group" v-if="findPasswordMessage">
-          <div class="alert alert-info" role="alert">{{ findPasswordMessage }}</div>
+          <div :class="['warning-message', { 'error-message': isPasswordMessageError, 'info-message': !isPasswordMessageError }]" role="alert">{{ findPasswordMessage }}</div>
         </div>
         <div class="buttons">
           <button type="button" class="btn btn-primary" @click="findPassword">비밀번호 찾기</button>
@@ -114,7 +118,6 @@ const findPassword = async () => {
     </div>
   </div>
 </template>
-
 <style scoped>
 body, html {
   overflow: hidden; /* Hide scrollbar */
@@ -124,8 +127,9 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 84vh;
   background-color: #f8f9fa;
+  overflow: hidden; /* Hide scrollbar */
 }
 
 .login-box {
@@ -137,22 +141,29 @@ body, html {
 }
 
 .title {
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   text-align: center;
   color: #7468B6;
+  
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Increase spacing between form fields */
 }
 
 .form-label {
+
   display: block;
   margin-bottom: 5px;
   color: #333;
+  margin-bottom: 40px
+  
+  
 }
 
 .form-input {
+  
+  
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -175,6 +186,7 @@ body, html {
 }
 
 .buttons {
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -193,12 +205,12 @@ body, html {
 }
 
 .btn-secondary {
-  background-color: #AD88C6;
+  background-color: #7468B6;
   color: #fff;
 }
 
 .btn-warning {
-  background-color: #FFBC42;
+  background-color: #7468B6;
   color: #fff;
 }
 
@@ -223,7 +235,7 @@ body, html {
 
 .modal-content {
   background-color: #fff;
-  margin: 15% auto;
+  margin: 10% auto;
   padding: 20px;
   border: 1px solid #888;
   border-radius: 10px;
@@ -262,8 +274,21 @@ body, html {
   border-color: #b3d7ff;
   color: #31708f;
 }
-</style>
 
+.warning-message {
+  text-align: left;
+  border-radius: 5px;
+  padding: 0px;
+}
+
+.error-message {
+  color: red;
+}
+
+.info-message {
+  color: blue;
+}
+</style>
 
 <!-- <script setup>
 import { ref } from "vue"

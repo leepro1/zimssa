@@ -51,6 +51,7 @@ async function deleteUser(userId,success,fail) {
 //   }
 // }
 async function check(userId, success, fail) {
+  console.log("check")
   console.log(userId)
   await local.get(`/user/check/${userId}`).then(success).catch(fail);
 }
