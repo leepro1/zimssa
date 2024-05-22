@@ -9,6 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LikeMapper {
     void insert(Like like) throws SQLException;
     List<Like> list(String id) throws SQLException;
-     void delete(String house_name) throws SQLException;
+     void delete(int id) throws SQLException;
 
 }

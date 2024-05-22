@@ -13,7 +13,8 @@ import lombok.ToString;
 public class Like {
 
     int id;
-    Long price;
+
+    String type; //maemae, jeonse
     String location;
     String house_name;
     String user_id;
