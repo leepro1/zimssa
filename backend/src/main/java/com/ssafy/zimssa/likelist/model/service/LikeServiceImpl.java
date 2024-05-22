@@ -33,8 +33,8 @@ public class LikeServiceImpl implements LikeService{
     }
 
     @Override
-    public void delete(String house_name) throws SQLException {
+    public void delete(int id) throws SQLException {
 
-        likeMapper.delete(house_name);
+        likeMapper.delete(id);
     }
 }

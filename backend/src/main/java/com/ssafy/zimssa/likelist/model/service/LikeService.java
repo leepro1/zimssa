@@ -10,6 +10,6 @@ public interface LikeService  {
 
      void insert(Like like) throws SQLException;
      List<Like> list(String userId) throws SQLException;
-     void delete(String house_name) throws SQLException;
+     void delete(int id) throws SQLException;
 
 }

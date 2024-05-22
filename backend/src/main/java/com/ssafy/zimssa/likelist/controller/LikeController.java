@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/list")
+@RequestMapping("/jjim")
 @Slf4j
 public class LikeController {
 
@@ -26,29 +26,23 @@ public class LikeController {
         this.likeService = likeService;
     }
 
-    @PostMapping("/likes")
+    @PostMapping()
     ResponseEntity<String> likeHouse(@RequestBody Like like) throws SQLException {
-        System.out.println(like);
             likeService.insert(like);
 
         return ResponseEntity.ok("success");
     }
 
 
-    @GetMapping("/getLikes/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<List<Like>> getLikes(@PathVariable("userId") String userId) throws SQLException {
         List<Like> likeList = likeService.list(userId);
-        System.out.println(likeList);
-        for(Like likeitem:likeList)
-        {
-            System.out.println(likeitem);
-        }
-        System.out.println();
-        return ResponseEntity.ok(likeList);
+               return ResponseEntity.ok(likeList);
     }
-    @DeleteMapping("/deleteLikes/{house_name}")
-    public ResponseEntity<String> deleteLikes(@PathVariable("house_name") String house_name) throws SQLException {
-       likeService.delete(house_name);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteLikes(@PathVariable("id") int id) throws SQLException {
+        System.out.println(id);
+       likeService.delete(id);
 
         return ResponseEntity.ok("sucess");
     }
