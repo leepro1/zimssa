@@ -97,4 +97,8 @@ const logout = () => {
 .navClass {
   height: 10vh;
 }
+
+.container-fluid {
+  background-color: white;
+}
 </style>
