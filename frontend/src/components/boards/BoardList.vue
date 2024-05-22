@@ -84,12 +84,10 @@ const moveWrite = () => {
 </script>
 
 <template>
-  <div class="container">
+  <div>
     <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="sky">글목록</mark>
-        </h2>
+      <div class="col-lg-10 title-container">
+        <h2 class="title">공지사항</h2>
       </div>
       <div class="col-lg-10">
         <div class="row align-self-center mb-2">
@@ -145,4 +143,19 @@ const moveWrite = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.title {
+  height: 50px;
+  align-content: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  background-color: #7468b6;
+  text-align: center;
+  color: white;
+  border-radius: 10px; /* 모서리를 둥글게 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+</style>

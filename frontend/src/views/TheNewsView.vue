@@ -43,20 +43,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
-    <header class="header">
-      <h1>오늘의 간추린 뉴스</h1>
-      <p>{{ currentDate }}</p>
-    </header>
-    <section class="news-section" v-if="!loading">
-      <div class="news-grid">
-        <NewsCategory v-if="officeList.length" title="Office (사무실)" :news-items="officeList" />
-        <NewsCategory v-if="houseList.length" title="Housing (주택)" :news-items="houseList" />
-        <NewsCategory v-if="retailList.length" title="Retail (상가)" :news-items="retailList" />
-        <NewsCategory v-if="stockList.length" title="Stock (주식)" :news-items="stockList" />
-      </div>
-    </section>
-    <div v-if="loading" class="loading">Loading...</div>
+  <div>
+    <div class="row justify-content-center">
+      <header class="header">
+        <h1>오늘의 간추린 뉴스</h1>
+        <p>{{ currentDate }}</p>
+      </header>
+      <section class="news-section" v-if="!loading">
+        <div class="news-grid">
+          <NewsCategory v-if="officeList.length" title="Office (사무실)" :news-items="officeList" />
+          <NewsCategory v-if="houseList.length" title="Housing (주택)" :news-items="houseList" />
+          <NewsCategory v-if="retailList.length" title="Retail (상가)" :news-items="retailList" />
+          <NewsCategory v-if="stockList.length" title="Stock (주식)" :news-items="stockList" />
+        </div>
+      </section>
+      <div v-if="loading" class="loading">Loading...</div>
+    </div>
   </div>
 </template>
 
@@ -67,11 +69,6 @@ body {
   padding: 0;
   background-color: #f4f4f9;
   overflow: hidden;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .header {
