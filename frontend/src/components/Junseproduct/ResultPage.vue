@@ -95,7 +95,6 @@
   </script>
   
   <style scoped>
-
   .mypage-box {
     background-color: #fff;
     padding: 20px;

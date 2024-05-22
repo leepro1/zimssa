@@ -4,9 +4,11 @@ import { getNewsList } from "@/api/news.js";
 import { ref, onMounted } from "vue";
 import { formatDistanceToNow, parse } from "date-fns";
 import { useRouter } from "vue-router";
+import { listArticle } from "@/api/board.js";
 
 const houseList = ref([]); // 주택
-const loading = ref(true);
+const isNewsLoading = ref(true);
+const isBoardLoading = ref(true);
 const router = useRouter();
 
 // 현재 날짜를 가져오기
@@ -24,8 +26,36 @@ const getHouseNews = async () => {
   } catch (error) {
     console.error("Error fetching news:", error);
   } finally {
-    loading.value = false;
+    isNewsLoading.value = false;
   }
+};
+
+const articles = ref([]);
+
+// 게시글 목록 가져오기
+const getArticleList = () => {
+  console.log("getArticleList called................................");
+
+  const param = ref({
+    pgno: 1, // 0번째 부터
+    spp: 2, // 2개 출력
+    key: "",
+    word: "",
+  });
+
+  listArticle(
+    param.value,
+    ({ data }) => {
+      articles.value = data.articles;
+      console.log("articles.value...................", articles.value);
+      // currentPage.value = data.currentPage;
+      // totalPage.value = data.totalPageCount;
+      isBoardLoading.value = false;
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
 };
 
 function formatRelativeTime(pubDate) {
@@ -37,10 +67,15 @@ function formatRelativeTime(pubDate) {
 onMounted(() => {
   console.log("onMounted............");
   getHouseNews();
+  getArticleList();
 });
 
 const goToNews = () => {
   router.push({ name: "news" });
+};
+
+const goToBoard = () => {
+  router.push({ name: "board" });
 };
 </script>
 
@@ -56,8 +91,8 @@ const goToNews = () => {
             <div class="rounded-shadow-box" @click="goToNews">
               <h4>오늘의 뉴스</h4>
               <hr />
-              <div v-if="loading" class="loading">Loading...</div>
-              <ul v-if="!loading" class="announcement-list">
+              <div v-if="isNewsLoading" class="loading">Loading...</div>
+              <ul v-if="!isNewsLoading" class="announcement-list">
                 <li
                   v-for="(item, index) in houseList.slice(0, 2)"
                   :key="index"
@@ -70,7 +105,23 @@ const goToNews = () => {
             </div>
           </div>
 
-          <div class="board">board</div>
+          <div class="board">
+            <div class="rounded-shadow-box" @click="goToBoard">
+              <h4>공지사항</h4>
+              <hr />
+              <div v-if="isBoardLoading" class="loading">Loading...</div>
+              <ul v-if="!isBoardLoading" class="announcement-list">
+                <li
+                  v-for="(item, index) in articles.slice(0, 2)"
+                  :key="index"
+                  class="announcement-item"
+                >
+                  <span v-html="item.subject" class="announcement-text"></span>
+                  <span class="announcement-date">{{ item.registerTime }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

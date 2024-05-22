@@ -99,6 +99,7 @@
     <div class="form-group">
       <label>추천 상품 이름:</label>
       <div>{{ responseData.rcmdProdNm }}</div>
+<<<<<<< HEAD
     </div>
     <div class="form-group">
       <label>임차 보증금액 최대 한도율:</label>
@@ -113,6 +114,22 @@
       <div>{{ responseData.intSprtCont }}</div>
     </div>
     <div class="form-group">
+=======
+    </div>
+    <div class="form-group">
+      <label>임차 보증금액 최대 한도율:</label>
+      <div>{{ responseData.rentGrntMaxLoanLmtRate }}</div>
+    </div>
+    <div class="form-group">
+      <label>요청 대상 내용:</label>
+      <div>{{ responseData.reqTrgtCont }}</div>
+    </div>
+    <div class="form-group">
+      <label>이자 지원 내용:</label>
+      <div>{{ responseData.intSprtCont }}</div>
+    </div>
+    <div class="form-group">
+>>>>>>> origin
       <label>최대 대출 한도 금액:</label>
       <div>{{ responseData.maxLoanLmtAmt }}</div>
   </div>
