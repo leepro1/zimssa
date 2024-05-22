@@ -76,7 +76,7 @@ body {
 }
 
 .header {
-  background-color: #00aaff;
+  background-color: #7468b6;
   color: white;
   text-align: center;
   padding: 10px 0; /* 패딩을 줄여 높이 감소 */
