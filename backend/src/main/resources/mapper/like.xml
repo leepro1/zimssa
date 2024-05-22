@@ -6,13 +6,13 @@
 
 
     <insert id="insert" parameterType="com.ssafy.zimssa.likelist.model.dto.Like">
-        insert into likelist( location, house_name ,user_id,type)
+        insert into likelist( location, house_name ,user_id, type)
         values (#{location},#{house_name},#{user_id},#{type})
     </insert>
 
     <select id="list" parameterType="String" resultType="com.ssafy.zimssa.likelist.model.dto.Like">
-        select location, house_name ,user_id,type from likelist
-        where user_id = #{id}
+        select id, location, house_name ,user_id, type from likelist
+        where user_id = #{userId}
     </select>
 
     <delete id="delete" parameterType="int">

@@ -5,7 +5,12 @@
       <form @submit.prevent="submitForm">
         <div class="form-group">
           <label for="rentGrntAmt">임차보증금액</label>
-          <input placeholder="200000000"  type="text" id="rentGrntAmt" v-model="formData.rentGrntAmt" />
+          <input
+            placeholder="200000000"
+            type="text"
+            id="rentGrntAmt"
+            v-model="formData.rentGrntAmt"
+          />
         </div>
         <div class="form-group">
           <label for="trgtLwdgCd">지역</label>
@@ -50,7 +55,12 @@
         </div>
         <div class="form-group">
           <label for="myTotDebtAmt">총 부채금액</label>
-          <input placeholder="50000000" type="text" id="myTotDebtAmt" v-model="formData.myTotDebtAmt" />
+          <input
+            placeholder="50000000"
+            type="text"
+            id="myTotDebtAmt"
+            v-model="formData.myTotDebtAmt"
+          />
         </div>
         <div class="form-group">
           <label for="ownHsCnt">주택보유수</label>
@@ -82,62 +92,58 @@
           </select>
         </div>
         <div class="form-actions">
-          
           <router-link :to="{ name: 'ResultPage' }">
-          <button type="submit" @click="submitForm">맞춤형 추천 받기</button>
-        </router-link>        </div>
+            <button type="submit" @click="submitForm">맞춤형 추천 받기</button>
+          </router-link>
+        </div>
       </form>
-
-      
     </div>
-    
   </div>
 
   <div v-if="responseData" class="results form-box">
-  <h3>결과</h3>
-  <div class="result-info">
-    <div class="form-group">
-      <label>추천 상품 이름:</label>
-      <div>{{ responseData.rcmdProdNm }}</div>
+    <h3>결과</h3>
+    <div class="result-info">
+      <div class="form-group">
+        <label>추천 상품 이름:</label>
+        <div>{{ responseData.rcmdProdNm }}</div>
+      </div>
+      <div class="form-group">
+        <label>임차 보증금액 최대 한도율:</label>
+        <div>{{ responseData.rentGrntMaxLoanLmtRate }}</div>
+      </div>
+      <div class="form-group">
+        <label>요청 대상 내용:</label>
+        <div>{{ responseData.reqTrgtCont }}</div>
+      </div>
+      <div class="form-group">
+        <label>이자 지원 내용:</label>
+        <div>{{ responseData.intSprtCont }}</div>
+      </div>
+      <div class="form-group">
+        <label>최대 대출 한도 금액:</label>
+        <div>{{ responseData.maxLoanLmtAmt }}</div>
+      </div>
     </div>
-    <div class="form-group">
-      <label >임차 보증금액 최대 한도율:</label>
-      <div >{{ responseData.rentGrntMaxLoanLmtRate }}</div>
-    </div>
-    <div class="form-group">
-      <label>요청 대상 내용:</label>
-      <div>{{ responseData.reqTrgtCont }}</div>
-    </div>
-    <div class="form-group">
-      <label>이자 지원 내용:</label>
-      <div>{{ responseData.intSprtCont }}</div>
-    </div>
-    <div class="form-group">
-      <label>최대 대출 한도 금액:</label>
-      <div>{{ responseData.maxLoanLmtAmt }}</div>
   </div>
-</div>
-
-    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { submitFormData, getJunseInfo } from '@/api/junseproduct';
+import { ref } from "vue";
+import { submitFormData, getJunseInfo } from "@/api/junseproduct";
 import { findById2 } from "@/api/user";
 
 const responseData = ref(null);
 
 const formData = ref({
-  rentGrntAmt: '',
-  trgtLwdgCd: '',
-  age: '', 
-  weddStcd: '',
-  myIncmAmt: '',
-  myTotDebtAmt: '',
-  ownHsCnt: '',
-  grntPrmeActnDvcdCont: '',
-  id: '', // 사용자 아이디 필드 추가
+  rentGrntAmt: "",
+  trgtLwdgCd: "",
+  age: "",
+  weddStcd: "",
+  myIncmAmt: "",
+  myTotDebtAmt: "",
+  ownHsCnt: "",
+  grntPrmeActnDvcdCont: "",
+  id: "", // 사용자 아이디 필드 추가
 });
 
 const fetchUserId = async () => {
@@ -150,12 +156,12 @@ const fetchUserId = async () => {
       },
       (error) => {
         console.error(error);
-        alert('사용자 정보를 가져오는 데 실패했습니다.');
+        alert("사용자 정보를 가져오는 데 실패했습니다.");
       }
     );
   } catch (error) {
     console.error(error);
-    alert('사용자 정보를 가져오는 데 실패했습니다.');
+    alert("사용자 정보를 가져오는 데 실패했습니다.");
   }
 };
 
@@ -163,27 +169,28 @@ const submitForm = async () => {
   try {
     // 사용자 아이디를 가져옵니다.
     await fetchUserId();
-    
+
     // 폼 데이터 출력
     console.log("Form Data:");
     console.log(formData.value);
-    
+
     // 폼 데이터를 서버에 제출합니다.
     await submitFormData(
       formData.value.id, // 사용자 아이디
-      formData.value,    // 폼 데이터
+      formData.value, // 폼 데이터
       // 성공 시 실행될 함수
       (response) => {
         console.log("Form data submitted successfully.");
         // 제출 후, 서버에서 반환된 데이터를 사용하여 추가 작업을 수행합니다.
         console.log("Response from submitFormData:");
         console.log(response.data);
-        
+
         // 추가 작업을 위해 반환된 데이터를 responseData에 할당합니다.
         responseData.value = response.data;
-        
+
         // 사용자 정보를 기반으로 추가 작업을 수행하기 위해 getJunseInfo 함수 호출
-        getJunseInfo(formData.value.id, 
+        getJunseInfo(
+          formData.value.id,
           // 성공 시 실행될 함수
           (response1) => {
             console.log("JunseInfo retrieved successfully.");
@@ -206,12 +213,12 @@ const submitForm = async () => {
         console.error("Failed to submit form data.");
         console.error(error);
       }
-        // 오류 처리
-        // ex) 사용자에게 오류
-);
+      // 오류 처리
+      // ex) 사용자에게 오류
+    );
   } catch (error) {
     console.error(error);
-    alert('폼 데이터를 제출하는 데 실패했습니다.');
+    alert("폼 데이터를 제출하는 데 실패했습니다.");
   }
 };
 </script>
@@ -229,7 +236,7 @@ const submitForm = async () => {
 .title {
   text-align: center;
   margin-bottom: 15px; /* 여백을 줄임 */
-  color: #7468B6; /* 타이틀 색상 */
+  color: #7468b6; /* 타이틀 색상 */
 }
 
 .form-group {
@@ -239,17 +246,18 @@ const submitForm = async () => {
 label {
   display: block;
   margin-bottom: 3px; /* 여백을 줄임 */
-  color: #7468B6; /* 레이블 색상 */
+  color: #7468b6; /* 레이블 색상 */
   font-size: 0.8rem; /* 레이블 폰트 크기를 줄임 */
 }
 
-input, select {
+input,
+select {
   width: calc(100% - 12px); /* 입력 필드 너비를 줄임 */
   padding: 6px; /* 패딩을 줄임 */
   margin-top: 3px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 1.0rem; /* 입력 필드 폰트 크기를 줄임 */
+  font-size: 1rem; /* 입력 필드 폰트 크기를 줄임 */
 }
 
 .form-actions {
@@ -260,7 +268,7 @@ input, select {
 button {
   padding: 8px 16px; /* 버튼 패딩을 줄임 */
   border-radius: 5px;
-  background-color: #7468B6; /* 버튼 배경색 */
+  background-color: #7468b6; /* 버튼 배경색 */
   color: white;
   cursor: pointer;
   font-size: 0.8rem; /* 버튼 폰트 크기를 줄임 */
@@ -277,7 +285,7 @@ button:hover {
 .results h3 {
   text-align: center;
   margin-bottom: 8px; /* 여백을 줄임 */
-  color: #7468B6; /* 결과 제목 색상 */
+  color: #7468b6; /* 결과 제목 색상 */
   font-size: 0.9rem; /* 결과 제목 폰트 크기를 줄임 */
 }
 
@@ -295,7 +303,7 @@ button:hover {
 .result-info label {
   display: block;
   margin-bottom: 3px; /* 여백을 줄임 */
-  color: #7468B6; /* 레이블 색상 */
+  color: #7468b6; /* 레이블 색상 */
   font-size: 0.8rem; /* 레이블 폰트 크기를 줄임 */
 }
 
@@ -305,5 +313,4 @@ button:hover {
   border-radius: 5px;
   font-size: 0.8rem; /* 텍스트 폰트 크기를 줄임 */
 }
-
 </style>

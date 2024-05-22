@@ -14,7 +14,7 @@ public class Like {
 
     int id;
 
-    String type; //maemae, jeonse
+    String type; //maemae_info, jeonse_info
     String location;
     String house_name;
     String user_id;

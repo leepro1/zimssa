@@ -1,23 +1,12 @@
 @import "./base.css";
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Song+Myung&display=swap");
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  font-weight: normal;
+* {
+  font-family: "Do Hyeon", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
-
-a,
-.green {
-  text-decoration: none;
-  color: #ad88c6;
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (min-width: 1024px) {
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.container {
+  margin: 0 !important;
+  padding: 0 !important;
 }

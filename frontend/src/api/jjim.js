@@ -13,11 +13,11 @@ const getJjim = async (userId) => {
   }
 };
 
-const postJjim = async (userId, location, house_name) => {
+const postJjim = async (type, userId, dongName, aptName) => {
   try {
-    const response = await local.post(
-      `/jjim/detail?userId=${userId}&location=${location}&house_name=${house_name}`
-    );
+    const like = { type: type, user_id: userId, location: dongName, house_name: aptName };
+    console.log("like>>>>>>>>>>>", like);
+    const response = await local.post(`/jjim`, JSON.stringify(like));
     console.log(response.data);
     return response.data;
   } catch (error) {

@@ -4,6 +4,7 @@ import { debounce } from "lodash";
 import { searchByKeyword, getDetail } from "@/api/house";
 import { getMapMarker } from "@/api/mapMarker";
 import { getJjim, postJjim, deleteJjim } from "@/api/jjim";
+import { findById2 } from "@/api/user";
 import apartmentMarkerImage from "@/assets/apartment.png";
 import subwayMarkerImage from "@/assets/facilities/subway.png";
 import schoolMarkerImage from "@/assets/facilities/school.png";
@@ -22,15 +23,27 @@ const selectedApartment = ref(null);
 const selectedApartmentDetails = ref([]);
 const showSearchResults = ref(true);
 const selectedArea = ref("전체");
+const userId = ref("");
+const showJjimList = ref(false);
 
-// 로그인된 사용자 정보 (예시)
-const user = ref({
-  isLoggedIn: true,
-  id: "user123",
-});
+const fetchUserId = async () => {
+  try {
+    await findById2(
+      (response) => {
+        userId.value = response.data.userInfo.id;
+      },
+      (error) => {}
+    );
+    fetchJjimList();
+  } catch (error) {}
+};
 
 // 찜 목록
 const jjimList = ref([]);
+
+// 모달 상태와 선택된 아파트 정보
+const isModalOpen = ref(false);
+const selectedDetail = ref(null);
 
 // 편의시설 리스트
 const subwayList = ref([]);
@@ -401,9 +414,9 @@ const handleSearch = debounce(async () => {
 }, 500);
 
 const fetchJjimList = async () => {
-  if (user.value.isLoggedIn) {
+  if (userId.value) {
     try {
-      jjimList.value = await getJjim(user.value.id);
+      jjimList.value = await getJjim(userId.value);
     } catch (error) {
       console.error("Error fetching jjim list:", error);
     }
@@ -411,27 +424,28 @@ const fetchJjimList = async () => {
 };
 
 const handleJjimToggle = async () => {
-  if (!user.value.isLoggedIn) return;
+  if (userId.value) {
+    const existingJjim = jjimList.value.find(
+      (jjim) =>
+        jjim.location === selectedApartment.value.dongName &&
+        jjim.house_name === selectedApartment.value.aptName
+    );
 
-  const existingJjim = jjimList.value.find(
-    (jjim) =>
-      jjim.location === selectedApartment.value.dongName &&
-      jjim.house_name === selectedApartment.value.aptName
-  );
-
-  try {
-    if (existingJjim) {
-      await deleteJjim(existingJjim.id);
-    } else {
-      await postJjim(
-        user.value.id,
-        selectedApartment.value.dongName,
-        selectedApartment.value.aptName
-      );
+    try {
+      if (existingJjim) {
+        await deleteJjim(existingJjim.id);
+      } else {
+        await postJjim(
+          "jeonse_info",
+          userId.value,
+          selectedApartment.value.dongName,
+          selectedApartment.value.aptName
+        );
+      }
+      await fetchJjimList();
+    } catch (error) {
+      console.error("Error toggling jjim:", error);
     }
-    await fetchJjimList();
-  } catch (error) {
-    console.error("Error toggling jjim:", error);
   }
 };
 
@@ -442,6 +456,14 @@ const isJjimmed = computed(() => {
       jjim.house_name === selectedApartment.value.aptName
   );
 });
+
+const handleJjimApartment = (jjim) => {
+  const jjimApartment = {
+    dongName: jjim.location,
+    aptName: jjim.house_name,
+  };
+  handleSelectApartment(jjimApartment);
+};
 
 const handleSelectApartment = async (apartment) => {
   selectedApartment.value = apartment;
@@ -525,11 +547,22 @@ const wolsePriceStats = computed(() => {
   };
 });
 
+const openModal = (detail) => {
+  selectedDetail.value = detail;
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  selectedDetail.value = null;
+};
+
 watch(searchQuery, handleSearch);
 
 onMounted(() => {
   initMap();
   getMapMarkerFilter();
+  fetchUserId();
 });
 </script>
 
@@ -564,7 +597,7 @@ onMounted(() => {
           </div>
           <div>
             <button
-              v-if="user.isLoggedIn"
+              v-if="userId"
               @click="handleJjimToggle"
               :class="{ active: isJjimmed }"
               class="jjim-button"
@@ -574,9 +607,13 @@ onMounted(() => {
           </div>
         </div>
         <div ref="roadViewContainer" class="road-view-container"></div>
-        <div>
-          <button @click="dealType = '전세'" :class="{ active: dealType === '전세' }">전세</button>
-          <button @click="dealType = '월세'" :class="{ active: dealType === '월세' }">월세</button>
+        <div style="margin: 20px">
+          <button class="jwBtn" @click="dealType = '전세'" :class="{ active: dealType === '전세' }">
+            전세
+          </button>
+          <button class="jwBtn" @click="dealType = '월세'" :class="{ active: dealType === '월세' }">
+            월세
+          </button>
         </div>
         <div v-if="dealType === '전세'">
           <div>
@@ -601,6 +638,7 @@ onMounted(() => {
                 v-for="detail in filteredJeonseDetails"
                 :key="detail.dealDate + detail.area"
                 class="apartment-detail-item"
+                @click="openModal(detail)"
               >
                 <span>{{ detail.dealDate }}</span>
                 <span>{{ detail.area }} ㎡</span>
@@ -637,6 +675,7 @@ onMounted(() => {
                 v-for="detail in filteredWolseDetails"
                 :key="detail.dealDate + detail.area"
                 class="apartment-detail-item"
+                @click="openModal(detail)"
               >
                 <span>{{ detail.dealDate }}</span>
                 <span>{{ detail.area }} ㎡</span>
@@ -654,6 +693,18 @@ onMounted(() => {
     </div>
 
     <div id="map" class="map-container">
+      <div class="jjim-list-toggle">
+        <button @click="showJjimList = !showJjimList" class="jjim-list-button">
+          <i class="bi bi-heart"></i>
+        </button>
+        <div v-if="showJjimList" class="jjim-list">
+          <ul>
+            <li v-for="jjim in jjimList" :key="jjim.id" @click="handleJjimApartment(jjim)">
+              {{ jjim.location }} - {{ jjim.house_name }}
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="map-buttons">
         <button @click="toggleSubwayMarkers" class="map-button">
           <div><img src="@/assets/facilities/subway.png" width="24px" /></div>
@@ -683,6 +734,30 @@ onMounted(() => {
           <div><img src="@/assets/facilities/homeless.png" width="24px" /></div>
           <div class="button-label">노숙인</div>
         </button>
+      </div>
+    </div>
+
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <h2 style="margin-bottom: 30px">{{ selectedApartment.aptName }}</h2>
+        <p>
+          <strong>거래일:</strong> {{ selectedDetail.dealDate.substring(0, 4) }}년
+          {{ selectedDetail.dealDate.substring(4, 6) }}월
+          {{ selectedDetail.dealDate.substring(6, 8) }}일
+        </p>
+        <p><strong>거래 타입:</strong> {{ selectedDetail.dealType }}</p>
+        <p><strong>매물 타입:</strong> {{ selectedDetail.houseType }}</p>
+        <p><strong>면적:</strong> {{ selectedDetail.area }} ㎡</p>
+        <p><strong>건축년도:</strong> {{ selectedDetail.buildYear }}년</p>
+        <p><strong>층:</strong> {{ selectedDetail.floor }}층</p>
+        <p>
+          <strong>보증금:</strong>
+          {{ (parseInt(selectedDetail.dealPrice.replace(/,/g, ""), 10) / 10000).toFixed(2) }} 억원
+        </p>
+        <p v-if="selectedDetail.dealType === '월세'">
+          <strong>월세:</strong> {{ selectedDetail.rentPrice }} 만원
+        </p>
+        <button @click="closeModal">닫기</button>
       </div>
     </div>
   </div>
@@ -756,11 +831,13 @@ li {
 .price-stats {
   display: flex;
   justify-content: space-around;
+  padding-bottom: 10px;
 }
 
 .price-range {
   display: flex;
   flex-direction: column;
+  font-size: 20px;
 }
 
 .area-select {
@@ -820,7 +897,10 @@ li {
   z-index: 2;
   background-color: #ad88c6;
 }
-
+.jwBtn {
+  padding: 0 10px;
+  border: solid 1px;
+}
 .button-label {
   font-size: 10px;
 }
@@ -840,5 +920,77 @@ button.active {
 
 .jjim-button.active {
   color: #ff6b6b;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  background-color: #ad88c6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.jjim-list-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+
+.jjim-list-button {
+  background: #ad88c6;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+  transition: color 0.3s;
+}
+
+.jjim-list {
+  background: white;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.jjim-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.jjim-list li {
+  padding: 8px;
+  cursor: pointer;
 }
 </style>

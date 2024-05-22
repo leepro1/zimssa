@@ -4,6 +4,7 @@ import { debounce } from "lodash";
 import { searchByKeyword, getDetail } from "@/api/house";
 import { getMapMarker } from "@/api/mapMarker";
 import { getJjim, postJjim, deleteJjim } from "@/api/jjim";
+import { findById2 } from "@/api/user";
 import apartmentMarkerImage from "@/assets/apartment.png";
 import subwayMarkerImage from "@/assets/facilities/subway.png";
 import schoolMarkerImage from "@/assets/facilities/school.png";
@@ -22,11 +23,20 @@ const selectedApartment = ref(null);
 const selectedApartmentDetails = ref([]);
 const showSearchResults = ref(true);
 const selectedArea = ref("전체");
+const userId = ref("");
+const showJjimList = ref(false);
 
-const user = ref({
-  isLoggedIn: true,
-  id: "user123",
-});
+const fetchUserId = async () => {
+  try {
+    await findById2(
+      (response) => {
+        userId.value = response.data.userInfo.id;
+      },
+      (error) => {}
+    );
+    fetchJjimList();
+  } catch (error) {}
+};
 
 // 찜 목록
 const jjimList = ref([]);
@@ -392,9 +402,9 @@ const handleSearch = debounce(async () => {
 }, 500);
 
 const fetchJjimList = async () => {
-  if (user.value.isLoggedIn) {
+  if (userId.value) {
     try {
-      jjimList.value = await getJjim(user.value.id);
+      jjimList.value = await getJjim(userId.value);
     } catch (error) {
       console.error("Error fetching jjim list:", error);
     }
@@ -402,27 +412,28 @@ const fetchJjimList = async () => {
 };
 
 const handleJjimToggle = async () => {
-  if (!user.value.isLoggedIn) return;
+  if (userId.value) {
+    const existingJjim = jjimList.value.find(
+      (jjim) =>
+        jjim.location === selectedApartment.value.dongName &&
+        jjim.house_name === selectedApartment.value.aptName
+    );
 
-  const existingJjim = jjimList.value.find(
-    (jjim) =>
-      jjim.location === selectedApartment.value.dongName &&
-      jjim.house_name === selectedApartment.value.aptName
-  );
-
-  try {
-    if (existingJjim) {
-      await deleteJjim(existingJjim.id);
-    } else {
-      await postJjim(
-        user.value.id,
-        selectedApartment.value.dongName,
-        selectedApartment.value.aptName
-      );
+    try {
+      if (existingJjim) {
+        await deleteJjim(existingJjim.id);
+      } else {
+        await postJjim(
+          "maemae_info",
+          userId.value,
+          selectedApartment.value.dongName,
+          selectedApartment.value.aptName
+        );
+      }
+      await fetchJjimList();
+    } catch (error) {
+      console.error("Error toggling jjim:", error);
     }
-    await fetchJjimList();
-  } catch (error) {
-    console.error("Error toggling jjim:", error);
   }
 };
 
@@ -433,6 +444,14 @@ const isJjimmed = computed(() => {
       jjim.house_name === selectedApartment.value.aptName
   );
 });
+
+const handleJjimApartment = (jjim) => {
+  const jjimApartment = {
+    dongName: jjim.location,
+    aptName: jjim.house_name,
+  };
+  handleSelectApartment(jjimApartment);
+};
 
 const handleSelectApartment = async (apartment) => {
   selectedApartment.value = apartment;
@@ -488,11 +507,26 @@ const priceStats = computed(() => {
   };
 });
 
+// 모달 상태 및 선택된 아파트 정보 상태
+const isModalOpen = ref(false);
+const selectedDetail = ref(null);
+
+const openModal = (detail) => {
+  selectedDetail.value = detail;
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  selectedDetail.value = null;
+};
+
 watch(searchQuery, handleSearch);
 
 onMounted(() => {
   initMap();
   getMapMarkerFilter();
+  fetchUserId();
 });
 </script>
 
@@ -527,7 +561,7 @@ onMounted(() => {
           </div>
           <div>
             <button
-              v-if="user.isLoggedIn"
+              v-if="userId"
               @click="handleJjimToggle"
               :class="{ active: isJjimmed }"
               class="jjim-button"
@@ -558,6 +592,7 @@ onMounted(() => {
             v-for="detail in filteredDetails"
             :key="detail.dealDate + detail.area"
             class="apartment-detail-item"
+            @click="openModal(detail)"
           >
             <span>{{ detail.dealDate }}</span>
             <span>{{ detail.area }} ㎡</span>
@@ -573,6 +608,18 @@ onMounted(() => {
     </div>
 
     <div id="map" class="map-container">
+      <div class="jjim-list-toggle">
+        <button @click="showJjimList = !showJjimList" class="jjim-list-button">
+          <i class="bi bi-heart"></i>
+        </button>
+        <div v-if="showJjimList" class="jjim-list">
+          <ul>
+            <li v-for="jjim in jjimList" :key="jjim.id" @click="handleJjimApartment(jjim)">
+              {{ jjim.location }} - {{ jjim.house_name }}
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="map-buttons">
         <button @click="toggleSubwayMarkers" class="map-button">
           <div><img src="@/assets/facilities/subway.png" width="24px" /></div>
@@ -604,8 +651,29 @@ onMounted(() => {
         </button>
       </div>
     </div>
+
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <h2 style="margin-bottom: 30px">{{ selectedApartment.aptName }}</h2>
+        <p>
+          <strong>거래일:</strong> {{ selectedDetail.dealDate.substring(0, 4) }}년
+          {{ selectedDetail.dealDate.substring(4, 6) }}월
+          {{ selectedDetail.dealDate.substring(6, 8) }}일
+        </p>
+        <p><strong>거래 타입:</strong> 매매</p>
+        <p><strong>매물 타입:</strong> {{ selectedDetail.houseType }}</p>
+        <p><strong>건축년도:</strong> {{ selectedDetail.buildYear }}년</p>
+        <p><strong>층:</strong> {{ selectedDetail.floor }}층</p>
+        <p>
+          <strong>거래 가격:</strong>
+          {{ (parseInt(selectedDetail.dealPrice.replace(/,/g, ""), 10) / 10000).toFixed(2) }} 억원
+        </p>
+        <button @click="closeModal">닫기</button>
+      </div>
+    </div>
   </div>
 </template>
+
 <style scoped>
 ul {
   padding: 0;
@@ -758,5 +826,78 @@ button.active {
 
 .jjim-button.active {
   color: #ff6b6b;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  background-color: #ad88c6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.jjim-list-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+
+.jjim-list-button {
+  background: #ad88c6;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+  transition: color 0.3s;
+}
+
+.jjim-list {
+  background: white;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.jjim-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.jjim-list li {
+  padding: 8px;
+  cursor: pointer;
 }
 </style>
