@@ -461,9 +461,9 @@ const handleSelectApartment = async (apartment) => {
         map.value.setCenter(position);
         map.value.setLevel(3);
         displayMarkers([apartmentDetail]);
-        initRoadView(apartmentDetail.lat, apartmentDetail.lng);
       }
       await fetchJjimList();
+      await initRoadView(apartmentDetail.lat, apartmentDetail.lng);
     } else {
       console.error("No details found for the selected apartment.");
     }

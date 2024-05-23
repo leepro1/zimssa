@@ -476,6 +476,7 @@ const handleSelectApartment = async (apartment) => {
         initRoadView(apartmentDetail.lat, apartmentDetail.lng);
       }
       await fetchJjimList();
+      await initRoadView(apartmentDetail.lat, apartmentDetail.lng);
     } else {
       console.error("No details found for the selected apartment.");
     }
