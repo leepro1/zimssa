@@ -223,94 +223,69 @@ const submitForm = async () => {
 };
 </script>
 <style scoped>
+.container {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
 .form-box {
-  height: auto; /* 자동 높이 설정 */
-  max-height: 85vh; /* 최대 높이 설정 */
-  overflow-y: auto; /* 세로 스크롤 적용 */
-  padding: 10px; /* 패딩을 줄임 */
-  background-color: #fff; /* 폼 박스 배경색 */
+  width: 100%;
+  max-width: 400px;
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .title {
   text-align: center;
-  margin-bottom: 15px; /* 여백을 줄임 */
-  color: #7468b6; /* 타이틀 색상 */
+  margin-bottom: 20px;
+  color: #7468b6;
 }
 
 .form-group {
-  margin-bottom: 10px; /* 여백을 줄임 */
+  margin-bottom: 15px;
 }
 
 label {
   display: block;
-  margin-bottom: 3px; /* 여백을 줄임 */
-  color: #7468b6; /* 레이블 색상 */
-  font-size: 0.8rem; /* 레이블 폰트 크기를 줄임 */
+  margin-bottom: 5px;
+  color: #7468b6;
 }
 
 input,
 select {
-  width: calc(100% - 12px); /* 입력 필드 너비를 줄임 */
-  padding: 6px; /* 패딩을 줄임 */
+  width: calc(100% - 12px);
+  padding: 8px;
   margin-top: 3px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 1rem; /* 입력 필드 폰트 크기를 줄임 */
+  font-size: 1rem;
 }
 
 .form-actions {
   text-align: center;
-  margin-top: 15px; /* 여백을 줄임 */
+  margin-top: 20px;
 }
 
 button {
-  padding: 8px 16px; /* 버튼 패딩을 줄임 */
+  padding: 10px 20px;
   border-radius: 5px;
-  background-color: #7468b6; /* 버튼 배경색 */
+  background-color: #7468b6;
   color: white;
   cursor: pointer;
-  font-size: 0.8rem; /* 버튼 폰트 크기를 줄임 */
+  font-size: 1rem;
 }
 
 button:hover {
-  background-color: #5d52a1; /* 버튼 호버 배경색 */
+  background-color: #5d52a1;
 }
 
 .results {
-  margin-top: 15px; /* 여백을 줄임 */
-}
-
-.results h3 {
-  text-align: center;
-  margin-bottom: 8px; /* 여백을 줄임 */
-  color: #7468b6; /* 결과 제목 색상 */
-  font-size: 0.9rem; /* 결과 제목 폰트 크기를 줄임 */
-}
-
-.result-info {
-  padding: 12px; /* 패딩을 줄임 */
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-}
-
-.result-info .form-group {
-  margin-bottom: 10px; /* 여백을 줄임 */
-}
-
-.result-info label {
-  display: block;
-  margin-bottom: 3px; /* 여백을 줄임 */
-  color: #7468b6; /* 레이블 색상 */
-  font-size: 0.8rem; /* 레이블 폰트 크기를 줄임 */
-}
-
-.result-info div {
-  padding: 6px; /* 패딩을 줄임 */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 0.8rem; /* 텍스트 폰트 크기를 줄임 */
+  margin-top: 30px;
 }
 </style>

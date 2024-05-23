@@ -56,12 +56,16 @@ export default {
       this.messages = lastBotMessage ? [lastBotMessage] : [];
       this.messages.push({ text: this.question, isUser: true });
 
+         const currentQuestion = this.question;
+    this.question = ''; // Clear the input field immediately
+
       try {
-        const response = await axios.post('http://localhost:80/zimssa/api/v1/chat-gpt', { question: this.question }, {
+        const response = await axios.post('http://localhost:80/zimssa/api/v1/chat-gpt', { question: currentQuestion }, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
+        this.question = '';
 
         this.messages.push({ text: response.data, isUser: false });
       } catch (error) {
