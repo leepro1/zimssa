@@ -46,15 +46,11 @@ public class JunseProductController {
 
     @GetMapping("/junse/list/{userId}")
     public ResponseEntity<JunseInfoResponseDto> list(@PathVariable("userId") String userId) throws Exception {
-        System.out.println("list get>>>>>>>>>>>>>>>>>");
-        System.out.println(userId);
+
 
         JunseInfoResponseDto junseInfoResponseDto = junseService.getproduct(userId);
-        //return new ResponseEntity<>(junseInfoResponseDto, HttpStatus.OK);
         if (junseInfoResponseDto != null) {
-            // 클라이언트에게 HTTP 상태 코드 200(OK)와 함께 응답 본문을 전송합니다.
-            System.out.println("성공");
-            System.out.println(junseInfoResponseDto);
+
             return new ResponseEntity<JunseInfoResponseDto>(junseInfoResponseDto, HttpStatus.OK);
         } else {
             // 클라이언트에게 HTTP 상태 코드 404(NOT FOUND)와 함께 응답을 전송합니다.
@@ -67,13 +63,10 @@ public class JunseProductController {
     public ResponseEntity<JunseInfoResponseDto> fetchDataFromAPI(@PathVariable String userId, @RequestBody JunseUserInfoDto userInfoDto) throws Exception {
         // 메서드 본문 내용은 변경하지 않고 사용자의 아이디를 추가로 받아서 처리합니다.
         // API 엔드포인트 및 파라미터 설정
-        System.out.println(userInfoDto);
     	String url = makeUrl(userInfoDto);
 
         // API 호출 및 데이터 수신
-        System.out.println(url);
         String response = restTemplate.getForObject(url, String.class);
-        System.out.println("!@@@response  "+ response);
 
         ObjectMapper objectMapper = new ObjectMapper();
         ApiResponse apiResponse = objectMapper.readValue(response, ApiResponse.class);
@@ -86,16 +79,13 @@ public class JunseProductController {
                 break;
             }
         }
-        System.out.println("GrantDvcd: " + grantDvcd);
 
 
         // 나온 상품코드를 바탕으로 상세내용 조회
 
         JunseInfoResponseDto junseInfoResponseDto = null;
         url= BASE_URL+DETAILINFO_URL+serviceKey+"&dataType=JSON&grntDvcd="+grantDvcd;
-        System.out.println(url);
         response = restTemplate.getForObject(url, String.class);
-        System.out.println(response);
         JunseProductApiResponse junseProductApiResponse = objectMapper.readValue(response, JunseProductApiResponse.class);
 
         if (junseProductApiResponse != null && junseProductApiResponse.getBody() != null && junseProductApiResponse.getBody().getItem() != null) {
@@ -133,9 +123,6 @@ public class JunseProductController {
                     item.getTrtBankCont(),
                     userId
             );        }
-        // ResponseEntity 반환
-        System.out.println("!!!!!!");
-        System.out.println(junseInfoResponseDto);
         junseService.save(junseInfoResponseDto);
         if (junseInfoResponseDto != null) {
             return ResponseEntity.ok(junseInfoResponseDto);
@@ -147,33 +134,12 @@ public class JunseProductController {
         
         
     }
-//    @GetMapping("/list/{userId")
-//    public ResponseEntity<String > list(@PathVariable String userId)
-//    {
-//
-//    }
-//
+
 
     private String makeUrl (JunseUserInfoDto userInfoDto) throws UnsupportedEncodingException {
     	
 
-    	//UserInfoDto userInfoDto = new UserInfoDto("JSON","1","1","200000000","2629000000","22","1","40000000","10000000","1","01");
 
-
-//        return BASE_URL
-//        		+ apiUri
-//                + serviceKey
-//                 +"&dataType="+userInfoDto.getDataType()
-//                +"&numOfRows="+userInfoDto.getNumOfRows()
-//                +"&pageNo="+userInfoDto.getPageNo()
-//                +"&rentGrntAmt="+userInfoDto.getRentGrntAmt()
-//                +"&trgtLwdgCd="+userInfoDto.getTrgtLwdgCd()
-//                +"&age="+userInfoDto.getAge()
-//                +"&weddStcd="+userInfoDto.getWeddStcd()
-//                +"&myIncmAmt="+userInfoDto.getMyIncmAmt()
-//                +"&myTotDebtAmt="+userInfoDto.getMyTotDebtAmt()
-//                +"&ownHsCnt="+userInfoDto.getOwnHsCnt()
-//                +"&grntPrmeActnDvcdCont="+userInfoDto.getGrntPrmeActnDvcdCont();
         return BASE_URL
                 + apiUri
                 + serviceKey

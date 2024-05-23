@@ -21,14 +21,12 @@ public class LikeServiceImpl implements LikeService{
     @Override
     public void insert(Like like) throws SQLException {
 
-        System.out.println("service"+ like);
         likeMapper.insert(like);
     }
 
     @Override
     public List<Like> list(String userId) throws SQLException {
 
-        System.out.println(userId);
         return likeMapper.list(userId);
     }
 

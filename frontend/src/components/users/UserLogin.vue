@@ -92,14 +92,22 @@ const goToSignUp = () => {
           />
         </div>
         <div class="form-group" v-if="isLoginError === true">
-          <div class="alert alert-danger" role="alert">아이디 또는 비밀번호 확인해 주세요</div>
+          <div class="alert alert-danger" role="alert">
+            아이디 또는 비밀번호 확인해 주세요
+          </div>
         </div>
         <div class="buttons">
-          <button type="button" class="btn btn-primary btn-block" @click="login">로그인</button>
+          <button type="button" class="btn btn-primary btn-block" @click="login">
+            로그인
+          </button>
         </div>
         <div class="buttons-secondary">
-          <button type="button" class="btn btn-secondary" @click="goToSignUp">회원가입</button>
-          <button type="button" class="btn btn-warning" @click="openFindPasswordModal">비밀번호 찾기</button>
+          <button type="button" class="btn btn-secondary" @click="goToSignUp">
+            회원가입
+          </button>
+          <button type="button" class="btn btn-warning" @click="openFindPasswordModal">
+            비밀번호 찾기
+          </button>
         </div>
       </form>
     </div>
@@ -109,23 +117,42 @@ const goToSignUp = () => {
         <span class="close" @click="closeFindPasswordModal">&times;</span>
         <h2>비밀번호 찾기</h2>
         <div class="form-group">
-          <label for="findPasswordId" class="form-label">아이디를 입력하세요. 등록된 이메일로 임시비밀번호가 전송됩니다.</label>
-          <input type="text" class="form-input" v-model="findPasswordUserId" placeholder="아이디" />
+          <label for="findPasswordId" class="form-label">
+            아이디를 입력하세요. 등록된 이메일로 임시비밀번호가 전송됩니다.
+          </label>
+          <input
+            type="text"
+            class="form-input"
+            v-model="findPasswordUserId"
+            placeholder="아이디"
+          />
         </div>
         <div class="form-group" v-if="findPasswordMessage">
-          <div :class="['warning-message', { 'error-message': isPasswordMessageError, 'info-message': !isPasswordMessageError }]" role="alert">{{ findPasswordMessage }}</div>
+          <div
+            :class="[
+              'warning-message',
+              { 'error-message': isPasswordMessageError, 'info-message': !isPasswordMessageError }
+            ]"
+            role="alert"
+          >
+            {{ findPasswordMessage }}
+          </div>
         </div>
         <div class="buttons">
-          <button type="button" class="btn btn-primary" @click="findPassword">비밀번호 찾기</button>
+          <button type="button" class="btn btn-primary" @click="findPassword">
+            비밀번호 찾기
+          </button>
+        
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
 <style scoped>
 body, html {
-  overflow: hidden; /* Hide scrollbar */
+  overflow: hidden; 
   margin: 0;
 }
 
@@ -153,7 +180,7 @@ body, html {
 }
 
 .form-group {
-  margin-bottom: 20px; /* Increase spacing between form fields */
+  margin-bottom: 20px; 
 }
 
 .form-label {
@@ -218,7 +245,6 @@ body, html {
   opacity: 0.9;
 }
 
-/* Modal Styles */
 .modal {
   display: block;
   position: fixed;
@@ -239,11 +265,14 @@ body, html {
   border-radius: 10px;
   width: 80%;
   max-width: 500px;
+  position: relative; 
 }
 
 .close {
   color: #aaa;
-  float: right;
+  position: absolute; 
+  top: 10px; 
+  right: 10px; 
   font-size: 28px;
   font-weight: bold;
 }
@@ -286,4 +315,5 @@ body, html {
 .info-message {
   color: blue;
 }
+
 </style>

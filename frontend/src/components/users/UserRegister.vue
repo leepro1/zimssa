@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { check, deleteUser } from "@/api/user"; // deleteUser 메서드 import
+import { check, deleteUser } from "@/api/user"; 
 
 const name = ref('');
 const id = ref('');
@@ -11,7 +11,7 @@ const email_id = ref('');
 const email_domain = ref('선택');
 const custom_email_domain = ref('');
 const idCheckMessage = ref('');
-const idCheckStatus = ref(''); // success, error, or empty
+const idCheckStatus = ref(''); 
 
 const router = useRouter();
 
@@ -30,7 +30,7 @@ const join = async () => {
     emailId: email_id.value,
     emailDomain: finalEmailDomain
   };
-  console.log('User Data:', userData); // 데이터 확인을 위한 로그
+  console.log('User Data:', userData); 
 
   try {
     const response = await fetch(`${import.meta.env.VITE_VUE_API_URL}/user/join`, {
@@ -43,8 +43,8 @@ const join = async () => {
 
     if (response.ok) {
       alert('회원가입이 성공적으로 완료되었습니다.');
-      // 회원가입 성공 후 메인 화면으로 리디렉션
-      router.push('/main'); // 메인 화면 경로에 맞게 조정하세요
+      
+      router.push('/main'); 
     } else {
       const result = await response.json();
       alert(`회원가입 실패: ${result.message}`);
@@ -61,7 +61,7 @@ const resetForm = () => {
   password.value = '';
   pwdcheck.value = '';
   email_id.value = '';
-  email_domain.value = '선택'; // 여기서 email_domain을 초기화합니다.
+  email_domain.value = '선택'; 
   custom_email_domain.value = '';
   idCheckMessage.value = '';
   idCheckStatus.value = '';
@@ -77,12 +77,11 @@ const checkId = async () => {
 
     
    
-  //    alert('사용 가능한 아이디입니다.');
+
       idCheckMessage.value = "사용가능아이디입니다.";
       idCheckStatus.value = 'success';
     
-     // idCheckMessage.value = result;
-     // idCheckStatus.value = 'error';
+  
     
   } catch (error) {
     console.error('아이디 중복 검사 중 오류 발생:', error);
@@ -91,9 +90,7 @@ const checkId = async () => {
   }
 }
 
-// ID must be 3-20 characters long, alphanumeric
 const isIdValid = computed(() => /^[a-zA-Z0-9]{3,20}$/.test(id.value));
-// Password must be 8-20 characters long, include letters and numbers, and may include special characters
 const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/.test(password.value));
 </script>
 
@@ -105,7 +102,6 @@ const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]
         <input type="text" id="name" v-model="name" placeholder="이름" />
         <div class="input-group">
           <input type="text" id="id" v-model="id" @blur="checkId" placeholder="아이디" />
-          <!-- <button type="button" @click="checkId">아이디 중복확인</button> -->
         </div>
         <small v-show="idCheckStatus === 'success'" class="text-success">{{ idCheckMessage }}</small>
         <small v-show="idCheckStatus === 'error'" class="text-danger">{{ idCheckMessage }}</small>
@@ -118,12 +114,12 @@ const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]
         <small v-show="password !== pwdcheck && pwdcheck !== ''" class="text-danger">비밀번호가 일치하지 않습니다.</small>
         <div class="input-group">
           <input type="text" v-model="email_id" placeholder="이메일" />
-          <span>@</span>
+          <span class="small-span">@</span>
           <input v-if="isCustomDomain" type="text" v-model="custom_email_domain" placeholder="직접 입력..." />
           <select v-else v-model="email_domain">
             <option value="선택">선택</option>
             <option value="ssafy.com">ssafy.com</option>
-            <option value="google.com">google.com</option>
+            <option value="google.com">gmail.com</option>
             <option value="naver.com">naver.com</option>
             <option value="kakao.com">kakao.com</option>
             <option value="custom">직접 입력</option>
@@ -133,17 +129,14 @@ const isPasswordValid = computed(() => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]
           <button type="submit" class="btn btn-primary">회원가입</button>
         </div>
       </form>
-      <!-- <div v-if="!isIdValid || !isPasswordValid" class="validation-message">
-        회원가입 조건을 만족하지 않습니다.     <br>
-입력 내용을 확인해 주세요.
-      </div> -->
+ 
     </div>
   </div>
 </template>
 
 <style scoped>
 body, html {
-  overflow: hidden; /* Hide scrollbar */
+  overflow: hidden; 
 }
 
 .container {
@@ -192,7 +185,7 @@ input, select, button, span {
   border-radius: 0 5px 5px 0;
   text-align: center;
   line-height: 30px;
-  margin-left: -1px; /* Removing gap */
+  margin-left: -1px; 
 }
 
 .input-group button {
@@ -251,13 +244,16 @@ input, select, button, span {
 
 .text-success {
   color: green;
-  margin-bottom: 20px; /* 텍스트 성공 클래스에 마진 추가 */
+  margin-bottom: 20px; 
 }
-
+.small-span {
+  width: 45px; 
+  height: 46px; 
+}
 .text-danger {
   color: red;
   
-  margin-bottom: 20px; /* 텍스트 성공 클래스에 마진 추가 */
+  margin-bottom: 20px; 
 
 }
 

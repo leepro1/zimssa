@@ -43,13 +43,12 @@ export default {
     async sendQuestion() {
       if (this.question.trim() === "") return;
 
-      // Keep the last bot message and add the new user message
       const lastBotMessage = this.messages.find((msg) => !msg.isUser);
       this.messages = lastBotMessage ? [lastBotMessage] : [];
       this.messages.push({ text: this.question, isUser: true });
 
       const currentQuestion = this.question;
-      this.question = ""; // Clear the input field immediately
+      this.question = ""; 
 
       try {
         const response = await axios.post(

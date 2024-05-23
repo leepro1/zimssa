@@ -22,7 +22,7 @@ async function findById2(success, fail) {
 }
 
 async function tokenRegeneration(user, success, fail) {
-  local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); //axios header에 refresh-token 셋팅
+  local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); 
   await local.post(`/user/refresh`, user).then(success).catch(fail);
 }
 
@@ -30,27 +30,15 @@ async function logout(id, success, fail) {
   await local.get(`/user/logout/${id}`).then(success).catch(fail);
 }
 async function updateUser(userId, user, success, fail) {
-  //const token = sessionStorage.getItem('accessToken');
-  //local.defaults.headers["Authorization"] = `Bearer ${token}`;
   await local.put(`/user/update/${userId}`, user).then(success).catch(fail);
 }
-// 사용자 삭제 API 요청
 async function deleteUser(userId,success,fail) {
 
-  //  const token = sessionStorage.getItem('accessToken');
   await local.delete(`/user/delete/${userId}`).then(success).catch(fail);
   
 }
-// async function updateUser(user, success, fail) {
-//  // const token = sessionStorage.getItem("accessToken");
-//   if (token) {
-//     local.defaults.headers["Authorization"] = `Bearer ${token.replace(/ /g, '')}`;
-//     await local.put(`/user/member`, user).then(success).catch(fail);
-//   } else {
-//     fail(new Error("No token found in sessionStorage"));
-//   }
-// }
-async function check(userId, success, fail) {
+
+async function check(userId, success, fsail) {
   console.log("check")
   console.log(userId)
   await local.get(`/user/check/${userId}`).then(success).catch(fail);

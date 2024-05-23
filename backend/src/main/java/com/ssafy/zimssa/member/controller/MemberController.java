@@ -44,9 +44,7 @@ public class MemberController {
 	}
 	@GetMapping("/check/{id}")
 	public ResponseEntity<Map<String, String>> check(@PathVariable("id") String id) throws Exception {
-		System.out.println("check id " + id + ">>>>>>>>>>>>>>>>");
 		boolean isDuplicate = memberService.checkduplicate(id);
-		System.out.println(isDuplicate);
 		Map<String, String> response = new HashMap<>();
 		if (isDuplicate) {
 			response.put("id", id);
@@ -69,17 +67,13 @@ public class MemberController {
 
 	@PostMapping("/join")
 	public ResponseEntity<Member> join(@Valid @RequestBody Member member) throws Exception {
-		log.info("join controller>>>>>>>>>>>>>>>>>>>>>>> join controller");
-		System.out.println(member);
 		memberService.join(member);
 		return new ResponseEntity<Member>(HttpStatus.OK);
 	}
 
 	@PutMapping("/update/{id}")
 	public ResponseEntity<Member> update(@PathVariable("id") String id,@RequestBody Member member) throws Exception {
-		log.info("udpate controller>>>>>>>>>>>>>>>>>>>>>>> update controller");
 
-		System.out.println(id);
 		member.setId(id);
 	
 		memberService.update(member);
@@ -88,8 +82,7 @@ public class MemberController {
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> delete(@PathVariable("id") String id) throws Exception {
-		System.out.println("delete id "+ id
-		);
+
 		memberService.delete(id);
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -100,7 +93,6 @@ public class MemberController {
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> login(
 			@RequestBody @Parameter(description = "로그인 시 필요한 회원정보(아이디, 비밀번호).", required = true) Member member) {
-		log.debug("login user : {}", member);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
@@ -108,9 +100,7 @@ public class MemberController {
 			if(loginUser != null) {
 				String accessToken = jwtUtil.createAccessToken(loginUser.getId());
 				String refreshToken = jwtUtil.createRefreshToken(loginUser.getId());
-				log.debug("access token : {}", accessToken);
-				log.debug("refresh token : {}", refreshToken);
-				log.info(accessToken);
+
 //				발급받은 refresh token 을 DB에 저장.
 				memberService.saveRefreshToken(loginUser.getId(), refreshToken);
 				
@@ -125,7 +115,6 @@ public class MemberController {
 			} 
 			
 		} catch (Exception e) {
-			log.debug("로그인 에러 발생 : {}", e);
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}

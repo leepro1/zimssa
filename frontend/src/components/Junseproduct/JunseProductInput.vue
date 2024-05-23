@@ -143,16 +143,14 @@ const formData = ref({
   myTotDebtAmt: "",
   ownHsCnt: "",
   grntPrmeActnDvcdCont: "",
-  id: "", // 사용자 아이디 필드 추가
+  id: "",
 });
 
 const fetchUserId = async () => {
   try {
     await findById2(
       (response) => {
-        console.log("junse User Info Retrieved");
-        console.log(response.data.userInfo);
-        formData.value.id = response.data.userInfo.id; // 사용자 아이디 값을 formData에 할당
+        formData.value.id = response.data.userInfo.id; 
       },
       (error) => {
         console.error(error);
@@ -167,57 +165,37 @@ const fetchUserId = async () => {
 
 const submitForm = async () => {
   try {
-    // 사용자 아이디를 가져옵니다.
     await fetchUserId();
 
-    // 폼 데이터 출력
-    console.log("Form Data:");
-    console.log(formData.value);
+  
 
-    // 폼 데이터를 서버에 제출합니다.
     await submitFormData(
-      formData.value.id, // 사용자 아이디
-      formData.value, // 폼 데이터
-      // 성공 시 실행될 함수
+      formData.value.id, 
+      formData.value, 
       (response) => {
-        console.log("Form data submitted successfully.");
-        // 제출 후, 서버에서 반환된 데이터를 사용하여 추가 작업을 수행합니다.
-        console.log("Response from submitFormData:");
-        console.log(response.data);
 
-        // 추가 작업을 위해 반환된 데이터를 responseData에 할당합니다.
         responseData.value = response.data;
 
-        // 사용자 정보를 기반으로 추가 작업을 수행하기 위해 getJunseInfo 함수 호출
         getJunseInfo(
           formData.value.id,
-          // 성공 시 실행될 함수
           (response1) => {
-            console.log("JunseInfo retrieved successfully.");
-            // 서버에서 반환된 JunseInfo 데이터를 responseData에 추가합니다.
-            console.log("Response from getJunseInfo:");
-            console.log(response1.data);
+           
             responseData.value = response1.data;
           },
-          // 실패 시 실행될 함수
+         
           (error) => {
-            console.error("Failed to retrieve JunseInfo.");
             console.error(error);
-            // 오류 처리
-            // ex) 사용자에게 오류 메시지 표시
+    
           }
         );
       },
-      // 실패 시 실행될 함수
+    
       (error) => {
         console.error("Failed to submit form data.");
-        console.error(error);
       }
-      // 오류 처리
-      // ex) 사용자에게 오류
+    
     );
   } catch (error) {
-    console.error(error);
     alert("폼 데이터를 제출하는 데 실패했습니다.");
   }
 };

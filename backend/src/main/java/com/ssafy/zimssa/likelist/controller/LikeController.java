@@ -41,7 +41,6 @@ public class LikeController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteLikes(@PathVariable("id") int id) throws SQLException {
-        System.out.println(id);
        likeService.delete(id);
 
         return ResponseEntity.ok("sucess");

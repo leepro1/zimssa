@@ -55,16 +55,13 @@ export default {
       try {
         await findById2(
           (response) => {
-            console.log("User Info Retrieved", response.data.userInfo);
             this.user = response.data.userInfo;
           },
           (error) => {
-            console.error(error);
             alert('사용자 정보를 가져오는 데 실패했습니다.');
           }
         );
       } catch (error) {
-        console.error(error);
         alert('사용자 정보를 가져오는 데 실패했습니다.');
       }
     },
@@ -83,12 +80,10 @@ export default {
             this.$router.push({ name: 'user-mypage' });
           },
           (error) => {
-            console.error(error);
             alert('회원 정보를 수정하는 데 실패했습니다.');
           }
         );
       } catch (error) {
-        console.error(error);
         alert('회원 정보를 수정하는 데 실패했습니다.');
       }
     }
@@ -98,7 +93,7 @@ export default {
 
 <style scoped>
 body, html {
-  overflow: hidden; /* Hide scrollbar */
+  overflow: hidden;
 }
 
 .edit-user-container {
@@ -129,7 +124,7 @@ label {
   margin-bottom: 5px;
   font-weight: bold;
   color: #7468B6;
-  text-align: left; /* Left align all labels */
+  text-align: left; 
 }
 
 input {

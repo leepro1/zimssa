@@ -96,7 +96,7 @@ export default {
 
 <style scoped>
 body, html {
-  overflow: hidden; /* Hide scrollbar */
+  overflow: hidden; 
 }
 
 .container {
