@@ -41,7 +41,7 @@ export default {
     :autoplay="{ delay: 4000 }"
     @swiper="onSwiper"
     @slideChange="onSlideChange"
-    class="swiper-container"
+    class="swiper-container swiper"
   >
     <swiper-slide>
       <div class="slide-content">
@@ -82,6 +82,9 @@ export default {
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 
+.swiper {
+  border-bottom: 1px solid rgb(165, 165, 165);
+}
 .swiper-container {
   width: 100%;
   height: 20vh; /* 전체 화면 높이 */

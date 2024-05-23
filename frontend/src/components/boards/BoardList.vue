@@ -108,7 +108,7 @@ const moveWrite = () => {
                   type="text"
                   class="form-control"
                   v-model="param.word"
-                  placeholder="검색어..."
+                  placeholder="제목 검색"
                 />
                 <button class="btn btn-dark" type="button" @click="getArticleList">검색</button>
               </div>
@@ -147,7 +147,7 @@ const moveWrite = () => {
 .title {
   height: 10vh;
   align-content: center;
-  margin-top: 15px;
+  margin-top: 50px;
   margin-bottom: 15px;
   padding-top: 3px;
   padding-bottom: 3px;
