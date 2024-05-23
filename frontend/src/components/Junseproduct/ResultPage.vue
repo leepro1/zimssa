@@ -210,20 +210,18 @@ p {
 }
 
 .toLoginBtn {
-  border-color: 7468B6;
-  color: #fff;
-  background-image: linear-gradient(45deg, #ad88c6 50%, transparent 50%);
-  background-position: 100%;
-  background-size: 400%;
-  transition: background 300ms ease-in-out;
+  background-color: #ffffff; /* 흰색 배경 */
+  border: 2px solid #ad88c6; /* 테두리를 #ad88c6 색상으로 설정 */
+  color: #ad88c6; /* 텍스트 색상을 #ad88c6으로 설정 */
   border-radius: 12px;
   width: 200px;
   height: 35px;
-  color: black;
   margin: 0 20px; /* 좌우 간격을 균등하게 유지 */
+  transition: background 300ms ease-in-out, color 300ms ease-in-out;
 }
 
 .toLoginBtn:hover {
-  background-position: 0;
+  background-color: #ad88c6; /* 호버 시 배경색을 #ad88c6로 변경 */
+  color: #ffffff; /* 호버 시 텍스트 색상을 흰색으로 변경 */
 }
 </style>

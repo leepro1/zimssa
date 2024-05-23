@@ -84,6 +84,10 @@ export default {
 
 .swiper {
   border-bottom: 1px solid rgb(165, 165, 165);
+  background-image: url("src/assets/main_apt.jpg"); /* 배경 이미지 추가 */
+  background-size: cover; /* 배경 이미지가 컨테이너를 넘지 않도록 설정 */
+  background-position: center; /* 배경 이미지가 가운데에 위치하도록 설정 */
+  background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
 }
 .swiper-container {
   width: 100%;
@@ -106,7 +110,7 @@ export default {
 .slide-text {
   position: absolute;
   z-index: 2;
-  color: rgb(0, 0, 0);
+  color: black;
   text-align: center;
   width: 100%;
   top: 50%;

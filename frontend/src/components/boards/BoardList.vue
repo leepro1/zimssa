@@ -84,12 +84,12 @@ const moveWrite = () => {
 </script>
 
 <template>
-  <div>
-    <div class="row justify-content-center">
-      <div class="col-lg-10 title-container title">
+  <div class="cont">
+    <div class="inner">
+      <div class="title-container title">
         <h2>공지사항</h2>
       </div>
-      <div class="col-lg-10">
+      <div>
         <div class="row align-self-center mb-2">
           <div class="col-md-2 text-start">
             <button
@@ -144,6 +144,14 @@ const moveWrite = () => {
 </template>
 
 <style scoped>
+.cont {
+  display: flex;
+  justify-content: center;
+}
+.cont .inner {
+  width: 50vw;
+}
+
 .title {
   height: 10vh;
   align-content: center;
