@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import TheMainView from "../views/TheMainView.vue";
-// import TheBoardView from "../views/TheBoardView.vue";
 
 import { storeToRefs } from "pinia";
-import TheJunseProductView from "@/views/TheJunseProductView.vue"; // 새로운 뷰 추가
+import TheJunseProductView from "@/views/TheJunseProductView.vue";
 
 import { useMemberStore } from "@/stores/member";
 
@@ -64,7 +63,7 @@ const router = createRouter({
           component: () => import("@/components/users/UserMyPage.vue"),
         },
         {
-          path: "mypage/edit-user", // Add this route
+          path: "mypage/edit-user",
           name: "EditUser",
           beforeEnter: onlyAuthUser,
           component: () => import("@/components/users/EditUser.vue"),
@@ -72,9 +71,9 @@ const router = createRouter({
       ],
     },
     {
-      path: '/result',
-      name: 'ResultPage',
-      component:  () => import("@/components/Junseproduct/ResultPage.vue"),
+      path: "/result",
+      name: "ResultPage",
+      component: () => import("@/components/Junseproduct/ResultPage.vue"),
     },
     {
       path: "/board",

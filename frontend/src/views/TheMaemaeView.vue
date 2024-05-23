@@ -59,7 +59,7 @@ const childMarkers = ref([]);
 const impairmentMarkers = ref([]);
 const homelessMarkers = ref([]);
 
-const center = ref({ lat: 37.5665, lng: 126.978 }); // 초기 지도 중심 (서울시청 기준)
+const center = ref({ lat: 37.501259, lng: 127.039593 });
 const roadViewContainer = ref(null);
 
 const getMapMarkerFilter = async () => {
@@ -354,7 +354,7 @@ const displayMarkers = (markersData) => {
   const data = markersData[0];
   const position = new kakao.maps.LatLng(data.lat, data.lng);
 
-  const markerImage = new kakao.maps.MarkerImage(apartmentMarkerImage, new kakao.maps.Size(40, 40));
+  const markerImage = new kakao.maps.MarkerImage(apartmentMarkerImage, new kakao.maps.Size(50, 50));
 
   const marker = new kakao.maps.Marker({
     position,
@@ -363,27 +363,21 @@ const displayMarkers = (markersData) => {
   });
 
   const content = `
-    <div style="background-color: #ad88c6; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px;">
-      <div style="font-weight: bold; font-size: 14px;">${selectedApartment.value.aptName}</div>
-      <div style="font-size: 12px;">${priceStats.value.min} 억 ~ ${priceStats.value.max} 억</div>
-    </div>
+    <div style="color: white; background-color: #ad88c6; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px; margin-bottom:45px;">
+      <div style="font-weight: bold; font-size: 18px;">${selectedApartment.value.aptName}</div>
+      <div style="font-size: 14px;">${priceStats.value.min} 억 ~ ${priceStats.value.max} 억</div>
+    </div> 
   `;
 
-  const infoWindow = new kakao.maps.InfoWindow({
-    content,
-    removable: false,
-    disableAutoPan: false,
+  const customOverlay = new kakao.maps.CustomOverlay({
+    map: map.value,
+    position: position,
+    content: content,
+    yAnchor: 1,
   });
 
-  const contentDiv = document.createElement("div");
-  contentDiv.innerHTML = content;
-
-  setTimeout(() => {
-    infoWindow.setContent(contentDiv);
-    infoWindow.open(map.value, marker);
-  }, 0);
-
   markers.value.push(marker);
+  markers.value.push(customOverlay);
 };
 
 const handleSearch = debounce(async () => {
@@ -552,14 +546,8 @@ onMounted(() => {
         </ul>
       </div>
       <div v-if="selectedApartmentDetails.length">
-        <div style="display: flex; justify-content: space-around">
-          <div>
-            <h2>{{ selectedApartment.aptName }}</h2>
-            <p>
-              <strong>{{ selectedApartment.dongName }}</strong>
-            </p>
-          </div>
-          <div>
+        <div style="display: flex; justify-content: left; align-items: center">
+          <div style="margin: 20px">
             <button
               v-if="userId"
               @click="handleJjimToggle"
@@ -569,17 +557,23 @@ onMounted(() => {
               <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
             </button>
           </div>
+          <div>
+            <h2>{{ selectedApartment.aptName }}</h2>
+            <p>
+              <strong>{{ selectedApartment.dongName }}</strong>
+            </p>
+          </div>
         </div>
         <div ref="roadViewContainer" class="road-view-container"></div>
         <div v-if="filteredDetails.length" class="price-stats">
-          <div class="price-range">
-            <div>{{ priceStats.min }}억원 ~ {{ priceStats.max }}억원</div>
-            <div>(평균 {{ priceStats.avg }}억원)</div>
-          </div>
           <div>
             <select v-model="selectedArea" class="area-select">
               <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
             </select>
+          </div>
+          <div class="price-range">
+            <div>{{ priceStats.min }}억원 ~ {{ priceStats.max }}억원</div>
+            <div>(평균 {{ priceStats.avg }}억원)</div>
           </div>
         </div>
         <ul class="apartment-details-list">
@@ -608,7 +602,7 @@ onMounted(() => {
     </div>
 
     <div id="map" class="map-container">
-      <div class="jjim-list-toggle">
+      <div v-if="userId" class="jjim-list-toggle">
         <button @click="showJjimList = !showJjimList" class="jjim-list-button">
           <i class="bi bi-heart"></i>
         </button>
@@ -742,11 +736,14 @@ li {
 .price-stats {
   display: flex;
   justify-content: space-around;
+  align-items: center;
+  padding-bottom: 10px;
 }
 
 .price-range {
   display: flex;
   flex-direction: column;
+  font-size: 20px;
 }
 
 .area-select {

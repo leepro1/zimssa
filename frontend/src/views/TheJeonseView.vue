@@ -67,7 +67,7 @@ const homelessMarkers = ref([]);
 const dealType = ref("전세");
 
 // 지도 중심
-const center = ref({ lat: 37.5665, lng: 126.978 });
+const center = ref({ lat: 37.501259, lng: 127.039593 });
 const roadViewContainer = ref(null);
 
 const getMapMarkerFilter = async () => {
@@ -209,7 +209,7 @@ const displaySubwayMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(subwayMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(subwayMarkerImage, new kakao.maps.Size(32, 32)),
       });
       subwayMarkers.value.push(marker);
     }
@@ -231,7 +231,7 @@ const displaySchoolMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(schoolMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(schoolMarkerImage, new kakao.maps.Size(32, 32)),
       });
       schoolMarkers.value.push(marker);
     }
@@ -253,7 +253,7 @@ const displayHospitalMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(hospitalMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(hospitalMarkerImage, new kakao.maps.Size(32, 32)),
       });
       hospitalMarkers.value.push(marker);
     }
@@ -275,7 +275,7 @@ const displaySeniorMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(seniorMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(seniorMarkerImage, new kakao.maps.Size(32, 32)),
       });
       seniorMarkers.value.push(marker);
     }
@@ -297,7 +297,7 @@ const displayChildMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(childMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(childMarkerImage, new kakao.maps.Size(32, 32)),
       });
       childMarkers.value.push(marker);
     }
@@ -319,7 +319,7 @@ const displayImpairmentMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(impairmentMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(impairmentMarkerImage, new kakao.maps.Size(32, 32)),
       });
       impairmentMarkers.value.push(marker);
     }
@@ -341,7 +341,7 @@ const displayHomelessMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(homelessMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(homelessMarkerImage, new kakao.maps.Size(32, 32)),
       });
       homelessMarkers.value.push(marker);
     }
@@ -366,7 +366,7 @@ const displayMarkers = (markersData) => {
   const data = markersData[0];
   const position = new kakao.maps.LatLng(data.lat, data.lng);
 
-  const markerImage = new kakao.maps.MarkerImage(apartmentMarkerImage, new kakao.maps.Size(40, 40));
+  const markerImage = new kakao.maps.MarkerImage(apartmentMarkerImage, new kakao.maps.Size(50, 50));
 
   const marker = new kakao.maps.Marker({
     position,
@@ -375,27 +375,21 @@ const displayMarkers = (markersData) => {
   });
 
   const content = `
-    <div style="background-color: #ad88c6; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px;">
-      <div style="font-weight: bold; font-size: 14px;">${selectedApartment.value.aptName}</div>
-      <div style="font-size: 12px;">${jeonsePriceStats.value.min} 억 ~ ${jeonsePriceStats.value.max} 억</div>
-    </div>
+    <div style="color: white; background-color: #ad88c6; text-align: center; padding: 10px; white-space: nowrap; border-radius: 8px; margin-bottom:45px;">
+      <div style="font-weight: bold; font-size: 18px;">${selectedApartment.value.aptName}</div>
+      <div style="font-size: 14px;">${jeonsePriceStats.value.min} 억 ~ ${jeonsePriceStats.value.max} 억</div>
+    </div> 
   `;
 
-  const infoWindow = new kakao.maps.InfoWindow({
-    content,
-    removable: false,
-    disableAutoPan: false,
+  const customOverlay = new kakao.maps.CustomOverlay({
+    map: map.value,
+    position: position,
+    content: content,
+    yAnchor: 1,
   });
 
-  const contentDiv = document.createElement("div");
-  contentDiv.innerHTML = content;
-
-  setTimeout(() => {
-    infoWindow.setContent(contentDiv);
-    infoWindow.open(map.value, marker);
-  }, 0);
-
   markers.value.push(marker);
+  markers.value.push(customOverlay);
 };
 
 const handleSearch = debounce(async () => {
@@ -588,14 +582,8 @@ onMounted(() => {
         </ul>
       </div>
       <div v-if="selectedApartmentDetails.length">
-        <div style="display: flex; justify-content: space-around">
-          <div>
-            <h2>{{ selectedApartment.aptName }}</h2>
-            <p>
-              <strong>{{ selectedApartment.dongName }}</strong>
-            </p>
-          </div>
-          <div>
+        <div style="display: flex; justify-content: left; align-items: center">
+          <div style="margin: 20px">
             <button
               v-if="userId"
               @click="handleJjimToggle"
@@ -605,27 +593,41 @@ onMounted(() => {
               <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
             </button>
           </div>
+          <div>
+            <h2>{{ selectedApartment.aptName }}</h2>
+            <p>
+              <strong>{{ selectedApartment.dongName }}</strong>
+            </p>
+          </div>
         </div>
         <div ref="roadViewContainer" class="road-view-container"></div>
-        <div style="margin: 20px">
-          <button class="jwBtn" @click="dealType = '전세'" :class="{ active: dealType === '전세' }">
-            전세
-          </button>
-          <button class="jwBtn" @click="dealType = '월세'" :class="{ active: dealType === '월세' }">
-            월세
-          </button>
-        </div>
         <div v-if="dealType === '전세'">
           <div>
             <div class="price-stats">
-              <div class="price-range">
-                <div>{{ jeonsePriceStats.min }}억원 ~ {{ jeonsePriceStats.max }}억원</div>
-                <div>(평균 {{ jeonsePriceStats.avg }}억원)</div>
-              </div>
               <div>
+                <div style="margin: 20px 0">
+                  <button
+                    class="jwBtn"
+                    @click="dealType = '전세'"
+                    :class="{ active: dealType === '전세' }"
+                  >
+                    전세
+                  </button>
+                  <button
+                    class="jwBtn"
+                    @click="dealType = '월세'"
+                    :class="{ active: dealType === '월세' }"
+                  >
+                    월세
+                  </button>
+                </div>
                 <select v-model="selectedArea" class="area-select">
                   <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
                 </select>
+              </div>
+              <div class="price-range">
+                <div>{{ jeonsePriceStats.min }}억원 ~ {{ jeonsePriceStats.max }}억원</div>
+                <div>(평균 {{ jeonsePriceStats.avg }}억원)</div>
               </div>
             </div>
             <ul class="apartment-details-list">
@@ -655,14 +657,30 @@ onMounted(() => {
         <div v-if="dealType === '월세'">
           <div>
             <div class="price-stats">
-              <div class="price-range">
-                <div>{{ wolsePriceStats.min }}억원 ~ {{ wolsePriceStats.max }}억원</div>
-                <div>(평균 {{ wolsePriceStats.avg }}억원)</div>
-              </div>
               <div>
+                <div style="margin: 20px 0">
+                  <button
+                    class="jwBtn"
+                    @click="dealType = '전세'"
+                    :class="{ active: dealType === '전세' }"
+                  >
+                    전세
+                  </button>
+                  <button
+                    class="jwBtn"
+                    @click="dealType = '월세'"
+                    :class="{ active: dealType === '월세' }"
+                  >
+                    월세
+                  </button>
+                </div>
                 <select v-model="selectedArea" class="area-select">
                   <option v-for="area in uniqueAreas" :key="area" :value="area">{{ area }}</option>
                 </select>
+              </div>
+              <div class="price-range">
+                <div>{{ wolsePriceStats.min }}억원 ~ {{ wolsePriceStats.max }}억원</div>
+                <div>(평균 {{ wolsePriceStats.avg }}억원)</div>
               </div>
             </div>
             <ul class="apartment-details-list">
@@ -693,7 +711,7 @@ onMounted(() => {
     </div>
 
     <div id="map" class="map-container">
-      <div class="jjim-list-toggle">
+      <div v-if="userId" class="jjim-list-toggle">
         <button @click="showJjimList = !showJjimList" class="jjim-list-button">
           <i class="bi bi-heart"></i>
         </button>

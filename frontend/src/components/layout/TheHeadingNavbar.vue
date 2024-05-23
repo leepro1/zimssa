@@ -26,7 +26,7 @@ const logout = () => {
         <img
           src="@/assets/zimssa.png"
           class="rounded mx-auto d-block"
-          style="height: 8vh"
+          style="height: 9vh"
           alt="..."
         />
       </router-link>

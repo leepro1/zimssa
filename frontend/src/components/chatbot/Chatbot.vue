@@ -6,9 +6,9 @@
         <button @click="togglePopup">X</button>
       </div>
       <div class="messages">
-        <div 
-          v-for="(message, index) in messages" 
-          :key="index" 
+        <div
+          v-for="(message, index) in messages"
+          :key="index"
           :class="message.isUser ? 'user-message' : 'bot-message'"
         >
           <div class="message-bubble">
@@ -17,30 +17,22 @@
         </div>
       </div>
       <div class="input-area">
-        <input 
-          v-model="question" 
-          @keyup.enter="sendQuestion" 
-          placeholder="질문 입력" 
-        />
+        <input v-model="question" @keyup.enter="sendQuestion" placeholder="질문 입력" />
         <button @click="sendQuestion">Send</button>
       </div>
     </div>
-    <button 
-      class="open-button" 
-      @click="togglePopup" 
-      v-if="!isOpen"
-    >부동산 AI Chat</button>
+    <button class="open-button" @click="togglePopup" v-if="!isOpen">부동산 AI Chat</button>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       isOpen: false,
-      question: '',
+      question: "",
       messages: [],
     };
   },
@@ -49,30 +41,34 @@ export default {
       this.isOpen = !this.isOpen;
     },
     async sendQuestion() {
-      if (this.question.trim() === '') return;
+      if (this.question.trim() === "") return;
 
       // Keep the last bot message and add the new user message
-      const lastBotMessage = this.messages.find(msg => !msg.isUser);
+      const lastBotMessage = this.messages.find((msg) => !msg.isUser);
       this.messages = lastBotMessage ? [lastBotMessage] : [];
       this.messages.push({ text: this.question, isUser: true });
 
-         const currentQuestion = this.question;
-    this.question = ''; // Clear the input field immediately
+      const currentQuestion = this.question;
+      this.question = ""; // Clear the input field immediately
 
       try {
-        const response = await axios.post('http://localhost:80/zimssa/api/v1/chat-gpt', { question: currentQuestion }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        this.question = '';
+        const response = await axios.post(
+          "http://localhost:80/zimssa/api/v1/chat-gpt",
+          { question: currentQuestion },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        this.question = "";
 
         this.messages.push({ text: response.data, isUser: false });
       } catch (error) {
-        console.error('Error getting response from the server:', error);
+        console.error("Error getting response from the server:", error);
       }
 
-      this.question = '';
+      this.question = "";
     },
   },
 };
@@ -92,6 +88,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 9999;
 }
 
 .chatbot-header {
@@ -99,7 +96,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background: #7468B6;
+  background: #7468b6;
   color: white;
 }
 
@@ -127,11 +124,11 @@ export default {
 }
 
 .user-message .message-bubble {
-  background-color: #E1AFD1;
+  background-color: #e1afd1;
 }
 
 .bot-message .message-bubble {
-  background-color: #FFE6E6;
+  background-color: #ffe6e6;
 }
 
 .input-area {
@@ -151,7 +148,7 @@ input {
 button {
   padding: 10px 20px;
   border: none;
-  background-color: #7468B6;
+  background-color: #7468b6;
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -162,12 +159,13 @@ button:hover {
 }
 
 .open-button {
+  z-index: 9999;
   position: fixed;
   bottom: 20px;
   right: 20px;
   padding: 10px 20px;
   border: none;
-  background-color: #7468B6;
+  background-color: #7468b6;
   color: white;
   border-radius: 5px;
   cursor: pointer;

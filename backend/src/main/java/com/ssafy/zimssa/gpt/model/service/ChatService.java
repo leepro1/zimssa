@@ -12,6 +12,8 @@ public class ChatService {
 
     public String getChatResponse(String prompt) {
         // ChatGPT 에게 질문을 던집니다.
-        return chatgptService.sendMessage(prompt);
+        String expertPrompt = "You are a real estate expert. Answer the following question with detailed and professional insights.\n\n" + prompt;
+
+        return chatgptService.sendMessage(expertPrompt);
     }
 }
