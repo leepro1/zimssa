@@ -69,12 +69,12 @@ function onDeleteArticle() {
 </script>
 
 <template>
-  <div>
-    <div class="row justify-content-center">
-      <div class="col-lg-10 title-container title">
+  <div class="cont">
+    <div class="inner">
+      <div class="title">
         <h2>게시글</h2>
       </div>
-      <div class="col-lg-10 text-start">
+      <div class="text-start">
         <div class="row my-2">
           <h2 class="text-secondary px-5">{{ article.subject }}</h2>
         </div>
@@ -99,9 +99,7 @@ function onDeleteArticle() {
           </div>
           <div class="divider mt-3 mb-3"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
-              글목록
-            </button>
+            <button type="button" class="move-list-btn" @click="moveList">글목록</button>
             <template v-if="isLoggedIn && isAdmin">
               <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
                 글수정
@@ -122,8 +120,12 @@ function onDeleteArticle() {
 </template>
 
 <style scoped>
-.container {
-  margin-top: 50px;
+.cont {
+  display: flex;
+  justify-content: center;
+}
+.cont .inner {
+  width: 50vw;
 }
 
 .title {
@@ -167,5 +169,14 @@ button.btn-outline-primary,
 button.btn-outline-success,
 button.btn-outline-danger {
   border-radius: 10px; /* 모서리를 둥글게 */
+}
+
+.move-list-btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #ad88c6;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

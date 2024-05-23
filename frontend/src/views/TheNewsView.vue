@@ -43,13 +43,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="row justify-content-center">
-      <header class="col-lg-10 title-container title">
+  <div class="cont">
+    <div class="inner">
+      <header class="title">
         <h2>오늘의 뉴스</h2>
         <p>{{ currentDate }}</p>
       </header>
-      <section class="news-section col-lg-10 title-container" v-if="!loading">
+      <section class="news-section title-container" v-if="!loading">
         <div class="news-grid">
           <div class="box">
             <NewsCategory v-if="jeonseList.length" title="전세" :news-items="jeonseList" />
@@ -75,6 +75,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.cont {
+  display: flex;
+  justify-content: center;
+}
+.cont .inner {
+  width: 80vw;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -106,6 +114,7 @@ body {
   border-radius: 10px; /* 모서리를 둥글게 */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
+
 .title h2 {
   margin: 0;
 }
@@ -121,7 +130,6 @@ body {
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;
-  width: 100%;
   height: 100%;
   gap: 10px;
 }

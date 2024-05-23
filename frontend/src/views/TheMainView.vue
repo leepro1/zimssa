@@ -91,59 +91,61 @@ const goToJeonse = () => {
 <template>
   <div>
     <swiper-slide></swiper-slide>
-    <div class="content">
-      <div class="left">
-        <div class="inner">
-          <div class="introduce">
-            <h1 style="margin-bottom: 20px">𝔃𝓲𝓶𝓼𝓼𝓪</h1>
-            <p>"짐 싸! 좋은 집으로 이사 가자"</p>
-            <h5>나에게 꼭 맞는 전세 보증 상품을 알아보자!</h5>
-            <h5>요즘 부동산 가격은? 뉴스를 통해!</h5>
-          </div>
-          <div class="linkBtns">
-            <button @click="goToMaemae">매매 매물 보러가기 ></button>
-            <button @click="goToJeonse">전월세 매물 보러가기 ></button>
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="product">
-          <result-page></result-page>
-        </div>
-        <div class="news-board">
-          <div class="news">
-            <div class="rounded-shadow-box" @click="goToNews">
-              <h4>오늘의 뉴스</h4>
-              <hr />
-              <div v-if="isNewsLoading" class="loading">Loading...</div>
-              <ul v-if="!isNewsLoading" class="announcement-list">
-                <li
-                  v-for="(item, index) in houseList.slice(0, 2)"
-                  :key="index"
-                  class="announcement-item"
-                >
-                  <span v-html="item.title" class="announcement-text"></span>
-                  <span class="announcement-date">{{ formatRelativeTime(item.pubDate) }}</span>
-                </li>
-              </ul>
+    <div class="outer">
+      <div class="content">
+        <div class="left rounded-shadow-box-content">
+          <div class="inner">
+            <div class="introduce">
+              <h1 style="margin-bottom: 20px">𝔃𝓲𝓶𝓼𝓼𝓪</h1>
+              <p>"짐 싸! 좋은 집으로 이사 가자"</p>
+              <h5>나에게 꼭 맞는 전세 보증 상품을 알아보자!</h5>
+              <h5>요즘 부동산 가격은? 뉴스를 통해!</h5>
+            </div>
+            <div class="linkBtns">
+              <button @click="goToMaemae">매매 매물 보러가기 ></button>
+              <button @click="goToJeonse">전월세 매물 보러가기 ></button>
             </div>
           </div>
+        </div>
+        <div class="right">
+          <div class="product">
+            <result-page></result-page>
+          </div>
+          <div class="news-board">
+            <div class="news">
+              <div class="rounded-shadow-box" @click="goToNews">
+                <h4>오늘의 뉴스</h4>
+                <hr />
+                <div v-if="isNewsLoading" class="loading">Loading...</div>
+                <ul v-if="!isNewsLoading" class="announcement-list">
+                  <li
+                    v-for="(item, index) in houseList.slice(0, 2)"
+                    :key="index"
+                    class="announcement-item"
+                  >
+                    <span v-html="item.title" class="announcement-text"></span>
+                    <span class="announcement-date">{{ formatRelativeTime(item.pubDate) }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
-          <div class="board">
-            <div class="rounded-shadow-box" @click="goToBoard">
-              <h4>공지사항</h4>
-              <hr />
-              <div v-if="isBoardLoading" class="loading">Loading...</div>
-              <ul v-if="!isBoardLoading" class="announcement-list">
-                <li
-                  v-for="(item, index) in articles.slice(0, 2)"
-                  :key="index"
-                  class="announcement-item"
-                >
-                  <span v-html="item.subject" class="announcement-text"></span>
-                  <span class="announcement-date">{{ item.registerTime }}</span>
-                </li>
-              </ul>
+            <div class="board">
+              <div class="rounded-shadow-box" @click="goToBoard">
+                <h4>공지사항</h4>
+                <hr />
+                <div v-if="isBoardLoading" class="loading">Loading...</div>
+                <ul v-if="!isBoardLoading" class="announcement-list">
+                  <li
+                    v-for="(item, index) in articles.slice(0, 2)"
+                    :key="index"
+                    class="announcement-item"
+                  >
+                    <span v-html="item.subject" class="announcement-text"></span>
+                    <span class="announcement-date">{{ item.registerTime }}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -153,20 +155,30 @@ const goToJeonse = () => {
 </template>
 
 <style scoped>
+.outer {
+  display: flex;
+  justify-content: center;
+  width: 100%; /* 전체 너비로 설정 */
+  height: 100%; /* 전체 높이로 설정 */
+  position: relative; /* 내부 요소를 위치시키기 위해 상대 위치 설정 */
+}
+
 .content-linkbtns {
   align-items: center;
   align-content: center;
 }
+
 .content {
   display: flex;
-  width: 100%;
+  width: 80vw;
   height: 70vh;
+  padding-bottom: 0px;
 }
 
 .left {
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: 50%;
   justify-content: center;
   align-items: center;
 }
@@ -174,14 +186,12 @@ const goToJeonse = () => {
 .left .inner {
   display: flex;
   flex-direction: column;
-  background-color: #f0f0f0; /* 원하는 배경색으로 변경 */
   border-radius: 10px; /* 모서리를 둥글게 */
 }
 
 .right {
   display: flex;
-  background-color: rgb(255, 255, 255, 0.8);
-  width: 50vw;
+  width: 50%;
   height: 70vh;
 }
 
@@ -201,20 +211,20 @@ const goToJeonse = () => {
   padding-top: 20px;
   padding-bottom: 20px;
   flex-direction: column;
-  width: 25vw;
+  width: 50%;
   height: 70vh;
 }
 
 .news {
   display: flex;
   width: 100%;
-  height: 35vh;
+  height: 50%;
 }
 
 .board {
   display: flex;
   width: 100%;
-  height: 35vh;
+  height: 50%;
 }
 
 .rounded-shadow-box {
@@ -225,6 +235,13 @@ const goToJeonse = () => {
   width: 300px; /* 원하는 너비로 설정 */
   margin: 20px auto; /* 가운데 정렬 */
   text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+.rounded-shadow-box-content {
+  background-color: white; /* 원하는 배경색으로 변경 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  width: 50%; /* 원하는 너비로 설정 */
+  margin: 20px auto; /* 가운데 정렬 */
 }
 
 /* 뉴스 정보 */
@@ -262,7 +279,6 @@ const goToJeonse = () => {
 .introduce {
   align-items: center;
   align-content: center;
-  background-color: rgb(255, 255, 255);
   padding: 20px;
   width: 100%;
   height: 100%;
@@ -282,29 +298,22 @@ const goToJeonse = () => {
 .linkBtns {
   display: flex;
   flex-direction: row;
-  /* justify-content: center;
-  align-items: center; */
-  background-color: white;
   padding: 20px 0;
-  /* width: 100%;
-  height: 30%; */
 }
 
 .linkBtns button {
-  border-color: 7468B6;
-  color: #fff;
-  background-image: linear-gradient(45deg, #ad88c6 50%, transparent 50%);
-  background-position: 100%;
-  background-size: 400%;
-  transition: background 300ms ease-in-out;
+  background-color: #ffffff; /* 흰색 배경 */
+  border: 2px solid #ad88c6; /* 테두리를 #ad88c6 색상으로 설정 */
+  color: #ad88c6; /* 텍스트 색상을 #ad88c6으로 설정 */
   border-radius: 12px;
   width: 250px;
   height: 70px;
-  color: black;
   margin: 0 20px; /* 좌우 간격을 균등하게 유지 */
+  transition: background 300ms ease-in-out, color 300ms ease-in-out;
 }
 
 .linkBtns button:hover {
-  background-position: 0;
+  background-color: #ad88c6; /* 호버 시 배경색을 #ad88c6로 변경 */
+  color: #ffffff; /* 호버 시 텍스트 색상을 흰색으로 변경 */
 }
 </style>
