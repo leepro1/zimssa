@@ -11,7 +11,7 @@
     >
       <h2 v-html="news.title"></h2>
       <!-- <p v-html="news.description" class="news-description"></p> -->
-      <span>{{ formatRelativeTime(news.pubDate) }}</span>
+      <span class="pub-date">{{ formatRelativeTime(news.pubDate) }}</span>
     </div>
   </div>
 </template>
@@ -61,12 +61,13 @@ export default {
 }
 
 .news-item {
+  position: relative; /* Relative positioning for absolute child elements */
   background-color: #e8e8e8;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 70px; /* Adjusting height to fit 3 items within the category */
+  height: 90px; /* Adjusting height to fit 3 items within the category */
   overflow: hidden;
 }
 
@@ -81,9 +82,14 @@ export default {
 }
 
 .news-item span {
-  display: block;
-  text-align: right;
+  position: absolute; /* Absolute positioning */
+  bottom: 10px; /* Offset from the bottom */
+  right: 10px; /* Offset from the right */
   color: #888;
   font-size: 0.9em;
+}
+
+.pub-date {
+  /* Additional styles for pub-date if necessary */
 }
 </style>

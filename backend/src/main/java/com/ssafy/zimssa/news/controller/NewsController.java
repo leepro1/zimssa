@@ -28,7 +28,7 @@ import java.io.IOException;
 public class NewsController {
 
 	
-    private static final String API_URL = "https://openapi.naver.com/v1/search/news.json?display=3&query=";
+    private static final String API_URL = "https://openapi.naver.com/v1/search/news.json?display=5&query=";
     private static final String CLIENT_ID = "yaHcxXZeuNbl9vz_av53";
     private static final String CLIENT_SECRET = "WsXbOngZir";
 	

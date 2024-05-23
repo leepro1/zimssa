@@ -3,10 +3,10 @@ import NewsCategory from "@/components/news/NewsCategory.vue";
 import { getNewsList } from "@/api/news.js";
 import { ref, onMounted } from "vue";
 
-const officeList = ref([]); // 사무실
-const houseList = ref([]); // 주택
-const retailList = ref([]); // 상가
-const stockList = ref([]); // 주식
+const jeonseList = ref([]); // 사무실 -> 전세
+const wolseList = ref([]); // 주택 -> 월세
+const realEstateList = ref([]); // 상가 -> 부동산
+const rebuildList = ref([]); // 주식 -> 재건축
 
 const loading = ref(true);
 
@@ -21,15 +21,15 @@ const currentDate = ref(
 
 const getNews = async () => {
   try {
-    officeList.value = (await getNewsList("%EC%82%AC%EB%AC%B4%EC%8B%A4")).slice(0, 3);
-    houseList.value = (await getNewsList("%EC%A3%BC%ED%83%9D")).slice(0, 3);
-    retailList.value = (await getNewsList("%EC%83%81%EA%B0%80")).slice(0, 3);
-    stockList.value = (await getNewsList("%EC%A3%BC")).slice(0, 3);
+    jeonseList.value = (await getNewsList("%EC%A0%84%EC%84%B8")).slice(0, 5);
+    wolseList.value = (await getNewsList("%EC%9B%94%EC%84%B8")).slice(0, 5);
+    realEstateList.value = (await getNewsList("%EB%B6%80%EB%8F%99%EC%82%B0")).slice(0, 5);
+    rebuildList.value = (await getNewsList("%EC%9E%AC%EA%B1%B4%EC%B6%95")).slice(0, 5);
 
-    console.log("officeList.value........................:", officeList.value);
-    console.log("houseList.value........................:", houseList.value);
-    console.log("retailList.value........................:", retailList.value);
-    console.log("stockList.value........................:", stockList.value);
+    console.log("officeList.value........................:", jeonseList.value);
+    console.log("houseList.value........................:", wolseList.value);
+    console.log("retailList.value........................:", realEstateList.value);
+    console.log("stockList.value........................:", rebuildList.value);
   } catch (error) {
     console.error("Error fetching news:", error);
   } finally {
@@ -45,16 +45,28 @@ onMounted(() => {
 <template>
   <div>
     <div class="row justify-content-center">
-      <header class="header">
-        <h1>오늘의 간추린 뉴스</h1>
+      <header class="col-lg-10 title-container title">
+        <h2 class="">오늘의 뉴스</h2>
         <p>{{ currentDate }}</p>
       </header>
-      <section class="news-section" v-if="!loading">
+      <section class="news-section col-lg-10 title-container" v-if="!loading">
         <div class="news-grid">
-          <NewsCategory v-if="officeList.length" title="Office (사무실)" :news-items="officeList" />
-          <NewsCategory v-if="houseList.length" title="Housing (주택)" :news-items="houseList" />
-          <NewsCategory v-if="retailList.length" title="Retail (상가)" :news-items="retailList" />
-          <NewsCategory v-if="stockList.length" title="Stock (주식)" :news-items="stockList" />
+          <div class="box">
+            <NewsCategory v-if="jeonseList.length" title="전세" :news-items="jeonseList" />
+          </div>
+          <div class="box">
+            <NewsCategory v-if="wolseList.length" title="월세" :news-items="wolseList" />
+          </div>
+          <div class="box">
+            <NewsCategory
+              v-if="realEstateList.length"
+              title="부동산"
+              :news-items="realEstateList"
+            />
+          </div>
+          <div class="box">
+            <NewsCategory v-if="rebuildList.length" title="재건축" :news-items="rebuildList" />
+          </div>
         </div>
       </section>
       <div v-if="loading" class="loading">Loading...</div>
@@ -62,7 +74,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -79,14 +91,24 @@ body {
   border-radius: 10px;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 1.8em; /* 폰트 크기 감소 */
-}
-
 .header p {
   margin: 0;
   font-size: 0.9em; /* 폰트 크기 감소 */
+}
+
+.title {
+  height: 10vh;
+  align-content: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  background-color: #7468b6;
+  text-align: center;
+  color: white;
+  border-radius: 10px; /* 모서리를 둥글게 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
 .news-section {
@@ -94,11 +116,21 @@ body {
 }
 
 .news-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 10px; /* 갭 감소 */
-  height: calc(100vh - 150px); /* Adjusting to fit within viewport minus header */
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+}
+
+.box {
+  flex: 1 1 50%; /* 너비와 높이를 각각 50%로 설정하여 4등분 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 100%; /* 높이를 전체 화면의 절반으로 설정 */
 }
 
 .loading {

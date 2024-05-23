@@ -86,8 +86,8 @@ const moveWrite = () => {
 <template>
   <div>
     <div class="row justify-content-center">
-      <div class="col-lg-10 title-container">
-        <h2 class="title">공지사항</h2>
+      <div class="col-lg-10 title-container title">
+        <h2>공지사항</h2>
       </div>
       <div class="col-lg-10">
         <div class="row align-self-center mb-2">
@@ -145,7 +145,7 @@ const moveWrite = () => {
 
 <style scoped>
 .title {
-  height: 50px;
+  height: 10vh;
   align-content: center;
   margin-top: 15px;
   margin-bottom: 15px;
