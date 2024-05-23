@@ -139,15 +139,31 @@ function moveList() {
       <textarea class="form-control" v-model="article.content" rows="10"></textarea>
     </div>
     <div class="col-auto text-center">
-      <button type="submit" class="btn btn-outline-primary mb-3" v-if="type === 'regist'">
+      <button type="button" class="detail-btn basic-btn" @click="moveList">목록</button>
+      <button type="submit" class="detail-btn highlight-btn" v-if="type === 'regist'">
         글작성
       </button>
-      <button type="submit" class="btn btn-outline-success mb-3" v-else>글수정</button>
-      <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="moveList">
-        목록으로이동...
-      </button>
+      <button type="submit" class="detail-btn highlight-btn" v-else>글수정</button>
     </div>
   </form>
 </template>
 
-<style scoped></style>
+<style scoped>
+.detail-btn {
+  margin: 0 5px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #ad88c6;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.highlight-btn {
+  background-color: #534787;
+}
+
+.basic-btn {
+  background-color: #7468b6;
+}
+</style>

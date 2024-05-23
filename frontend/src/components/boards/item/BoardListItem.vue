@@ -1,10 +1,13 @@
 <script setup>
-defineProps({ article: Object });
+defineProps({
+  article: Object,
+  number: Object,
+});
 </script>
 
 <template>
   <tr class="text-center">
-    <th scope="row">{{ article.articleNo }}</th>
+    <th scope="row">{{ number }}</th>
     <td class="text-start">
       <router-link
         :to="{ name: 'article-view', params: { articleno: article.articleNo } }"
@@ -13,7 +16,7 @@ defineProps({ article: Object });
         {{ article.subject }}
       </router-link>
     </td>
-    <td>{{ article.userName }}</td>
+    <td>관리자</td>
     <td>{{ article.hit }}</td>
     <td>{{ article.registerTime }}</td>
   </tr>

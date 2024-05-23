@@ -95,7 +95,7 @@ const moveWrite = () => {
             <button
               v-if="isLoggedIn && isAdmin"
               type="button"
-              class="btn btn-outline-primary btn-sm"
+              class="detail-btn"
               @click="moveWrite"
             >
               글쓰기
@@ -110,7 +110,7 @@ const moveWrite = () => {
                   v-model="param.word"
                   placeholder="제목 검색"
                 />
-                <button class="btn btn-dark" type="button" @click="getArticleList">검색</button>
+                <button class="detail-btn" type="button" @click="getArticleList">검색</button>
               </div>
             </form>
           </div>
@@ -127,9 +127,10 @@ const moveWrite = () => {
           </thead>
           <tbody>
             <BoardListItem
-              v-for="article in articles"
+              v-for="(article, index) in articles"
               :key="article.articleNo"
               :article="article"
+              :number="articles.length - index"
             ></BoardListItem>
           </tbody>
         </table>
@@ -165,5 +166,15 @@ const moveWrite = () => {
   color: white;
   border-radius: 10px; /* 모서리를 둥글게 */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.detail-btn {
+  margin: 0 5px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #ad88c6;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

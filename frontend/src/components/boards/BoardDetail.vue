@@ -99,18 +99,16 @@ function onDeleteArticle() {
           </div>
           <div class="divider mt-3 mb-3"></div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="move-list-btn" @click="moveList">글목록</button>
             <template v-if="isLoggedIn && isAdmin">
-              <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
-                글수정
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger mb-3 ms-1"
-                @click="onDeleteArticle"
-              >
+              <button type="button" class="detail-btn remove-btn" @click="onDeleteArticle">
                 글삭제
               </button>
+              <button type="button" class="detail-btn modify-btn" @click="moveModify">
+                글수정
+              </button>
+            </template>
+            <template v-else>
+              <button type="button" class="detail-btn" @click="moveList">글목록</button>
             </template>
           </div>
         </div>
@@ -171,12 +169,21 @@ button.btn-outline-danger {
   border-radius: 10px; /* 모서리를 둥글게 */
 }
 
-.move-list-btn {
+.detail-btn {
+  margin: 0 5px;
   padding: 10px 20px;
   border: none;
   background-color: #ad88c6;
   color: white;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.remove-btn {
+  background-color: #7468b6;
+}
+
+.modify-btn {
+  background-color: #534787;
 }
 </style>
