@@ -48,7 +48,7 @@ export default {
       this.messages.push({ text: this.question, isUser: true });
 
       const currentQuestion = this.question;
-      this.question = ""; 
+      this.question = "";
 
       try {
         const response = await axios.post(

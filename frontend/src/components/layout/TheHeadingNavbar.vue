@@ -101,4 +101,9 @@ const logout = () => {
 .container-fluid {
   background-color: white;
 }
+
+/* 활성화된 링크 스타일 */
+.router-link-active {
+  color: #ad88c6 !important;
+}
 </style>

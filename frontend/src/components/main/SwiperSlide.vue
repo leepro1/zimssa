@@ -125,4 +125,16 @@ h2 {
 p {
   font-size: 18px;
 }
+.swiper-button-next,
+.swiper-button-prev {
+  color: #ad88c6;
+}
+
+.swiper-pagination-bullet {
+  background-color: #e1afd1;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #ad88c6;
+}
 </style>

@@ -1,6 +1,5 @@
 package com.ssafy.zimssa.house.model.mapper;
 
-import com.ssafy.zimssa.house.model.dto.GuDong;
 import com.ssafy.zimssa.house.model.dto.request.AptDetailRequestDto;
 import com.ssafy.zimssa.house.model.dto.request.KeywordRequestDto;
 import com.ssafy.zimssa.house.model.dto.response.JeonseDetailResponseDto;
@@ -12,8 +11,6 @@ import java.util.List;
 
 @Mapper
 public interface HouseMapper {
-
-    List<GuDong> findAllGuDong();
 
     List<KeywordResponseDto> findAllAptByKeyword(KeywordRequestDto keywordDto);
 

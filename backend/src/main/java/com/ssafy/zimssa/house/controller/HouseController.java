@@ -3,7 +3,6 @@ package com.ssafy.zimssa.house.controller;
 import com.ssafy.zimssa.house.model.dto.request.AptDetailRequestDto;
 import com.ssafy.zimssa.house.model.dto.request.KeywordRequestDto;
 import com.ssafy.zimssa.house.model.dto.request.TradeType;
-import com.ssafy.zimssa.house.model.dto.response.GuDongResponseDto;
 import com.ssafy.zimssa.house.model.dto.response.JeonseDetailResponseDto;
 import com.ssafy.zimssa.house.model.dto.response.KeywordResponseDto;
 import com.ssafy.zimssa.house.model.dto.response.MaemaeDetailResponseDto;
@@ -20,12 +19,6 @@ import java.util.List;
 public class HouseController {
 
     private final HouseService houseService;
-
-    @GetMapping("/searchGuDong")
-    public ResponseEntity<List<GuDongResponseDto>> searchGuDong() {
-        List<GuDongResponseDto> response = houseService.findAllGuDong();
-        return ResponseEntity.ok(response);
-    }
 
     @GetMapping("/keyword")
     public ResponseEntity<List<KeywordResponseDto>> searchByKeyword(@ModelAttribute KeywordRequestDto keywordDto) {

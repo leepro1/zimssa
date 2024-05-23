@@ -12,6 +12,4 @@ import Chatbot from "@/components/chatbot/Chatbot.vue"; // Chatbot 컴포넌트�
   </div>
 </template>
 
-<style scoped>
-/* 필요한 스타일을 추가하세요 */
-</style>
+<style scoped></style>

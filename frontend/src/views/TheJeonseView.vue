@@ -582,19 +582,21 @@ onMounted(() => {
         </ul>
       </div>
       <div v-if="selectedApartmentDetails.length">
-        <div style="display: flex; justify-content: left; align-items: center">
-          <div style="margin: 20px">
-            <button
-              v-if="userId"
-              @click="handleJjimToggle"
-              :class="{ active: isJjimmed }"
-              class="jjim-button"
-            >
-              <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
-            </button>
-          </div>
+        <div>
           <div>
-            <h2>{{ selectedApartment.aptName }}</h2>
+            <div style="display: flex">
+              <h2>
+                {{ selectedApartment.aptName }}
+              </h2>
+              <button
+                v-if="userId"
+                @click="handleJjimToggle"
+                :class="{ active: isJjimmed }"
+                class="jjim-button"
+              >
+                <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+              </button>
+            </div>
             <p>
               <strong>{{ selectedApartment.dongName }}</strong>
             </p>
@@ -849,6 +851,7 @@ li {
 .price-stats {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   padding-bottom: 10px;
 }
 
@@ -920,10 +923,10 @@ li {
   border: solid 1px;
 }
 .button-label {
-  font-size: 10px;
+  font-size: 16px;
 }
 
-button.active {
+.jwBtn.active {
   background-color: #d1a7e0;
 }
 
@@ -934,6 +937,7 @@ button.active {
   font-size: 24px;
   color: #ad88c6;
   transition: color 0.3s;
+  margin-left: 10px;
 }
 
 .jjim-button.active {

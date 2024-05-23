@@ -150,7 +150,7 @@ const fetchUserId = async () => {
   try {
     await findById2(
       (response) => {
-        formData.value.id = response.data.userInfo.id; 
+        formData.value.id = response.data.userInfo.id;
       },
       (error) => {
         console.error(error);
@@ -167,33 +167,27 @@ const submitForm = async () => {
   try {
     await fetchUserId();
 
-  
-
     await submitFormData(
-      formData.value.id, 
-      formData.value, 
+      formData.value.id,
+      formData.value,
       (response) => {
-
         responseData.value = response.data;
 
         getJunseInfo(
           formData.value.id,
           (response1) => {
-           
             responseData.value = response1.data;
           },
-         
+
           (error) => {
             console.error(error);
-    
           }
         );
       },
-    
+
       (error) => {
         console.error("Failed to submit form data.");
       }
-    
     );
   } catch (error) {
     alert("폼 데이터를 제출하는 데 실패했습니다.");
@@ -203,16 +197,14 @@ const submitForm = async () => {
 <style scoped>
 .container {
   display: flex;
-
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 87vh;
 }
 
 .form-box {
   width: 100%;
   max-width: 400px;
-  margin: 20px;
   padding: 20px;
   background-color: #fff;
   border-radius: 10px;
@@ -242,7 +234,7 @@ select {
   margin-top: 3px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 15px;
 }
 
 .form-actions {

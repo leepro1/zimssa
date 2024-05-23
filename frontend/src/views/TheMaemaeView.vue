@@ -201,7 +201,7 @@ const displaySubwayMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(subwayMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(subwayMarkerImage, new kakao.maps.Size(32, 32)),
       });
       subwayMarkers.value.push(marker);
     }
@@ -223,7 +223,7 @@ const displaySchoolMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(schoolMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(schoolMarkerImage, new kakao.maps.Size(32, 32)),
       });
       schoolMarkers.value.push(marker);
     }
@@ -245,7 +245,7 @@ const displayHospitalMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(hospitalMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(hospitalMarkerImage, new kakao.maps.Size(32, 32)),
       });
       hospitalMarkers.value.push(marker);
     }
@@ -267,7 +267,7 @@ const displaySeniorMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(seniorMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(seniorMarkerImage, new kakao.maps.Size(32, 32)),
       });
       seniorMarkers.value.push(marker);
     }
@@ -288,7 +288,7 @@ const displayChildMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(childMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(childMarkerImage, new kakao.maps.Size(32, 32)),
       });
       childMarkers.value.push(marker);
     }
@@ -309,7 +309,7 @@ const displayImpairmentMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(impairmentMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(impairmentMarkerImage, new kakao.maps.Size(32, 32)),
       });
       impairmentMarkers.value.push(marker);
     }
@@ -330,7 +330,7 @@ const displayHomelessMarkers = () => {
         position,
         map: map.value,
         title: data.name,
-        image: new kakao.maps.MarkerImage(homelessMarkerImage, new kakao.maps.Size(24, 24)),
+        image: new kakao.maps.MarkerImage(homelessMarkerImage, new kakao.maps.Size(32, 32)),
       });
       homelessMarkers.value.push(marker);
     }
@@ -546,19 +546,21 @@ onMounted(() => {
         </ul>
       </div>
       <div v-if="selectedApartmentDetails.length">
-        <div style="display: flex; justify-content: left; align-items: center">
-          <div style="margin: 20px">
-            <button
-              v-if="userId"
-              @click="handleJjimToggle"
-              :class="{ active: isJjimmed }"
-              class="jjim-button"
-            >
-              <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
-            </button>
-          </div>
-          <div>
-            <h2>{{ selectedApartment.aptName }}</h2>
+        <div>
+          <div style="margin-left: 2px">
+            <div style="display: flex">
+              <h2>
+                {{ selectedApartment.aptName }}
+              </h2>
+              <button
+                v-if="userId"
+                @click="handleJjimToggle"
+                :class="{ active: isJjimmed }"
+                class="jjim-button"
+              >
+                <i :class="isJjimmed ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+              </button>
+            </div>
             <p>
               <strong>{{ selectedApartment.dongName }}</strong>
             </p>
@@ -805,11 +807,7 @@ li {
 }
 
 .button-label {
-  font-size: 10px;
-}
-
-button.active {
-  background-color: #d1a7e0;
+  font-size: 16px;
 }
 
 .jjim-button {
@@ -819,6 +817,7 @@ button.active {
   font-size: 24px;
   color: #ad88c6;
   transition: color 0.3s;
+  margin-left: 10px;
 }
 
 .jjim-button.active {

@@ -117,7 +117,6 @@ onMounted(fetchUserId);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
 }
 
 .mypage-box {

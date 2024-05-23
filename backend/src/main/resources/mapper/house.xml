@@ -4,21 +4,6 @@
 
 <mapper namespace="com.ssafy.zimssa.house.model.mapper.HouseMapper">
 
-    <resultMap id="GuDongResultMap" type="GuDong">
-        <result property="sigunguCd" column="sigungu_cd"/>
-        <result property="bjdongCd" column="bjdong_cd"/>
-        <result property="sigunguNm" column="sigungu_nm"/>
-        <result property="bjdongNm" column="bjdong_nm"/>
-    </resultMap>
-
-    <select id="findAllGuDong" resultMap="GuDongResultMap">
-        SELECT sigungu_cd,
-               bjdong_cd,
-               sigungu_nm,
-               bjdong_nm
-        FROM address_info
-    </select>
-
     <resultMap id="KeywordResultMap" type="KeywordResponseDto">
         <result property="dongName" column="bjdong_nm"/>
         <result property="aptName" column="api_building_name"/>

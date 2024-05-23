@@ -13,14 +13,14 @@ import java.sql.SQLException;
 
 public class JsonToDB {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/ssafyweb";
-    private static final String DB_USER = "ssafy";
-    private static final String DB_PASSWORD = "ssafyssafy";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/";
+    private static final String DB_USER = "";
+    private static final String DB_PASSWORD = "";
 
     public static void main(String[] args) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode root = mapper.readTree(new File("/Users/ihuiju/realZimssa/zimssa/backend/src/main/java/com/ssafy/zimssa/util/jsonToDB/hospital/hospital.json"));
+            JsonNode root = mapper.readTree(new File(""));
             ArrayNode dataArray = (ArrayNode) root;
 
             // Connect to the database
