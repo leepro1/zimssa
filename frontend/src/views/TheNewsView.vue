@@ -46,7 +46,7 @@ onMounted(() => {
   <div>
     <div class="row justify-content-center">
       <header class="col-lg-10 title-container title">
-        <h2 class="">오늘의 뉴스</h2>
+        <h2>오늘의 뉴스</h2>
         <p>{{ currentDate }}</p>
       </header>
       <section class="news-section col-lg-10 title-container" v-if="!loading">
@@ -91,15 +91,11 @@ body {
   border-radius: 10px;
 }
 
-.header p {
-  margin: 0;
-  font-size: 0.9em; /* 폰트 크기 감소 */
-}
-
 .title {
   height: 10vh;
+  flex-direction: column;
   align-content: center;
-  margin-top: 15px;
+  margin-top: 50px;
   margin-bottom: 15px;
   padding-top: 3px;
   padding-bottom: 3px;
@@ -109,6 +105,12 @@ body {
   color: white;
   border-radius: 10px; /* 모서리를 둥글게 */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+.title h2 {
+  margin: 0;
+}
+.title p {
+  margin: 0;
 }
 
 .news-section {

@@ -69,12 +69,10 @@ function onDeleteArticle() {
 </script>
 
 <template>
-  <div class="container">
+  <div>
     <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="sky">글보기</mark>
-        </h2>
+      <div class="col-lg-10 title-container title">
+        <h2>게시글</h2>
       </div>
       <div class="col-lg-10 text-start">
         <div class="row my-2">
@@ -96,7 +94,7 @@ function onDeleteArticle() {
             </div>
           </div>
           <div class="divider mb-3"></div>
-          <div class="text-secondary">
+          <div class="text-secondary article-content">
             {{ article.content }}
           </div>
           <div class="divider mt-3 mb-3"></div>
@@ -123,4 +121,51 @@ function onDeleteArticle() {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+  margin-top: 50px;
+}
+
+.title {
+  height: 10vh;
+  align-content: center;
+  margin-top: 50px;
+  margin-bottom: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  background-color: #7468b6;
+  text-align: center;
+  color: white;
+  border-radius: 10px; /* 모서리를 둥글게 */
+}
+
+.article-content {
+  padding: 20px;
+  background-color: #f9f9f9; /* 배경색 변경 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: #ccc; /* 구분선 색상 */
+  margin: 10px 0;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.btn {
+  margin-left: 10px;
+}
+
+button.btn-outline-primary,
+button.btn-outline-success,
+button.btn-outline-danger {
+  border-radius: 10px; /* 모서리를 둥글게 */
+}
+</style>

@@ -93,15 +93,17 @@ const goToJeonse = () => {
     <swiper-slide></swiper-slide>
     <div class="content">
       <div class="left">
-        <div class="introduce">
-          <h1>𝔃𝓲𝓶𝓼𝓼𝓪</h1>
-          <p>"짐 싸! 좋은 집으로 이사 가자"</p>
-          <h5>나에게 꼭 맞는 전세 보증 상품을 알아보자!</h5>
-          <h5>요즘 부동산 가격은? 뉴스를 통해!</h5>
-        </div>
-        <div class="linkBtns">
-          <button @click="goToMaemae">매매 매물 보러가기 ></button>
-          <button @click="goToJeonse">전월세 매물 보러가기 ></button>
+        <div class="inner">
+          <div class="introduce">
+            <h1 style="margin-bottom: 20px">𝔃𝓲𝓶𝓼𝓼𝓪</h1>
+            <p>"짐 싸! 좋은 집으로 이사 가자"</p>
+            <h5>나에게 꼭 맞는 전세 보증 상품을 알아보자!</h5>
+            <h5>요즘 부동산 가격은? 뉴스를 통해!</h5>
+          </div>
+          <div class="linkBtns">
+            <button @click="goToMaemae">매매 매물 보러가기 ></button>
+            <button @click="goToJeonse">전월세 매물 보러가기 ></button>
+          </div>
         </div>
       </div>
       <div class="right">
@@ -151,10 +153,12 @@ const goToJeonse = () => {
 </template>
 
 <style scoped>
+.content-linkbtns {
+  align-items: center;
+  align-content: center;
+}
 .content {
   display: flex;
-  background-color: rgb(255, 255, 255);
-  /* background-image: url("/Users/taehyeon/Github/zimssa/frontend/src/assets/zimssa.png"); */
   width: 100%;
   height: 70vh;
 }
@@ -163,11 +167,15 @@ const goToJeonse = () => {
   display: flex;
   flex-direction: column;
   width: 50vw;
-  height: 70vh;
-  margin: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.left .inner {
+  display: flex;
+  flex-direction: column;
   background-color: #f0f0f0; /* 원하는 배경색으로 변경 */
   border-radius: 10px; /* 모서리를 둥글게 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 
 .right {
@@ -274,11 +282,12 @@ const goToJeonse = () => {
 .linkBtns {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center;
+  align-items: center; */
   background-color: white;
-  width: 100%;
-  height: 30%;
+  padding: 20px 0;
+  /* width: 100%;
+  height: 30%; */
 }
 
 .linkBtns button {
