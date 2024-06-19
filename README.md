@@ -17,8 +17,6 @@
 
 2024.5.7(화) ~ 2024.05.24(금)
 
-### DataBase 설계
-<img width="509" alt="image" src="https://github.com/TeamZimssa/zimssa/assets/90558247/dfb34ccc-77ca-466b-9c0c-88bed41f7082">
 
 ## 💜 주요 기능
 
