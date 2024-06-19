@@ -2,10 +2,13 @@
 
 
 ## Team Members 
-|박정민|이태현|이희주|
+|박정민|이태현|이희주|
 |:--------------------:|:--------------------:|:--------------------:|
-|<img src = "https://avatars.githubusercontent.com/u/90558247?v=4" width = "100" height = "100">|<img src = "https://avatars.githubusercontent.com/u/107914598?s=400&v=4" width = "100" height = "100">|<img src = "https://avatars.githubusercontent.com/u/107914598?s=400&v=4" width = "100" height = "100">
+|<img src = "https://avatars.githubusercontent.com/u/90558247?v=4" width = "100" height = "100">|<img src = "https://github.com/ksh103/HappyHouse/assets/90558247/14261d92-b547-4ec2-a5e6-d3a8d11b4217" width = "100" height = "100">|<img src = "https://github.com/ksh103/HappyHouse/assets/90558247/57e6f087-9836-428d-ab9a-6ff3b04e3359" width = "100" height = "100">
 |[@inmyownway](https://github.com/inmyownway)|[@taehyeoon](https://github.com/taehyeoon)|[Huiju Lee](https://github.com/leepro1)|
+
+
+
 ## 💜 배경 및 개요
 
 서울 공공데이터 아파트 실거래가 데이터를 바탕으로 매매, 전월세 거래 정보를 제공하는 서비스입니다.
