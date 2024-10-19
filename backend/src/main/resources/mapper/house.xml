@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.zimssa.house.model.mapper.HouseMapper">
 
@@ -16,9 +16,9 @@
         FROM
             ${tradeType}
         WHERE
-            bldg_nm LIKE CONCAT('%', #{keyword}, '%')
+            MATCH(api_building_name) AGAINST(#{keyword} IN BOOLEAN MODE)
         ORDER BY
-            bjdong_nm
+            bjdong_nm;
     </select>
 
     <resultMap id="MaemaeResultMap" type="MaemaeDetailResponseDto">
@@ -46,7 +46,7 @@
             maemae_info
         WHERE
             bjdong_nm = #{dongName}
-            AND api_building_name = #{aptName}
+                AND MATCH(api_building_name) AGAINST(#{aptName} IN BOOLEAN MODE)
         ORDER BY
             deal_ymd DESC;
     </select>
@@ -80,7 +80,7 @@
             jeonse_info
         WHERE
             bjdong_nm = #{dongName}
-            AND api_building_name = #{aptName}
+                AND MATCH(api_building_name) AGAINST(#{aptName} IN BOOLEAN MODE)
         ORDER BY
             cntrct_de DESC;
     </select>

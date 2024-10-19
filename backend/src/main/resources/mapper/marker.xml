@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ssafy.zimssa.map.model.mapper.MapMapper">
 
-    <select id="findAllByMarker" parameterType="MapMarkerType" resultType="MapMarkerResponseDto">
-        SELECT type, name, lat, lng
+    <select id="findAllByMarker" parameterType="MapMarkerType" resultType="com.ssafy.zimssa.map.model.dto.response.MapMarkerResponseDto">
+        SELECT
+            type,
+            name,
+            ST_X(location) AS lng,
+            ST_Y(location) AS lat
         FROM facilities
-        WHERE type = #{ markerType }
+        WHERE type = #{markerType}
     </select>
 
 </mapper>

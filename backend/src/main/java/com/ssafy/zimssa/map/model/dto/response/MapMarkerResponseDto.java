@@ -14,6 +14,6 @@ public class MapMarkerResponseDto {
 
     private MapMarkerType type;
     private String name;
-    private String lat;
-    private String lng;
+    private double lat;
+    private double lng;
 }
